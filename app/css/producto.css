@@ -89,8 +89,8 @@
 
 .product-buybox {
   display: grid;
-  gap: 0.72rem;
-  padding: 0.95rem;
+  gap: 1rem;
+  padding: 1.1rem;
   border-radius: 22px;
   border: 1px solid var(--border);
   background: var(--surface-high);
@@ -149,12 +149,12 @@
    7. CONFIG
    ───────────────────────────────────────────── */
 
-.product-config { display: grid; gap: 0.6rem; }
+.product-config { display: grid; gap: 0.9rem; }
 
 .config-block {
   display: grid;
-  gap: 0.5rem;
-  padding-top: 0.55rem;
+  gap: 0.65rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--border-subtle);
   align-content: start;
 }
@@ -187,12 +187,12 @@
    8. FIT SELECTOR
    ───────────────────────────────────────────── */
 
-.product-fit-selector { display: grid; gap: 0.55rem; }
+.product-fit-selector { display: grid; gap: 0.75rem; }
 
 .fit-option {
   position: relative;
   display: grid;
-  gap: 0.12rem;
+  gap: 0.16rem;
   padding: 0.66rem 0.82rem;
   border-radius: 14px;
   border: 1.5px solid var(--border);
@@ -258,7 +258,7 @@
 .product-size-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.45rem;
+  gap: 0.75rem;
 }
 
 .size-option {
@@ -916,8 +916,8 @@
     La tabla de talles usa mejor el espacio vertical disponible.
   */
   .product-layout {
-    grid-template-columns: minmax(500px, 0.9fr) minmax(700px, 1.1fr);
-    gap: clamp(1.2rem, 1.6vw, 1.8rem);
+    grid-template-columns: minmax(500px, 0.95fr) minmax(700px, 1.05fr);
+    gap: clamp(1.5rem, 1.8vw, 2.2rem);
     align-items: stretch;
   }
 
@@ -939,15 +939,15 @@
 
   .product-buybox {
     display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.75fr);
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
     grid-template-rows: auto 1fr;
     grid-template-areas:
       "meta   order"
       "config order";
-    gap: 1.1rem;
+    gap: 1.4rem;
     min-height: clamp(600px, 76vh, 780px);
     height: 100%;
-    padding: 1.25rem;
+    padding: 1.3rem;
     border-radius: 26px;
     align-content: start;
     align-self: stretch;
@@ -973,44 +973,45 @@
   .product-config {
     grid-area: config;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(130px, 0.44fr);
-    gap: 0.7rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(200px, 0.85fr);
+    gap: 1rem;
     align-content: start;
   }
 
-  .product-config .config-block:first-child { grid-column: 1 / -1; }
+  .product-config .config-block:first-child,
+  .product-config .size-chart-block { grid-column: 1 / -1; }
 
-  .config-block { gap: 0.5rem; padding-top: 0.65rem; }
+  .config-block { gap: 0.75rem; padding-top: 0.8rem; }
   .config-head { min-height: 20px; }
   .config-label,
   .config-value { font-size: 0.79rem; line-height: 1.05; }
 
   .product-fit-selector {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem;
+    gap: 0.55rem;
   }
 
-  .fit-option { min-height: 50px; padding: 0.6rem 0.7rem; border-radius: 12px; }
+  .fit-option { min-height: 52px; padding: 0.65rem 0.75rem; border-radius: 12px; }
   .fit-option-title { font-size: 0.84rem; }
   .fit-option-note { font-size: 0.68rem; line-height: 1.1; }
 
   .product-size-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.32rem;
+    gap: 0.5rem;
     min-height: 78px;
     align-content: start;
   }
 
   .size-option {
-    min-height: 38px;
+    min-height: 42px;
     border-radius: 10px;
-    padding: 0.3rem 0.28rem;
-    font-size: 0.79rem;
+    padding: 0.4rem 0.35rem;
+    font-size: 0.82rem;
   }
 
   .product-swatches {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.32rem;
+    gap: 0.5rem;
   }
 
   .swatch-card { min-height: 34px; border-radius: 10px; }
@@ -1024,8 +1025,9 @@
   .size-chart-card {
     width: 100%;
     max-width: 430px;
-    padding: 0.5rem;
-    gap: 0.35rem;
+    min-height: 240px;
+    padding: 0.6rem;
+    gap: 0.45rem;
     border-radius: 13px;
   }
 

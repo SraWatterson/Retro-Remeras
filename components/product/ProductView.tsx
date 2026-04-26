@@ -17,12 +17,32 @@ import {
   normalizeImageUrl,
 } from '@/lib/shop';
 
-const COLORS = ['Negro', 'Blanco'];
+const COLORS = [
+  { name: 'Negro', swatchClass: 'swatch-dot--negro' },
+  { name: 'Blanco', swatchClass: 'swatch-dot--blanco' },
+];
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 const FITS = [
-  { key: 'regular', label: 'Regular' },
-  { key: 'oversize', label: 'Oversize' },
+  { key: 'regular', label: 'Regular', note: 'Calce clásico' },
+  { key: 'oversize', label: 'Oversize', note: 'Más amplio y relajado' },
 ];
+
+const SIZE_GUIDES = {
+  regular: {
+    label: 'Regular',
+    src: '/assets/talles-producto/talle-regular.png',
+    alt: 'Tabla de talles para remera regular',
+  },
+  oversize: {
+    label: 'Oversize',
+    src: '/assets/talles-producto/talles-oversize.png',
+    alt: 'Tabla de talles para remera oversize',
+  },
+};
+
+function getAvailableSizes(fit: string) {
+  return fit === 'oversize' ? ['M', 'L', 'XL', 'XXL'] : SIZES;
+}
 
 function cartItemMarkup(item: CartItem) {
   return `${item.productName} · ${item.fitLabel} · ${item.size} · ${item.color} · x${item.quantity}`;
@@ -36,7 +56,7 @@ export function ProductView({ productId }: Props) {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
+  const [selectedColor, setSelectedColor] = useState(COLORS[0].name);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedFit, setSelectedFit] = useState('regular');
   const [items, setItems] = useState<CartItem[]>([]);
@@ -69,7 +89,7 @@ export function ProductView({ productId }: Props) {
 
   const product = useMemo(() => {
     if (!products.length) return null;
-    return products.find((entry) => entry.id === productId) || products[0];
+    return products.find((entry) => entry.id === productId) || null;
   }, [productId, products]);
 
   const selectedImage = useMemo(() => {
@@ -161,8 +181,21 @@ export function ProductView({ productId }: Props) {
                 <div className="fit-selector product-fit-selector">
                   {FITS.map((fit) => (
                     <label className={`fit-option ${selectedFit === fit.key ? 'is-selected' : ''}`} key={fit.key}>
-                      <input type="radio" checked={selectedFit === fit.key} onChange={() => setSelectedFit(fit.key)} />
+                      <input
+                        type="radio"
+                        name="shirt-fit"
+                        checked={selectedFit === fit.key}
+                        onChange={() => {
+                          const nextFit = fit.key;
+                          const nextSizes = getAvailableSizes(nextFit);
+                          setSelectedFit(nextFit);
+                          setSelectedSize((currentSize) =>
+                            nextSizes.includes(currentSize) ? currentSize : nextSizes[0]
+                          );
+                        }}
+                      />
                       <span className="fit-option-title">{fit.label}</span>
+                      <span className="fit-option-note">{fit.note}</span>
                     </label>
                   ))}
                 </div>
@@ -174,9 +207,14 @@ export function ProductView({ productId }: Props) {
                   <strong className="config-value">{selectedSize}</strong>
                 </div>
                 <div className="size-grid product-size-grid">
-                  {SIZES.map((size) => (
+                  {getAvailableSizes(selectedFit).map((size) => (
                     <label className={`size-option ${selectedSize === size ? 'is-selected' : ''}`} key={size}>
-                      <input type="radio" checked={selectedSize === size} onChange={() => setSelectedSize(size)} />
+                      <input
+                        type="radio"
+                        name="shirt-size"
+                        checked={selectedSize === size}
+                        onChange={() => setSelectedSize(size)}
+                      />
                       <span>{size}</span>
                     </label>
                   ))}
@@ -191,14 +229,31 @@ export function ProductView({ productId }: Props) {
                 <div className="swatches product-swatches">
                   {COLORS.map((color) => (
                     <button
-                      key={color}
-                      className={`swatch-card ${selectedColor === color ? 'is-selected' : ''}`}
+                      key={color.name}
+                      className={`swatch-card ${selectedColor === color.name ? 'is-selected' : ''}`}
                       type="button"
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => setSelectedColor(color.name)}
+                      aria-label={color.name}
                     >
-                      {color}
+                      <span className={`swatch-dot-lg ${color.swatchClass}`} />
+                      <span className="swatch-name">{color.name}</span>
                     </button>
                   ))}
+                </div>
+              </div>
+
+              <div className="config-block size-chart-block">
+                <div className="size-chart-card">
+                  <div className="size-chart-card__head">
+                    <span>Tabla de talles</span>
+                    <strong>{SIZE_GUIDES[selectedFit]?.label ?? 'Regular'}</strong>
+                  </div>
+                  <div className="size-chart-card__media">
+                    <img
+                      src={SIZE_GUIDES[selectedFit]?.src ?? SIZE_GUIDES.regular.src}
+                      alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,3 +1,5 @@
+import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
+
 export function SiteFooter() {
   return (
     <footer className="footer">
@@ -14,11 +16,23 @@ export function SiteFooter() {
 
         <div>
           <div className="footer-social">
-            <a href="https://www.instagram.com/retro.remeras/" target="_blank" className="social-link instagram" rel="noreferrer">
-              Instagram
+            <a
+              href="https://www.instagram.com/retro.remeras/"
+              target="_blank"
+              className="social-link instagram"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <FaInstagram size={20} aria-hidden="true" />
             </a>
-            <a href="https://wa.me/5491156592963" target="_blank" className="social-link whatsapp" rel="noreferrer">
-              WhatsApp
+            <a
+              href="https://wa.me/5491156592963"
+              target="_blank"
+              className="social-link whatsapp"
+              rel="noreferrer"
+              aria-label="WhatsApp"
+            >
+              <FaWhatsapp size={20} aria-hidden="true" />
             </a>
           </div>
           <address className="footer-address" style={{ fontStyle: 'normal', marginTop: '.75rem', fontSize: '.85rem', opacity: '.65' }}>

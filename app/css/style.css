@@ -745,12 +745,12 @@ body.is-scrolled .brand img {
   width: 100%;
   max-width: 100%;
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(1.5rem, 3.5vw, 4rem);
   font-weight: 900;
   line-height: 1;
   overflow-wrap: break-word;
-  word-break: break-word;
-  hyphens: auto;
+  word-break: normal;
+  hyphens: none;
   letter-spacing: 0.01em;
   color: var(--text-primary);
   text-shadow: 0 0 40px rgba(245, 234, 212, 0.08);
@@ -1890,6 +1890,39 @@ body.is-scrolled .brand img {
   border-radius: var(--radius);
 }
 
+.not-found-page {
+  min-height: calc(100vh - var(--header-height) - 120px);
+  display: grid;
+  align-items: center;
+}
+
+.not-found-card {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  border-radius: calc(var(--radius) * 1.2);
+  background: rgba(28, 22, 16, 0.92);
+  border: 1px solid rgba(244, 197, 66, 0.18);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.not-found-actions {
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.8rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.not-found-card .section-title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.not-found-card .section-subtitle {
+  color: var(--text-secondary);
+}
+
 .modal[hidden] {
   display: none !important;
 }
@@ -3023,56 +3056,56 @@ body.is-scrolled .brand img {
 /* Fondo del hero */
 .home-page .hero {
   background:
-    radial-gradient(circle at 18% 16%, rgba(244, 197, 66, 0.10), transparent 26%),
-    radial-gradient(circle at 85% 18%, rgba(200, 47, 47, 0.12), transparent 30%),
-    linear-gradient(180deg, rgba(12, 12, 12, 0.98) 0%, rgba(8, 8, 8, 0.98) 100%);
+    radial-gradient(circle at 18% 16%, rgba(244, 197, 66, 0.12), transparent 26%),
+    radial-gradient(circle at 85% 18%, rgba(200, 47, 47, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(12, 12, 12, 0.96) 0%, rgba(8, 8, 8, 0.98) 100%);
 }
 
 .home-page .hero::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015) 0%, transparent 28%),
-    radial-gradient(circle at 50% 110%, rgba(244, 197, 66, 0.05), transparent 42%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 28%),
+    radial-gradient(circle at 50% 110%, rgba(244, 197, 66, 0.06), transparent 42%);
 }
 
 /* Fondo: cómo funciona */
 .home-page #como-funciona.section {
   background:
-    linear-gradient(180deg, rgba(9, 9, 9, 0.98) 0%, rgba(14, 11, 8, 0.98) 100%);
+    linear-gradient(180deg, rgba(10, 8, 5, 0.98) 0%, rgba(16, 12, 8, 0.98) 100%);
 }
 
 .home-page #como-funciona.section::before {
   background:
-    radial-gradient(circle at 82% 24%, rgba(244, 197, 66, 0.08), transparent 28%),
-    radial-gradient(circle at 12% 78%, rgba(200, 47, 47, 0.06), transparent 30%);
+    radial-gradient(circle at 82% 24%, rgba(244, 197, 66, 0.10), transparent 30%),
+    radial-gradient(circle at 12% 78%, rgba(200, 47, 47, 0.08), transparent 32%);
 }
 
 .home-page #como-funciona.section::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.012) 0%, transparent 36%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.06), transparent);
-  opacity: 0.72;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0%, transparent 36%),
+    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.07), transparent);
+  opacity: 0.74;
 }
 
 /* Fondo: categorías */
 .home-page .section--categories,
 .home-page .section:nth-of-type(2) {
   background:
-    linear-gradient(180deg, rgba(7, 10, 16, 0.98) 0%, rgba(10, 10, 10, 0.98) 100%);
+    linear-gradient(180deg, rgba(6, 10, 18, 0.98) 0%, rgba(11, 12, 16, 0.98) 100%);
 }
 
 .home-page .section--categories::before,
 .home-page .section:nth-of-type(2)::before {
   background:
-    radial-gradient(circle at 18% 18%, rgba(244, 197, 66, 0.10), transparent 30%),
-    radial-gradient(circle at 86% 76%, rgba(200, 47, 47, 0.06), transparent 26%);
+    radial-gradient(circle at 18% 18%, rgba(244, 197, 66, 0.12), transparent 30%),
+    radial-gradient(circle at 86% 76%, rgba(38, 123, 160, 0.08), transparent 28%);
 }
 
 .home-page .section--categories::after,
 .home-page .section:nth-of-type(2)::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.012) 0%, transparent 34%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.05), transparent);
-  opacity: 0.75;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0%, transparent 34%),
+    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.06), transparent);
+  opacity: 0.78;
 }
 
 /* Fondo: beneficios */
@@ -3097,20 +3130,20 @@ body.is-scrolled .brand img {
 /* Fondo: destacados */
 .home-page [data-carousel].section {
   background:
-    linear-gradient(180deg, rgba(8, 8, 8, 0.99) 0%, rgba(14, 10, 6, 0.98) 100%);
+    linear-gradient(180deg, rgba(10, 10, 10, 0.99) 0%, rgba(14, 9, 6, 0.98) 100%);
 }
 
 .home-page [data-carousel].section::before {
   background:
-    radial-gradient(circle at 20% 24%, rgba(244, 197, 66, 0.10), transparent 30%),
-    radial-gradient(circle at 82% 74%, rgba(200, 47, 47, 0.06), transparent 28%);
+    radial-gradient(circle at 20% 24%, rgba(244, 197, 66, 0.12), transparent 30%),
+    radial-gradient(circle at 82% 74%, rgba(107, 34, 20, 0.08), transparent 28%);
 }
 
 .home-page [data-carousel].section::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0%, transparent 30%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.05), transparent);
-  opacity: 0.78;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.016) 0%, transparent 30%),
+    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.06), transparent);
+  opacity: 0.8;
 }
 
 /* Ajustes mobile de fondos */

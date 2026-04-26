@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupLandingScrollAnimations();
   updateGlobalCartBadge(cart.load());
   subscribeToCartUpdates(updateGlobalCartBadge);
+
+  // Re-run scroll animations after hydration for dynamic content
+  setTimeout(setupLandingScrollAnimations, 500);
 });
 
 /* =========================
@@ -159,8 +162,11 @@ function updateGlobalCartBadge(items = []) {
    Scroll reveal (landing)
 ========================= */
 function setupLandingScrollAnimations() {
-  const homePage = document.body.classList.contains('home-page');
-  if (!homePage) return;
+  const homePage = document.querySelector('.home-page');
+  if (!homePage) {
+    console.log('No .home-page found');
+    return;
+  }
 
   const elements = document.querySelectorAll(`
     .hero-copy,
@@ -174,9 +180,16 @@ function setupLandingScrollAnimations() {
     .footer-grid
   `);
 
+  console.log('Found elements:', elements.length);
+
   if (!elements.length) return;
 
-  elements.forEach((el, index) => {
+  // Filter elements that don't already have scroll-reveal
+  const newElements = Array.from(elements).filter(el => !el.classList.contains('scroll-reveal'));
+
+  console.log('New elements to animate:', newElements.length);
+
+  newElements.forEach((el, index) => {
     el.classList.add('scroll-reveal');
     el.style.setProperty('--reveal-delay', `${Math.min(index * 40, 240)}ms`);
   });
@@ -184,6 +197,7 @@ function setupLandingScrollAnimations() {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        console.log('Intersection:', entry.target, entry.isIntersecting);
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
@@ -195,5 +209,14 @@ function setupLandingScrollAnimations() {
     }
   );
 
-  elements.forEach((el) => observer.observe(el));
+  newElements.forEach((el) => {
+    observer.observe(el);
+    // Check if already visible
+    const rect = el.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight - 60 && rect.bottom > 0;
+    if (isVisible) {
+      el.classList.add('is-visible');
+      observer.unobserve(el);
+    }
+  });
 }
