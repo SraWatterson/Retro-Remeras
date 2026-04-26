@@ -1,26 +1,75 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
+const steps = [
+  {
+    number: '1',
+    title: 'Elegí un diseño',
+  },
+  {
+    number: '2',
+    title: 'Seleccioná color, tipo y talle',
+  },
+  {
+    number: '3',
+    title: 'Confirmá por WhatsApp',
+  },
+];
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 32,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export function StepsSection() {
   return (
     <section id="como-funciona" className="section">
       <div className="container">
-        <div className="section-header">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="section-kicker">Cómo funciona</span>
           <h2 className="section-title">Pedí tu remera en 3 pasos simples</h2>
           <p className="section-subtitle">Del catálogo a tu pedido por WhatsApp, sin vueltas.</p>
-        </div>
-        <div className="grid-3">
-          <article className="info-card">
-            <div className="step-number">1</div>
-            <h3>Elegí un diseño</h3>
-          </article>
-          <article className="info-card">
-            <div className="step-number">2</div>
-            <h3>Seleccioná color, tipo y talle</h3>
-          </article>
-          <article className="info-card">
-            <div className="step-number">3</div>
-            <h3>Confirmá por WhatsApp</h3>
-          </article>
-        </div>
+        </motion.div>
+
+        <motion.div
+          className="grid-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-80px' }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+        >
+          {steps.map((step) => (
+            <motion.article
+              key={step.number}
+              className="info-card"
+              variants={itemVariants}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="step-number">{step.number}</div>
+              <h3>{step.title}</h3>
+            </motion.article>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

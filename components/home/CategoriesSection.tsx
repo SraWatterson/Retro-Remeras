@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
+import { motion } from 'framer-motion';
 
 const CATEGORIES = [
   {
@@ -34,34 +37,70 @@ const CATEGORIES = [
   },
 ];
 
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 36,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export function CategoriesSection() {
   return (
     <section className="section section--categories">
       <div className="container">
-        <div className="section-header">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="section-kicker">Categorías destacadas</span>
           <h2 className="section-title">Diseños que representan lo que te gusta</h2>
-          <p className="section-subtitle">Explorá nuestras colecciones y encontrá el diseño que más te representa.</p>
-        </div>
+          <p className="section-subtitle">
+            Explorá nuestras colecciones y encontrá el diseño que más te representa.
+          </p>
+        </motion.div>
 
-        <div className="grid-3">
+        <motion.div
+          className="grid-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-80px' }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+        >
           {CATEGORIES.map((category) => (
-            <article
+            <motion.article
               key={category.title}
               className="category-card"
               style={{ '--category-image': `url('${category.image}')` } as CSSProperties}
+              variants={itemVariants}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <img src={category.image} alt={category.title} loading="lazy" decoding="async" />
+
               <div className="category-card-content">
                 <h3>{category.title}</h3>
                 <p>{category.description}</p>
               </div>
+
               <Link className="btn btn-explore" href="/catalogo">
                 Explorar
               </Link>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

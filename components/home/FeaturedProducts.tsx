@@ -1,14 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Product, createWhatsAppLink, formatPrice, normalizeImageUrl } from '@/lib/shop';
 
 const WHATSAPP_MESSAGE = 'Hola! Me interesa la remera. ¿Está disponible?';
+const AUTOPLAY_DELAY = 6000;
+const SWIPE_THRESHOLD = 60;
 
 export function FeaturedProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -16,6 +21,7 @@ export function FeaturedProducts() {
     async function loadProducts() {
       const response = await fetch('/api/products', { cache: 'no-store' });
       const data = await response.json();
+
       if (!ignore && Array.isArray(data)) {
         setProducts(data);
       }
@@ -33,112 +39,213 @@ export function FeaturedProducts() {
     [products]
   );
 
+  const goToPrevious = useCallback(() => {
+    if (featured.length <= 1) return;
+
+    setDirection(-1);
+    setActiveIndex((current) =>
+      current === 0 ? featured.length - 1 : current - 1
+    );
+  }, [featured.length]);
+
+  const goToNext = useCallback(() => {
+    if (featured.length <= 1) return;
+
+    setDirection(1);
+    setActiveIndex((current) =>
+      current === featured.length - 1 ? 0 : current + 1
+    );
+  }, [featured.length]);
+
+  const goToIndex = (index: number) => {
+    if (index === activeIndex) return;
+
+    setDirection(index > activeIndex ? 1 : -1);
+    setActiveIndex(index);
+  };
+
   useEffect(() => {
     if (activeIndex >= featured.length) {
       setActiveIndex(0);
     }
   }, [featured.length, activeIndex]);
 
+  useEffect(() => {
+    if (isPaused || featured.length <= 1) return;
+
+    const interval = window.setInterval(() => {
+      goToNext();
+    }, AUTOPLAY_DELAY);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [featured.length, goToNext, isPaused]);
+
+  const activeProduct = featured[activeIndex];
+
   return (
     <section className="section" data-carousel>
       <div className="container">
-        <div className="section-header">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
           <span className="section-kicker">Catálogo destacado</span>
           <h2 className="section-title">Algunos de nuestros diseños más pedidos</h2>
-          <p className="section-subtitle">Explorá el catálogo completo y entrá al detalle de cada producto.</p>
-        </div>
+          <p className="section-subtitle">
+            Explorá el catálogo completo y entrá al detalle de cada producto.
+          </p>
+        </motion.div>
 
-        <div className="carousel-outer">
+        <motion.div
+          className="carousel-outer"
+          initial={{ opacity: 0, y: 36 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onFocus={() => setIsPaused(true)}
+          onBlur={() => setIsPaused(false)}
+        >
           <div className="carousel-track-wrap">
             <div className="carousel-track" data-carousel-track>
-              {featured.map((product, index) => (
-                <article
-                  className="carousel-item"
-                  key={product.id}
-                  hidden={activeIndex !== index}
-                  aria-hidden={activeIndex !== index}
-                  style={{ display: activeIndex === index ? 'flex' : 'none' }}
-                >
-                  <div className="product-card product-card--linked">
-                    <Link
-                      className="product-card-link"
-                      href={`/producto?id=${product.id}`}
-                      aria-label={`Ver ${product.nombre}`}
-                    >
-                      <div className="product-media">
-                        <img
-                          src={normalizeImageUrl(product.imagen)}
-                          alt={product.nombre}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        {product.destacado ? (
-                          <span className="cat-visual__badge">Destacado</span>
-                        ) : null}
-                      </div>
-                    </Link>
+              <AnimatePresence mode="wait" custom={direction}>
+                {activeProduct ? (
+                  <motion.article
+                    key={activeProduct.id}
+                    className="carousel-item"
+                    custom={direction}
+                    initial={{ opacity: 0, x: direction > 0 ? 80 : -80, scale: 0.985 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: direction > 0 ? -80 : 80, scale: 0.985 }}
+                    transition={{
+                      duration: 0.48,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.16}
+                    onDragEnd={(_, info) => {
+                      if (info.offset.x < -SWIPE_THRESHOLD) {
+                        goToNext();
+                      }
 
-                    <div className="product-content">
-                      <div className="product-category">{product.categoria}</div>
-                      <h3 className="product-title">
-                        <Link className="product-title-link" href={`/producto?id=${product.id}`}>
-                          {product.nombre}
-                        </Link>
-                      </h3>
-                      <p className="product-description">{product.descripcion}</p>
-                      <div className="price-row">
-                        <span className="product-price">{formatPrice(product.precio)}</span>
-                        <span className="tag">{product.disponible ? 'Disponible' : 'Consultar'}</span>
-                      </div>
-                      <div className="product-actions">
-                        <Link className="btn btn-secondary" href={`/producto?id=${product.id}`}>
-                          Ver producto
-                        </Link>
-                        <a
-                          className="btn btn-primary"
-                          href={createWhatsAppLink(WHATSAPP_MESSAGE)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          WhatsApp
-                        </a>
+                      if (info.offset.x > SWIPE_THRESHOLD) {
+                        goToPrevious();
+                      }
+                    }}
+                  >
+                    <div className="product-card product-card--linked">
+                      <Link
+                        className="product-card-link"
+                        href={`/producto?id=${activeProduct.id}`}
+                        aria-label={`Ver ${activeProduct.nombre}`}
+                      >
+                        <div className="product-media">
+                          <img
+                            src={normalizeImageUrl(activeProduct.imagen)}
+                            alt={activeProduct.nombre}
+                            loading="lazy"
+                            decoding="async"
+                          />
+
+                          {activeProduct.destacado ? (
+                            <span className="cat-visual__badge">Destacado</span>
+                          ) : null}
+                        </div>
+                      </Link>
+
+                      <div className="product-content">
+                        <div className="product-category">{activeProduct.categoria}</div>
+
+                        <h3 className="product-title">
+                          <Link
+                            className="product-title-link"
+                            href={`/producto?id=${activeProduct.id}`}
+                          >
+                            {activeProduct.nombre}
+                          </Link>
+                        </h3>
+
+                        <p className="product-description">{activeProduct.descripcion}</p>
+
+                        <div className="price-row">
+                          <span className="product-price">
+                            {formatPrice(activeProduct.precio)}
+                          </span>
+                          <span className="tag">
+                            {activeProduct.disponible ? 'Disponible' : 'Consultar'}
+                          </span>
+                        </div>
+
+                        <div className="product-actions">
+                          <Link
+                            className="btn btn-secondary"
+                            href={`/producto?id=${activeProduct.id}`}
+                          >
+                            Ver producto
+                          </Link>
+
+                          <a
+                            className="btn btn-primary"
+                            href={createWhatsAppLink(WHATSAPP_MESSAGE)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            WhatsApp
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </motion.article>
+                ) : null}
+              </AnimatePresence>
             </div>
           </div>
 
           <button
             type="button"
             className="carousel-arrow carousel-arrow--prev"
-            onClick={() => setActiveIndex((current) => Math.max(current - 1, 0))}
-            disabled={activeIndex === 0}
+            onClick={goToPrevious}
+            disabled={featured.length <= 1}
             aria-label="Anterior"
           />
 
           <button
             type="button"
             className="carousel-arrow carousel-arrow--next"
-            onClick={() => setActiveIndex((current) => Math.min(current + 1, featured.length - 1))}
-            disabled={activeIndex >= featured.length - 1}
+            onClick={goToNext}
+            disabled={featured.length <= 1}
             aria-label="Siguiente"
           />
-        </div>
+        </motion.div>
 
-        <div className="carousel-dots" data-carousel-dots>
-          {featured.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`carousel-dot${activeIndex === index ? ' is-active' : ''}`}
-              onClick={() => setActiveIndex(index)}
-              aria-label={`Ir al producto ${index + 1}`}
-              aria-current={activeIndex === index ? 'true' : 'false'}
-            />
-          ))}
-        </div>
+        {featured.length > 1 ? (
+          <motion.div
+            className="carousel-dots"
+            data-carousel-dots
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+          >
+            {featured.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`carousel-dot${activeIndex === index ? ' is-active' : ''}`}
+                onClick={() => goToIndex(index)}
+                aria-label={`Ir al producto ${index + 1}`}
+                aria-current={activeIndex === index ? 'true' : 'false'}
+              />
+            ))}
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );
