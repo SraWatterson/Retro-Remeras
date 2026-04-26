@@ -1,0 +1,31 @@
+export function SiteFooter() {
+  return (
+    <footer className="footer">
+      <div className="container footer-grid">
+        <div>
+          <a className="brand" href="/" aria-label="Retro Remeras">
+            <img src="/assets/logo/icono-banner.png" alt="Retro Remeras" loading="lazy" decoding="async" />
+          </a>
+          <p>
+            Remeras con estilo, nostalgia y personalidad. Diseños temáticos, atención cercana y pedidos simples por WhatsApp.
+          </p>
+          <small>© {new Date().getFullYear()} Retro Remeras. Todos los derechos reservados.</small>
+        </div>
+
+        <div>
+          <div className="footer-social">
+            <a href="https://www.instagram.com/retro.remeras/" target="_blank" className="social-link instagram" rel="noreferrer">
+              Instagram
+            </a>
+            <a href="https://wa.me/5491156592963" target="_blank" className="social-link whatsapp" rel="noreferrer">
+              WhatsApp
+            </a>
+          </div>
+          <address className="footer-address" style={{ fontStyle: 'normal', marginTop: '.75rem', fontSize: '.85rem', opacity: '.65' }}>
+            Buenos Aires, Argentina · Envíos a todo el país
+          </address>
+        </div>
+      </div>
+    </footer>
+  );
+}

@@ -1,0 +1,166 @@
+[
+  {
+    "id": 1,
+    "nombre": "Remera Atari",
+    "categoria": "Videojuegos",
+    "precio": 21000,
+    "imagen": "assets/catalogo/diseno-atari/atari-negra.png",
+    "imagenesPorColor": {
+      "Negro": "assets/catalogo/diseno-atari/atari-negra.png",
+      "Blanco": "assets/catalogo/diseno-atari/atari-blanca.jpg"
+    },  
+    "descripcion": "Diseño atari vintage",
+    "disponible": true,
+    "destacado": true
+  },
+  {
+    "id": 2,
+    "nombre": "Remera Espíritu de Carretera",
+    "categoria": "Vintage",
+    "precio": 21000,
+    "imagen": "assets/catalogo/ejemplo-vintage.jpg",
+    "descripcion": "Una remera vintage",
+    "disponible": true,
+    "destacado": true
+  },
+  {
+    "id": 3,
+    "nombre": "Remera goku",
+    "categoria": "Anime",
+    "precio": 21000,
+    "imagen": "assets/catalogo/remera-goku.jpg",
+    "descripcion": "Una remera de Goku",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 4,
+    "nombre": "Remera Bon Jovi",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/bon-jovi.jpeg",
+    "descripcion": "Remera Bon Jovi",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 5,
+    "nombre": "Remera Parasyte",
+    "categoria": "Anime",
+    "precio": 21000,
+    "imagen": "assets/catalogo/parasyte.png",
+    "descripcion": "Remera anime parasyte",
+    "disponible": true,
+    "destacado": true
+  },
+  {
+    "id": 6,
+    "nombre": "Remera Picapiedras",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/retro-picapiedra.jpeg",
+    "descripcion": "Remera Picapiedras",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 7,
+    "nombre": "Remera Stranger Things",
+    "categoria": "Cine / Peliculas",
+    "precio": 21000,
+    "imagen": "assets/catalogo/stranger-things.png",
+    "descripcion": "Remera Stranger Things",
+    "disponible": true,
+    "destacado": true
+  },
+  {
+    "id": 8,
+    "nombre": "Remera Artesano del miedo",
+    "categoria": "Cine / Peliculas",
+    "precio": 21000,
+    "imagen": "assets/catalogo/artesano.jpeg",
+    "descripcion": "Remera Artesano del miedo",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 9,
+    "nombre": "Remera Beatles",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/beatles.jpeg",
+    "descripcion": "Remera Beatles",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 10,
+    "nombre": "Remera Charly García",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/charlygarcia.jpeg",
+    "descripcion": "Remera Charly García",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 11,
+    "nombre": "Remera Les Paul",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/guitar.jpeg",
+    "descripcion": "Remera Les Paul",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 12,
+    "nombre": "Remera Kiss",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/kiss.jpeg",
+    "descripcion": "Remera Kiss",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 13,
+    "nombre": "Remera Rolling Stones",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/rollingstones.jpeg",
+    "descripcion": "Remera Rolling Stones",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 14,
+    "nombre": "Remera Sandro",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/sandro.jpeg",
+    "descripcion": "Remera Sandro",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 15,
+    "nombre": "Remera Soda Stereo",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/sodastereo.jpeg",
+    "descripcion": "Remera Soda Stereo",
+    "disponible": true,
+    "destacado": false
+  },
+  {
+    "id": 16,
+    "nombre": "Remera Patricio Rey",
+    "categoria": "Variados",
+    "precio": 21000,
+    "imagen": "assets/catalogo/patricio-rey-blanca.jpg",
+    "descripcion": "Remera Patricio Rey",
+    "disponible": true,
+    "destacado": false
+  }
+]

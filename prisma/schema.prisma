@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         Role     @default(VIEWER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdProducts Product[] @relation("CreatedProducts")
+  updatedProducts Product[] @relation("UpdatedProducts")
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  legacyId        Int?     @unique
+  slug            String   @unique
+  nombre          String
+  categoria       String
+  precio          Int
+  imagen          String?
+  imagenesPorColor Json?
+  descripcion     String
+  disponible      Boolean  @default(true)
+  destacado       Boolean  @default(false)
+  activo          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdById String?
+  updatedById String?
+  createdBy   User? @relation("CreatedProducts", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy   User? @relation("UpdatedProducts", fields: [updatedById], references: [id], onDelete: SetNull)
+}

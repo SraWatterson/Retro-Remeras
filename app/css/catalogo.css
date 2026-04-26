@@ -1,0 +1,314 @@
+.catalog-main {
+  padding: 2rem 0 4rem;
+}
+
+.catalog-hero {
+  padding: 2.5rem 0 1.25rem;
+}
+
+.catalog-shell {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.filters {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.filter-row {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.filter-pill:hover,
+.filter-pill.is-active {
+  transform: translateY(-1px);
+  background: var(--yellow-fill);
+  border-color: var(--border-active);
+  color: var(--yellow);
+}
+
+.catalog-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.catalog-grid > * {
+  min-width: 0;
+}
+
+.catalog-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.catalog-shell .filters > .section-header {
+  margin-bottom: 1rem;
+}
+
+.catalog-shell .filters h2 {
+  font-size: 2rem;
+}
+
+.catalog-meta {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+}
+
+[data-catalog-grid] {
+  margin-top: 1rem;
+}
+
+.size-showcase {
+  display: grid;
+  gap: 1rem;
+}
+
+.size-showcase-group {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.size-showcase-label {
+  color: var(--yellow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.85rem;
+}
+
+.size-mini-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.size-mini-chip {
+  min-width: 46px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0.55rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+@media (min-width: 720px) {
+  .filter-row {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: end;
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .size-showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .catalog-shell {
+    grid-template-columns: 300px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .filters {
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .catalog-main {
+    padding: 1.4rem 0 3rem;
+  }
+
+  .catalog-hero {
+    padding: 1.6rem 0 1rem;
+  }
+
+  .catalog-shell {
+    gap: 1rem;
+  }
+
+  .filters {
+    position: static;
+  }
+
+  .catalog-stats {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .catalog-main {
+    padding: 1.1rem 0 2.5rem;
+  }
+
+  .catalog-hero {
+    padding: 1.2rem 0 0.85rem;
+  }
+
+  .catalog-shell .filters > .section-header {
+    margin-bottom: 0.8rem;
+  }
+
+  .catalog-shell .filters h2 {
+    font-size: 1.5rem;
+  }
+
+  .filter-row {
+    gap: 0.75rem;
+  }
+
+  .filter-pills {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .filter-pill {
+    width: 100%;
+    padding: 0.78rem 0.9rem;
+  }
+
+  .catalog-stats {
+    gap: 0.55rem;
+    font-size: 0.94rem;
+  }
+
+  .catalog-grid,
+  .size-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .size-mini-row {
+    gap: 0.45rem;
+  }
+
+  .size-mini-chip {
+    min-width: 42px;
+    padding: 0.5rem 0.65rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .catalog-main {
+    padding: 0.9rem 0 2.2rem;
+  }
+
+  .catalog-shell {
+    gap: 0.85rem;
+  }
+
+  .filters,
+  .catalog-results,
+  .catalog-stats > * {
+    min-width: 0;
+  }
+
+  .catalog-meta,
+  .catalog-stats {
+    font-size: 0.9rem;
+  }
+
+  .filter-pill {
+    font-size: 0.92rem;
+    padding: 0.75rem 0.8rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .catalog-shell {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 1.35rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .catalog-shell {
+    grid-template-columns: 340px minmax(0, 1fr);
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+
+
+/* ── Correcciones post-auditoría ── */
+
+/* Filters usa surface. Sin backdrop-filter sobre bg sólido. */
+.filters {
+  background: var(--surface);
+  padding: 1.25rem;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* Filter pill activa: fondo amarillo sólido es correcto para este caso.
+   Ajustar el text-shadow para legibilidad. */
+.filter-pill.is-active {
+  background: var(--yellow);
+  color: var(--text-inverse);
+  border-color: var(--yellow);
+  box-shadow: 0 6px 18px rgba(244, 197, 66, 0.22);
+  font-weight: 700;
+}
+
+/* Gap de grid reducido: 2rem era excesivo para cards de catálogo. */
+.catalog-grid {
+  gap: 1.25rem;
+}
+
+/* CHANGELOG · catalogo.css
+
+✔ Reemplazo de fondos blancos translúcidos por var(--surface) en filtros y chips.
+✔ Normalización de bordes amarillos al sistema var(--border) y var(--border-active).
+✔ Reemplazo del bloque de Refinamientos Manus por Correcciones post-auditoría.
+✔ .filters usa superficie sólida, sin backdrop-filter, con radio y borde del sistema.
+✔ .filter-pill.is-active mantiene amarillo sólido con texto var(--text-inverse).
+✔ Gap de .catalog-grid reducido a 1.25rem.
+✔ Eliminados los bloques @media (min-width: 2200px) y @media (min-width: 3200px).
+✔ Variante aplicada: Warmth & Depth.
+*/
