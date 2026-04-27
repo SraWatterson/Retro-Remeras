@@ -35,7 +35,7 @@ export function SiteFooter() {
               <FaWhatsapp size={20} aria-hidden="true" />
             </a>
           </div>
-          <address className="footer-address" style={{ fontStyle: 'normal', marginTop: '.75rem', fontSize: '.85rem', opacity: '.65' }}>
+          <address className="footer-address">
             Buenos Aires, Argentina · Envíos a todo el país
           </address>
         </div>

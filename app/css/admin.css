@@ -180,3 +180,8 @@
     align-items: flex-start;
   }
 }
+
+.admin-main .filters {
+  display: grid;
+  gap: 1rem;
+}

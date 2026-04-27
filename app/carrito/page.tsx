@@ -1,3 +1,4 @@
+import '../css/carrito.css';
 import { CartView } from '@/components/cart/CartView';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';

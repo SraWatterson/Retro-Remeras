@@ -1,46 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { CATEGORY_LIST, Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
 
 type Props = {
   initialCategory?: string;
   initialSearch?: string;
+  initialProducts: Product[];
 };
 
-export function CatalogView({ initialCategory, initialSearch }: Props) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+export function CatalogView({ initialCategory, initialSearch, initialProducts }: Props) {
+  const products = useMemo(() => initialProducts, [initialProducts]);
+  const loading = false;
   const [search, setSearch] = useState(initialSearch || '');
   const [activeCategory, setActiveCategory] = useState(
     initialCategory && CATEGORY_LIST.includes(initialCategory) ? initialCategory : 'Todos'
   );
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function loadProducts() {
-      try {
-        const response = await fetch('/api/products', { cache: 'no-store' });
-        const data = await response.json();
-
-        if (!ignore && Array.isArray(data)) {
-          setProducts(data);
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadProducts();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   const filtered = useMemo(() => {
     const searchText = normalizeText(search);
@@ -71,7 +48,7 @@ export function CatalogView({ initialCategory, initialSearch }: Props) {
               <p className="section-subtitle">Filtrá por categoría o escribí una palabra clave.</p>
             </div>
 
-            <div className="filters">
+            <div className="filters-fields">
               <div className="form-group">
                 <label className="form-label" htmlFor="catalog-search">Buscar producto</label>
                 <input
@@ -124,7 +101,7 @@ export function CatalogView({ initialCategory, initialSearch }: Props) {
                     <article className="product-card product-card--linked" key={product.id}>
                       <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
                         <div className="product-media">
-                          <img src={normalizeImageUrl(product.imagen)} alt={product.nombre} loading="lazy" decoding="async" />
+                          <img src={normalizeImageUrl(product.imagen)} alt={product.nombre} loading="lazy" decoding="async" width={900} height={900} />
                           {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
                         </div>
                       </Link>

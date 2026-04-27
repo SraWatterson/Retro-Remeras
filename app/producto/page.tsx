@@ -1,9 +1,10 @@
+import '../css/producto.css';
 import { notFound } from 'next/navigation';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { ProductView } from '@/components/product/ProductView';
-import { prisma } from '@/lib/prisma';
+import { getPublicProductById } from '@/lib/product-queries';
 
 type PageProps = {
   searchParams: Promise<{ id?: string }>;
@@ -17,9 +18,9 @@ export default async function Page({ searchParams }: PageProps) {
     notFound();
   }
 
-  const product = await prisma.product.findUnique({ where: { id: productId } });
+  const product = await getPublicProductById(productId);
 
-  if (!product || !product.activo) {
+  if (!product) {
     notFound();
   }
 
@@ -27,7 +28,7 @@ export default async function Page({ searchParams }: PageProps) {
     <>
       <PromoBar />
       <SiteHeader active="catalogo" />
-      <ProductView productId={productId} />
+      <ProductView product={product} />
       <SiteFooter />
     </>
   );

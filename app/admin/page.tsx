@@ -1,3 +1,4 @@
+import '../css/admin.css';
 import { AdminPanel } from '@/components/admin/AdminPanel';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';

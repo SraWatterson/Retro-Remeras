@@ -17,6 +17,11 @@
   min-width: 0;
 }
 
+.filters-fields {
+  display: grid;
+  gap: 1rem;
+}
+
 .filter-row {
   display: grid;
   gap: 0.9rem;
@@ -122,7 +127,7 @@
   font-weight: 700;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 768px) {
   .filter-row {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     align-items: end;
@@ -154,7 +159,7 @@
   }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023.98px) {
   .catalog-main {
     padding: 1.4rem 0 3rem;
   }
@@ -177,7 +182,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .catalog-main {
     padding: 1.1rem 0 2.5rem;
   }
@@ -229,7 +234,7 @@
   }
 }
 
-@media (max-width: 479px) {
+@media (max-width: 479.98px) {
   .catalog-main {
     padding: 0.9rem 0 2.2rem;
   }
@@ -301,14 +306,4 @@
   gap: 1.25rem;
 }
 
-/* CHANGELOG · catalogo.css
 
-✔ Reemplazo de fondos blancos translúcidos por var(--surface) en filtros y chips.
-✔ Normalización de bordes amarillos al sistema var(--border) y var(--border-active).
-✔ Reemplazo del bloque de Refinamientos Manus por Correcciones post-auditoría.
-✔ .filters usa superficie sólida, sin backdrop-filter, con radio y borde del sistema.
-✔ .filter-pill.is-active mantiene amarillo sólido con texto var(--text-inverse).
-✔ Gap de .catalog-grid reducido a 1.25rem.
-✔ Eliminados los bloques @media (min-width: 2200px) y @media (min-width: 3200px).
-✔ Variante aplicada: Warmth & Depth.
-*/

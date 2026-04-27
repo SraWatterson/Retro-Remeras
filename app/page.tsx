@@ -5,8 +5,11 @@ import { StepsSection } from '@/components/home/StepsSection';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { getFeaturedProducts } from '@/lib/product-queries';
 
-export default function Page() {
+export default async function Page() {
+  const featuredProducts = await getFeaturedProducts();
+
   return (
     <>
       <PromoBar />
@@ -16,7 +19,7 @@ export default function Page() {
         <HeroSection />
         <CategoriesSection />
         <StepsSection />
-        <FeaturedProducts />
+        <FeaturedProducts initialProducts={featuredProducts} />
       </main>
 
       <SiteFooter />

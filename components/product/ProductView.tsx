@@ -49,13 +49,10 @@ function cartItemMarkup(item: CartItem) {
 }
 
 type Props = {
-  productId?: string;
+  product: Product;
 };
 
-export function ProductView({ productId }: Props) {
-
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+export function ProductView({ product }: Props) {
   const [selectedColor, setSelectedColor] = useState(COLORS[0].name);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedFit, setSelectedFit] = useState('regular');
@@ -65,32 +62,6 @@ export function ProductView({ productId }: Props) {
     setItems(cartLoad());
   }, []);
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function loadProducts() {
-      try {
-        const response = await fetch('/api/products', { cache: 'no-store' });
-        const data = await response.json();
-
-        if (!ignore && Array.isArray(data)) {
-          setProducts(data);
-        }
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    }
-
-    loadProducts();
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  const product = useMemo(() => {
-    if (!products.length) return null;
-    return products.find((entry) => entry.id === productId) || null;
-  }, [productId, products]);
 
   const selectedImage = useMemo(() => {
     const byColor = product?.imagenesPorColor?.[selectedColor];
@@ -98,27 +69,6 @@ export function ProductView({ productId }: Props) {
   }, [product, selectedColor]);
 
   const orderLink = createWhatsAppLink(createCartMessage(items));
-
-  if (loading) {
-    return (
-      <main className="product-page">
-        <section className="container product-shell">Cargando producto...</section>
-      </main>
-    );
-  }
-
-  if (!product) {
-    return (
-      <main className="product-page">
-        <section className="container product-shell">
-          <div className="empty-state">
-            <h2>No encontramos este producto</h2>
-            <Link className="btn btn-primary" href="/catalogo">Volver al catálogo</Link>
-          </div>
-        </section>
-      </main>
-    );
-  }
 
   function addToCart() {
     const nextItem: CartItem = {
@@ -157,7 +107,7 @@ export function ProductView({ productId }: Props) {
         <div className="product-layout">
           <section className="product-gallery">
             <div className="product-gallery-main">
-              <img src={selectedImage} alt={product.nombre} />
+              <img src={selectedImage} alt={product.nombre} width={1200} height={1200} />
             </div>
           </section>
 
@@ -252,6 +202,8 @@ export function ProductView({ productId }: Props) {
                     <img
                       src={SIZE_GUIDES[selectedFit]?.src ?? SIZE_GUIDES.regular.src}
                       alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
+                      width={900}
+                      height={560}
                     />
                   </div>
                 </div>

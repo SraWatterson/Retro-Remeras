@@ -9,30 +9,16 @@ const WHATSAPP_MESSAGE = 'Hola! Me interesa la remera. ¿Está disponible?';
 const AUTOPLAY_DELAY = 6000;
 const SWIPE_THRESHOLD = 60;
 
-export function FeaturedProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+type Props = {
+  initialProducts: Product[];
+};
+
+export function FeaturedProducts({ initialProducts }: Props) {
+  const products = useMemo(() => initialProducts, [initialProducts]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
-  useEffect(() => {
-    let ignore = false;
-
-    async function loadProducts() {
-      const response = await fetch('/api/products', { cache: 'no-store' });
-      const data = await response.json();
-
-      if (!ignore && Array.isArray(data)) {
-        setProducts(data);
-      }
-    }
-
-    loadProducts();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   const featured = useMemo(
     () => products.filter((product) => product.destacado).slice(0, 12),
@@ -152,6 +138,8 @@ export function FeaturedProducts() {
                             alt={activeProduct.nombre}
                             loading="lazy"
                             decoding="async"
+                            width={900}
+                            height={900}
                           />
 
                           {activeProduct.destacado ? (

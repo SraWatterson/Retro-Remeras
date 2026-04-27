@@ -29,6 +29,7 @@
   --yellow-light: #f7d060;
   --yellow-fill: rgba(244, 197, 66, 0.10);
   --red: #b82828;
+  --red-soft: #e24b45;
   --red-fill: rgba(184, 40, 40, 0.12);
 
   /* ── Bordes (sistema unificado de 4 niveles) ── */
@@ -37,44 +38,50 @@
   --border-active: rgba(244, 197, 66, 0.36);
   --border-strong: rgba(244, 197, 66, 0.58);
 
-  /* ── Sombras ── */
+  /* ── Sombras: sistema compacto + aliases de compatibilidad ── */
   --shadow-sm: 0 4px 12px rgba(4, 3, 2, 0.45);
-  --shadow: 0 12px 32px rgba(4, 3, 2, 0.55), 0 4px 10px rgba(4, 3, 2, 0.35);
+  --shadow-md: 0 12px 32px rgba(4, 3, 2, 0.55), 0 4px 10px rgba(4, 3, 2, 0.35);
   --shadow-lg: 0 24px 56px rgba(4, 3, 2, 0.65), 0 8px 20px rgba(4, 3, 2, 0.4);
-  --shadow-card: 0 4px 14px rgba(4, 3, 2, 0.42), 0 1px 4px rgba(4, 3, 2, 0.28);
-  --shadow-card-hover: 0 20px 48px rgba(4, 3, 2, 0.58), 0 6px 16px rgba(4, 3, 2, 0.35);
-  --shadow-btn-primary: 0 8px 24px rgba(244, 197, 66, 0.28), 0 2px 8px rgba(4, 3, 2, 0.3);
-  --glow-yellow: 0 0 28px rgba(244, 197, 66, 0.18);
-  --glow-red: 0 0 24px rgba(184, 40, 40, 0.2);
+  --shadow-xl: 0 32px 80px rgba(4, 3, 2, 0.72), 0 10px 28px rgba(4, 3, 2, 0.42);
+  --shadow-glow-yellow: 0 0 28px rgba(244, 197, 66, 0.18);
+  --shadow-glow-red: 0 0 24px rgba(184, 40, 40, 0.2);
 
-  /* Sombras específicas existentes */
-  --shadow-header: 0 1px 0 rgba(244, 197, 66, 0.04), 0 4px 24px rgba(4, 3, 2, 0.38);
-  --shadow-mobile-menu: 0 16px 48px rgba(4, 3, 2, 0.56), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  --shadow-btn-soft: 0 8px 28px rgba(4, 3, 2, 0.36), 0 0 0 1px rgba(244, 197, 66, 0.08);
-  --shadow-btn-ghost: 0 6px 20px rgba(4, 3, 2, 0.28);
-  --shadow-cart: 0 8px 24px rgba(4, 3, 2, 0.26), 0 0 0 0 rgba(244, 197, 66, 0);
-  --shadow-cart-hover: 0 14px 32px rgba(4, 3, 2, 0.34), 0 0 0 3px rgba(244, 197, 66, 0.1);
-  --shadow-badge: 0 6px 16px rgba(4, 3, 2, 0.34);
-  --shadow-poster-badge: 0 8px 22px rgba(4, 3, 2, 0.52);
-  --shadow-category-btn: 0 10px 26px rgba(4, 3, 2, 0.42);
-  --shadow-category-btn-hover: 0 14px 34px rgba(4, 3, 2, 0.48);
-  --shadow-poster-frame: 0 18px 46px rgba(4, 3, 2, 0.50);
+  --shadow: var(--shadow-md);
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-lg);
+  --shadow-btn-primary: 0 8px 24px rgba(244, 197, 66, 0.28), 0 2px 8px rgba(4, 3, 2, 0.3);
+  --glow-yellow: var(--shadow-glow-yellow);
+  --glow-red: var(--shadow-glow-red);
+
+  /* Aliases existentes: se mantienen para no romper selectores ya escritos. */
+  --shadow-header: var(--shadow-sm);
+  --shadow-mobile-menu: var(--shadow-lg);
+  --shadow-btn-soft: var(--shadow-md);
+  --shadow-btn-ghost: var(--shadow-sm);
+  --shadow-cart: var(--shadow-sm);
+  --shadow-cart-hover: var(--shadow-md);
+  --shadow-badge: var(--shadow-sm);
+  --shadow-poster-badge: var(--shadow-md);
+  --shadow-category-btn: var(--shadow-md);
+  --shadow-category-btn-hover: var(--shadow-lg);
+  --shadow-poster-frame: var(--shadow-lg);
   --shadow-focus-ring: 0 0 0 3px rgba(244, 197, 66, 0.14);
-  --shadow-benefit-hover: 0 18px 44px rgba(4, 3, 2, 0.46), 0 0 0 1px rgba(244, 197, 66, 0.06), var(--glow-yellow);
+  --shadow-benefit-hover: var(--shadow-lg), var(--shadow-glow-yellow);
   --shadow-step-number: 0 6px 16px rgba(184, 40, 40, 0.25), 0 2px 6px rgba(244, 197, 66, 0.15);
   --shadow-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -2px 0 var(--category-accent);
   --shadow-glass-inset-hover: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -2px 0 var(--category-accent), inset 0 0 28px rgba(255, 255, 255, 0.025);
   --shadow-footer-inset: inset 0 1px 0 rgba(255, 255, 255, 0.02);
-  --shadow-product-hover: 0 20px 48px rgba(4, 3, 2, 0.52), 0 4px 12px rgba(4, 3, 2, 0.30), 0 0 0 1px rgba(244, 197, 66, 0.06);
+  --shadow-product-hover: var(--shadow-lg);
   --shadow-shirt-inset: inset 0 -8px 24px rgba(4, 3, 2, 0.38);
-  --shadow-carousel-card: 0 10px 26px rgba(4, 3, 2, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.025);
-  --shadow-carousel-card-hover: 0 24px 52px rgba(4, 3, 2, 0.50), 0 4px 12px rgba(4, 3, 2, 0.30), 0 0 0 1px rgba(244, 197, 66, 0.07);
-  --shadow-modal: 0 32px 80px rgba(4, 3, 2, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.025) inset;
+  --shadow-carousel-card: var(--shadow-md);
+  --shadow-carousel-card-hover: var(--shadow-lg);
+  --shadow-modal: var(--shadow-xl);
   --shadow-notice-inset: inset 0 1px 0 rgba(244, 197, 66, 0.06);
   --shadow-section-inset: inset 0 1px 0 rgba(255, 255, 255, 0.035), inset 0 -1px 0 rgba(244, 197, 66, 0.045);
   --glow-yellow-sm: 0 0 16px rgba(244, 197, 66, 0.06);
   --glow-yellow-md: 0 0 18px rgba(244, 197, 66, 0.08);
   --glow-yellow-lg: 0 0 18px rgba(244, 197, 66, 0.16);
+
 
   /* Transiciones */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -85,8 +92,12 @@
   --radius: 18px;
   --radius-sm: 12px;
   --container-max: 1120px;
+  --container-md: 1120px;
+  --container-lg: 1280px;
+  --container-xl: 1360px;
   --container-pad: 16px;
   --container: min(var(--container-max), calc(100% - (var(--container-pad) * 2)));
+  --container-wide: min(var(--container-lg), calc(100% - (var(--container-pad) * 2)));
   --header-height: 68px;
 }
 
@@ -419,7 +430,7 @@ body.is-scrolled .brand img {
   color: var(--cream);
   opacity: 0.92;
   font-size: 1rem;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: 0.018em;
   transition:
     opacity 0.22s ease,
@@ -1003,9 +1014,10 @@ body.is-scrolled .brand img {
 .info-card:hover,
 .benefit-card:hover {
   transform: translateY(-4px);
-  border-color: var(--border);
+  border-color: var(--border-active);
   box-shadow: var(--shadow-benefit-hover);
 }
+
 
 .info-card h3,
 .benefit-card h3 {
@@ -1244,7 +1256,7 @@ body.is-scrolled .brand img {
   gap: 1.25rem;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   /* TODO HTML: agregar section--categories a la sección de Categorías destacadas. */
 .home-page .section--categories .grid-3,
 .home-page .section:nth-of-type(2) .grid-3 {
@@ -2247,7 +2259,7 @@ body.is-scrolled .brand img {
 }
 
 /* Desktop */
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   :root {
     --header-height: 84px;
   }
@@ -2696,7 +2708,10 @@ body.is-scrolled .brand img {
   will-change: transform;
 }
 
-.promo-bar__track span {
+.promo-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
   flex: 0 0 auto;
 }
 
@@ -2706,7 +2721,7 @@ body.is-scrolled .brand img {
   }
 
   to {
-    transform: translateX(-33.333%);
+    transform: translateX(-50%);
   }
 }
 
@@ -2714,7 +2729,7 @@ body.is-scrolled .brand img {
   animation-play-state: paused;
 }
 
-@media (max-width: 1099.98px) {
+@media (max-width: 1023.98px) {
   .home-page .topbar {
     overflow: visible;
   }
@@ -2786,7 +2801,7 @@ body.is-scrolled .brand img {
   }
 }
 
-@media (min-width: 768px) and (max-width: 1099.98px) {
+@media (min-width: 768px) and (max-width: 1023.98px) {
   .home-page .poster-stack {
     grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
     min-height: clamp(340px, 46vw, 460px);
@@ -2966,7 +2981,7 @@ body.is-scrolled .brand img {
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   .home-page .hero > .container {
     width: min(1320px, calc(100% - (var(--container-pad) * 2)));
   }
@@ -3287,7 +3302,7 @@ body.is-scrolled .brand img {
   box-shadow: var(--shadow-poster-frame);
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1024px) {
   .home-page .hero-grid {
     grid-template-columns: minmax(0, 0.92fr) minmax(560px, 1.08fr);
     gap: clamp(2.5rem, 4vw, 4rem);
@@ -3350,28 +3365,123 @@ body.is-scrolled .brand img {
   }
 }
 
-/* CHANGELOG
-   - Prioridad 3: btn-explore creado, selector section--categories agregado y fallback nth-of-type mantenido.
-   - Corrección: variables de texto reparadas y cards de categoría conectadas a --category-image desde el HTML.
-*/
 
-/* CHANGELOG PRIORIDAD 4
-   - Fix previo: las imágenes de categorías ahora también se renderizan con <img> real absoluto dentro de .category-card para evitar fallas de rutas en --category-image.
-   - Prioridad 4: blur inicial de scroll-reveal reducido de 6px a 3px.
-   - Prioridad 4: escala de .hero-title consolidada con progresión ascendente entre breakpoints.
-   - Prioridad 4: eliminados media queries 2200px y 3200px.
-*/
 
-/* CHANGELOG · style.css
-   - Reemplazado el sistema de tokens de color por la variante Warmth & Depth.
-   - Actualizadas sombras base y sombras de componentes para mantener profundidad cálida sin romper variables existentes.
-   - Corregido el fondo del body con rojo más sobrio y amarillo más sutil.
-   - Reemplazados colores de texto hardcodeados por tokens del sistema.
-   - Normalizados fondos principales de superficies translúcidas hacia var(--surface), respetando overlays y pseudo-elementos decorativos.
-   - Eliminados acentos azules/violetas fuera de paleta en fondos de secciones de la landing.
-   - Promo bar actualizada a var(--red), con borde inferior oscuro y texto en var(--text-primary).
-   - Footer simplificado a var(--footer-bg).
-   - Bordes amarillos irregulares unificados al sistema de cuatro niveles: subtle, default, active y strong.
-   - Reducido el blur inicial de scroll-reveal de 6px a 3px.
-   - Eliminadas media queries de ultra-resolución para 2200px y 3200px.
-*/
+
+
+
+
+/* =========================================================
+   Ajuste visual 2026-04-27 · Landing premium
+   Fondos con más profundidad + legibilidad puntual en categorías.
+   ========================================================= */
+
+.home-page {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(244, 197, 66, 0.075), transparent 28%),
+    radial-gradient(circle at 86% 8%, rgba(184, 40, 40, 0.075), transparent 30%),
+    linear-gradient(180deg, #080706 0%, #0b0907 48%, #070706 100%);
+}
+
+.home-page .section,
+.home-page .hero {
+  overflow: hidden;
+}
+
+.home-page .hero {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(244, 197, 66, 0.16), transparent 28%),
+    radial-gradient(circle at 82% 22%, rgba(184, 40, 40, 0.15), transparent 32%),
+    radial-gradient(circle at 50% 112%, rgba(244, 197, 66, 0.08), transparent 40%),
+    linear-gradient(180deg, #11100d 0%, #090806 100%);
+}
+
+.home-page .section--categories,
+.home-page .section:nth-of-type(2) {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(244, 197, 66, 0.105), transparent 30%),
+    radial-gradient(circle at 88% 72%, rgba(184, 40, 40, 0.10), transparent 32%),
+    linear-gradient(180deg, #090806 0%, #0d0b08 58%, #120c07 100%);
+}
+
+.home-page .section--categories::before,
+.home-page .section:nth-of-type(2)::before {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.024), transparent 32%),
+    radial-gradient(circle at 24% 78%, rgba(184, 40, 40, 0.075), transparent 34%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(244, 197, 66, 0.018) 0 1px,
+      transparent 1px 84px
+    );
+  opacity: 0.72;
+}
+
+.home-page #como-funciona.section {
+  background:
+    radial-gradient(circle at 84% 18%, rgba(244, 197, 66, 0.12), transparent 30%),
+    radial-gradient(circle at 12% 84%, rgba(184, 40, 40, 0.10), transparent 34%),
+    linear-gradient(180deg, #151008 0%, #0f0a07 54%, #090807 100%);
+}
+
+.home-page [data-carousel].section {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(244, 197, 66, 0.12), transparent 30%),
+    radial-gradient(circle at 84% 76%, rgba(184, 40, 40, 0.115), transparent 34%),
+    linear-gradient(180deg, #0a0807 0%, #120a07 54%, #080706 100%);
+}
+
+.home-page .section + .section {
+  border-top: 1px solid rgba(244, 197, 66, 0.075);
+}
+
+.category-card::after {
+  background:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.18), rgba(8, 7, 6, 0.46)),
+    radial-gradient(circle at 72% 18%, rgba(244, 197, 66, 0.10), transparent 46%),
+    radial-gradient(circle at 18% 88%, rgba(184, 40, 40, 0.09), transparent 52%);
+}
+
+.category-card-content {
+  width: min(100%, 92%);
+  height: auto;
+  padding: 0.78rem 0.9rem 4.05rem;
+  margin: -0.2rem 0 0 -0.15rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(90deg, rgba(4, 3, 2, 0.58), rgba(4, 3, 2, 0.30) 66%, transparent 100%);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(1.8px);
+  -webkit-backdrop-filter: blur(1.8px);
+}
+
+.category-card h3 {
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.75),
+    0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+.category-card p {
+  color: rgba(255, 239, 207, 0.88);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.78),
+    0 8px 22px rgba(0, 0, 0, 0.52);
+}
+
+.category-card:hover .category-card-content,
+.category-card:focus-within .category-card-content {
+  background:
+    linear-gradient(90deg, rgba(4, 3, 2, 0.64), rgba(4, 3, 2, 0.34) 68%, transparent 100%);
+}
+
+@media (max-width: 767.98px) {
+  .category-card-content {
+    width: 100%;
+    padding: 0.72rem 0.78rem 3.85rem;
+    margin-left: 0;
+  }
+}

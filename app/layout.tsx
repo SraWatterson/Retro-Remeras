@@ -1,9 +1,5 @@
 import type { Metadata } from 'next';
 import './css/style.css';
-import './css/catalogo.css';
-import './css/producto.css';
-import './css/carrito.css';
-import './css/admin.css';
 
 export const metadata: Metadata = {
   title: 'Retro Remeras',
