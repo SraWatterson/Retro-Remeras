@@ -14,7 +14,7 @@ export type ColorImageRow = {
 };
 
 export type ProductFormState = {
-  legacyId: string;
+  legacyId: number | '';
   slug: string;
   nombre: string;
   categoria: string;
@@ -28,6 +28,14 @@ export type ProductFormState = {
 
 export type ProductFormErrors = Partial<Record<keyof ProductFormState, string>> & {
   colorImages?: string;
+};
+
+export type PaginatedProductsResponse = {
+  items: Product[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 };
 
 export type ProductView = Product;

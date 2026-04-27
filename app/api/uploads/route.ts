@@ -1,14 +1,23 @@
 import { randomUUID } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { Role } from '@prisma/client';
+import { AuditAction, Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { createAuditLog } from '@/lib/audit-log';
 import { getCurrentSession, isRoleAllowed } from '@/lib/auth';
+import { checkRateLimit, jsonServerError, rateLimitResponse } from '@/lib/api-helpers';
 
 const MANAGER_ROLES: Role[] = [Role.ADMIN, Role.EDITOR];
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products');
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MIME_TO_EXTENSION: Record<string, string> = {
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+};
 
-function sanitizeFileName(name: string) {
+function sanitizeFileName(name: string, mimeType: string) {
   const parsed = path.parse(name);
   const base = parsed.name
     .toLowerCase()
@@ -19,12 +28,28 @@ function sanitizeFileName(name: string) {
     .replace(/(^-|-$)/g, '')
     .slice(0, 50);
 
-  const extension = parsed.ext.toLowerCase();
+  const extension = MIME_TO_EXTENSION[mimeType] || '.jpg';
   return `${base || 'image'}-${randomUUID().slice(0, 8)}${extension}`;
 }
 
 function isSafeUploadPath(filePath: string) {
-  return filePath.startsWith('/uploads/products/');
+  return filePath.startsWith('/uploads/products/') && !filePath.includes('..');
+}
+
+function hasValidImageSignature(buffer: Buffer, mimeType: string) {
+  if (mimeType === 'image/jpeg') {
+    return buffer.length > 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  }
+
+  if (mimeType === 'image/png') {
+    return buffer.length > 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  }
+
+  if (mimeType === 'image/webp') {
+    return buffer.length > 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
+  }
+
+  return false;
 }
 
 export async function POST(request: Request) {
@@ -32,6 +57,12 @@ export async function POST(request: Request) {
 
   if (!session || !isRoleAllowed(session.role, MANAGER_ROLES)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
+  }
+
+  const rateLimit = checkRateLimit({ key: `uploads:create:${session.id}`, limit: 25, windowMs: 60 * 1000 });
+
+  if (!rateLimit.allowed) {
+    return rateLimitResponse(rateLimit.resetAt);
   }
 
   try {
@@ -42,29 +73,48 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Archivo inválido' }, { status: 400 });
     }
 
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ error: 'Solo se permiten imágenes' }, { status: 400 });
+    if (!ALLOWED_MIME_TYPES.has(file.type)) {
+      return NextResponse.json({ error: 'Formato inválido. Usá JPG, PNG o WebP.' }, { status: 400 });
     }
 
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
+    if (file.size <= 0) {
+      return NextResponse.json({ error: 'El archivo está vacío' }, { status: 400 });
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
       return NextResponse.json({ error: 'La imagen supera el límite de 5MB' }, { status: 400 });
+    }
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    if (!hasValidImageSignature(buffer, file.type)) {
+      return NextResponse.json({ error: 'El contenido del archivo no coincide con una imagen válida' }, { status: 400 });
     }
 
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
 
-    const fileName = sanitizeFileName(file.name || 'image.png');
+    const fileName = sanitizeFileName(file.name || 'image', file.type);
     const absolutePath = path.join(UPLOAD_DIR, fileName);
 
-    const buffer = Buffer.from(await file.arrayBuffer());
     await fs.writeFile(absolutePath, buffer);
 
     const publicPath = `/uploads/products/${fileName}`;
 
+    await createAuditLog({
+      action: AuditAction.IMAGE_UPLOADED,
+      entity: 'Upload',
+      entityId: publicPath,
+      actorId: session.id,
+      metadata: {
+        fileName,
+        size: file.size,
+        mimeType: file.type,
+      },
+    });
+
     return NextResponse.json({ path: publicPath }, { status: 201 });
   } catch (error) {
-    console.error('uploads POST error', error);
-    return NextResponse.json({ error: 'No se pudo subir la imagen' }, { status: 500 });
+    return jsonServerError('UPLOADS_POST', 'No se pudo subir la imagen', error);
   }
 }
 
@@ -73,6 +123,12 @@ export async function DELETE(request: Request) {
 
   if (!session || !isRoleAllowed(session.role, MANAGER_ROLES)) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
+  }
+
+  const rateLimit = checkRateLimit({ key: `uploads:delete:${session.id}`, limit: 40, windowMs: 60 * 1000 });
+
+  if (!rateLimit.allowed) {
+    return rateLimitResponse(rateLimit.resetAt);
   }
 
   try {
@@ -87,9 +143,16 @@ export async function DELETE(request: Request) {
 
     await fs.unlink(absolutePath).catch(() => null);
 
+    await createAuditLog({
+      action: AuditAction.IMAGE_DELETED,
+      entity: 'Upload',
+      entityId: imagePath,
+      actorId: session.id,
+      metadata: { path: imagePath },
+    });
+
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error('uploads DELETE error', error);
-    return NextResponse.json({ error: 'No se pudo eliminar la imagen' }, { status: 500 });
+    return jsonServerError('UPLOADS_DELETE', 'No se pudo eliminar la imagen', error);
   }
 }

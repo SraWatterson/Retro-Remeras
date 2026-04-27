@@ -16,7 +16,12 @@ function toSlug(value) {
 
 async function main() {
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@retroremeras.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin123456';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'Admin#Retro2026!';
+
+  const strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,}$/;
+  if (!strongPasswordPattern.test(adminPassword)) {
+    throw new Error('ADMIN_PASSWORD debe tener al menos 10 caracteres, mayúscula, minúscula, número y símbolo.');
+  }
 
   const passwordHash = await bcrypt.hash(adminPassword, 12);
 

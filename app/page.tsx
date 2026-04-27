@@ -7,6 +7,7 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { getFeaturedProducts } from '@/lib/product-queries';
 
+export const revalidate = 60;
 export default async function Page() {
   const featuredProducts = await getFeaturedProducts();
 

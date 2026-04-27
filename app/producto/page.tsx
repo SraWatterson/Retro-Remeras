@@ -6,6 +6,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 import { ProductView } from '@/components/product/ProductView';
 import { getPublicProductById } from '@/lib/product-queries';
 
+export const revalidate = 60;
 type PageProps = {
   searchParams: Promise<{ id?: string }>;
 };

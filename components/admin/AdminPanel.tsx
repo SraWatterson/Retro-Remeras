@@ -5,10 +5,17 @@ import { Product } from '@/lib/shop';
 import { AdminLoginForm } from './AdminLoginForm';
 import { AdminSessionBar } from './AdminSessionBar';
 import { ProductEditorForm } from './ProductEditorForm';
-import { ProductTable } from './ProductTable';
+import { ProductSortOption, ProductStatusFilter, ProductTable } from './ProductTable';
 import { ColorImageRow, ProductFormErrors, ProductFormState, SessionUser } from './types';
 
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_REFRESH_INTERVAL_MS = 90 * 60 * 1000;
+
+type AdminToast = {
+  id: string;
+  type: 'success' | 'error' | 'info';
+  message: string;
+};
 
 const EMPTY_FORM: ProductFormState = {
   legacyId: '',
@@ -45,6 +52,10 @@ function colorRowsToRecord(rows: ColorImageRow[]) {
   return record;
 }
 
+function normalizeCategoryInput(value: string) {
+  return value.trim().replace(/\s+/g, ' ');
+}
+
 function validateProductInput(values: ProductFormState, colorRows: ColorImageRow[]) {
   const errors: ProductFormErrors = {};
 
@@ -57,8 +68,11 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
     errors.nombre = 'Nombre requerido (mínimo 2 caracteres).';
   }
 
-  if (values.categoria.trim().length < 2) {
+  const categoria = normalizeCategoryInput(values.categoria);
+  if (categoria.length < 2) {
     errors.categoria = 'Categoría requerida (mínimo 2 caracteres).';
+  } else if (categoria.length > 60) {
+    errors.categoria = 'La categoría no puede superar los 60 caracteres.';
   }
 
   const precio = Number(values.precio);
@@ -74,11 +88,8 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
     errors.descripcion = 'Descripción requerida (mínimo 3 caracteres).';
   }
 
-  if (values.legacyId.trim().length > 0) {
-    const legacy = Number(values.legacyId);
-    if (!Number.isInteger(legacy) || legacy <= 0) {
-      errors.legacyId = 'Legacy ID debe ser entero positivo.';
-    }
+  if (values.legacyId !== '' && (!Number.isInteger(values.legacyId) || values.legacyId <= 0)) {
+    errors.legacyId = 'Legacy ID debe ser entero positivo.';
   }
 
   const invalidRow = colorRows.some((row) => {
@@ -98,7 +109,7 @@ function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
   const payload: Record<string, unknown> = {
     slug: values.slug.trim(),
     nombre: values.nombre.trim(),
-    categoria: values.categoria.trim(),
+    categoria: normalizeCategoryInput(values.categoria),
     precio: Number(values.precio),
     imagen: values.imagen.trim(),
     imagenesPorColor: colorRowsToRecord(colorRows),
@@ -108,8 +119,8 @@ function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
     activo: values.activo,
   };
 
-  if (values.legacyId.trim()) {
-    payload.legacyId = Number(values.legacyId);
+  if (values.legacyId !== '') {
+    payload.legacyId = values.legacyId;
   }
 
   return payload;
@@ -122,7 +133,7 @@ function fromProduct(product: Product) {
 
   return {
     form: {
-      legacyId: product.legacyId ? String(product.legacyId) : '',
+      legacyId: product.legacyId || '',
       slug: product.slug,
       nombre: product.nombre,
       categoria: product.categoria,
@@ -145,7 +156,15 @@ export function AdminPanel() {
   const [loginError, setLoginError] = useState('');
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
+  const [productQuery, setProductQuery] = useState('');
+  const [productCategory, setProductCategory] = useState('');
+  const [productStatus, setProductStatus] = useState<ProductStatusFilter>('all');
+  const [productSort, setProductSort] = useState<ProductSortOption>('featured');
+  const [productPage, setProductPage] = useState(1);
+  const [productTotal, setProductTotal] = useState(0);
+  const [productPages, setProductPages] = useState(1);
   const [requestError, setRequestError] = useState('');
   const [uploading, setUploading] = useState(false);
 
@@ -154,12 +173,23 @@ export function AdminPanel() {
   const [formErrors, setFormErrors] = useState<ProductFormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState<AdminToast | null>(null);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const canManage = user?.role === 'ADMIN' || user?.role === 'EDITOR';
   const canDelete = user?.role === 'ADMIN';
   const formTitle = useMemo(() => (editingId ? 'Editar producto' : 'Crear producto'), [editingId]);
+
+  const showToast = useCallback((type: AdminToast['type'], message: string) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+
+    setToast({ id: crypto.randomUUID(), type, message });
+    toastTimeoutRef.current = setTimeout(() => setToast(null), 4200);
+  }, []);
 
   const resetForm = useCallback(() => {
     setEditingId(null);
@@ -174,10 +204,14 @@ export function AdminPanel() {
     setUser(null);
     setProducts([]);
     resetForm();
+
     if (message) {
       setLoginError(message);
+      showToast('info', message);
+    } else {
+      showToast('success', 'Sesión cerrada correctamente.');
     }
-  }, [resetForm]);
+  }, [resetForm, showToast]);
 
   const refreshSessionTimer = useCallback(() => {
     if (!user) return;
@@ -197,9 +231,20 @@ export function AdminPanel() {
 
   useEffect(() => {
     if (canManage) {
-      void loadProducts();
+      void loadProducts(productPage, productQuery, productCategory, productStatus, productSort);
+      void loadCategories();
     }
-  }, [canManage]);
+  }, [canManage, productPage, productQuery, productCategory, productStatus, productSort]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const refreshInterval = window.setInterval(() => {
+      void renewSession();
+    }, SESSION_REFRESH_INTERVAL_MS);
+
+    return () => window.clearInterval(refreshInterval);
+  }, [user]);
 
   useEffect(() => {
     if (!user) {
@@ -219,6 +264,12 @@ export function AdminPanel() {
     };
   }, [refreshSessionTimer, user]);
 
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    };
+  }, []);
+
   async function loadSession() {
     setLoadingSession(true);
     try {
@@ -234,19 +285,78 @@ export function AdminPanel() {
     }
   }
 
-  async function loadProducts() {
-    setLoadingProducts(true);
-    setRequestError('');
+  async function renewSession() {
     try {
-      const response = await fetch('/api/products', { cache: 'no-store' });
-      const data = await response.json();
-
-      if (!response.ok || !Array.isArray(data)) {
-        setRequestError(data?.error || 'No se pudieron cargar productos.');
+      const response = await fetch('/api/auth/refresh', { method: 'POST', cache: 'no-store' });
+      if (!response.ok) {
+        await performLogout('Tu sesión expiró. Volvé a iniciar sesión.');
         return;
       }
 
-      setProducts(data);
+      const data = await response.json();
+      if (data?.user) {
+        setUser(data.user);
+      }
+    } catch {
+      await performLogout('No se pudo renovar la sesión. Volvé a iniciar sesión.');
+    }
+  }
+
+  async function loadCategories() {
+    try {
+      const response = await fetch('/api/categories?includeInactive=true', { cache: 'no-store' });
+      if (!response.ok) return;
+      const data = await response.json();
+      setCategories(Array.isArray(data.items) ? data.items : []);
+    } catch {
+      setCategories([]);
+    }
+  }
+
+  async function loadProducts(
+    page = productPage,
+    query = productQuery,
+    category = productCategory,
+    status = productStatus,
+    sort = productSort
+  ) {
+    setLoadingProducts(true);
+    setRequestError('');
+    try {
+      const params = new URLSearchParams({
+        includeInactive: 'true',
+        page: String(page),
+        limit: '20',
+        status,
+        sort,
+      });
+
+      if (category.trim()) {
+        params.set('category', category.trim());
+      }
+
+      if (query.trim()) {
+        params.set('search', query.trim());
+      }
+
+      const response = await fetch('/api/products?' + params.toString(), { cache: 'no-store' });
+      const data = await response.json();
+      const items = Array.isArray(data) ? data : data?.items;
+
+      if (!response.ok || !Array.isArray(items)) {
+        const message = data?.error || 'No se pudieron cargar productos.';
+        setRequestError(message);
+        showToast('error', message);
+        return;
+      }
+
+      setProducts(items);
+      setProductTotal(Number(data?.total) || items.length);
+      setProductPages(Number(data?.pages) || 1);
+    } catch {
+      const message = 'No se pudieron cargar productos.';
+      setRequestError(message);
+      showToast('error', message);
     } finally {
       setLoadingProducts(false);
     }
@@ -257,7 +367,9 @@ export function AdminPanel() {
     setLoginError('');
 
     if (!email.trim() || !password.trim()) {
-      setLoginError('Ingresá email y contraseña.');
+      const message = 'Ingresá email y contraseña.';
+      setLoginError(message);
+      showToast('error', message);
       return;
     }
 
@@ -270,12 +382,15 @@ export function AdminPanel() {
     const data = await response.json();
 
     if (!response.ok) {
-      setLoginError(data?.error || 'No se pudo iniciar sesión.');
+      const message = data?.error || 'No se pudo iniciar sesión.';
+      setLoginError(message);
+      showToast('error', message);
       return;
     }
 
     setPassword('');
     setUser(data.user);
+    showToast('success', 'Sesión iniciada correctamente.');
   }
 
   function editProduct(product: Product) {
@@ -284,6 +399,8 @@ export function AdminPanel() {
     setForm(mapped.form);
     setColorRows(mapped.colorRows);
     setFormErrors({});
+    setRequestError('');
+    showToast('info', `Editando ${product.nombre}.`);
   }
 
   async function uploadFile(file: File) {
@@ -325,8 +442,11 @@ export function AdminPanel() {
       const oldPath = form.imagen;
       setForm((prev) => ({ ...prev, imagen: newPath }));
       if (oldPath) await removeUploadedFile(oldPath);
+      showToast('success', 'Imagen principal actualizada.');
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : 'No se pudo subir imagen.');
+      const message = error instanceof Error ? error.message : 'No se pudo subir imagen.';
+      setRequestError(message);
+      showToast('error', message);
     } finally {
       setUploading(false);
     }
@@ -345,8 +465,11 @@ export function AdminPanel() {
       setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, path: newPath } : row)));
 
       if (oldPath) await removeUploadedFile(oldPath);
+      showToast('success', 'Imagen de color actualizada.');
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : 'No se pudo subir imagen de color.');
+      const message = error instanceof Error ? error.message : 'No se pudo subir imagen de color.';
+      setRequestError(message);
+      showToast('error', message);
     } finally {
       setUploading(false);
     }
@@ -355,6 +478,7 @@ export function AdminPanel() {
   async function clearMainImage(removeFile: boolean) {
     if (removeFile && form.imagen) await removeUploadedFile(form.imagen);
     setForm((prev) => ({ ...prev, imagen: '' }));
+    showToast('info', removeFile ? 'Imagen principal eliminada.' : 'Imagen principal quitada del producto.');
   }
 
   async function clearColorImage(rowId: string, removeFile: boolean) {
@@ -364,6 +488,7 @@ export function AdminPanel() {
     if (removeFile && target.path) await removeUploadedFile(target.path);
 
     setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, path: '' } : row)));
+    showToast('info', removeFile ? 'Imagen de color eliminada.' : 'Imagen de color quitada.');
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -372,7 +497,10 @@ export function AdminPanel() {
     const errors = validateProductInput(form, colorRows);
     setFormErrors(errors);
 
-    if (Object.keys(errors).length > 0) return;
+    if (Object.keys(errors).length > 0) {
+      showToast('error', 'Revisá los campos marcados antes de guardar.');
+      return;
+    }
 
     setSaving(true);
     setRequestError('');
@@ -391,14 +519,22 @@ export function AdminPanel() {
       const data = await response.json();
 
       if (!response.ok) {
-        setRequestError(data?.error || 'No se pudo guardar el producto.');
+        const message = data?.error || 'No se pudo guardar el producto.';
+        setRequestError(message);
+        showToast('error', message);
         return;
       }
 
+      showToast('success', editingId ? 'Producto actualizado correctamente.' : 'Producto creado correctamente.');
       resetForm();
-      await loadProducts();
+      await Promise.all([
+        loadProducts(productPage, productQuery, productCategory, productStatus, productSort),
+        loadCategories(),
+      ]);
     } catch {
-      setRequestError('No se pudo guardar el producto.');
+      const message = 'No se pudo guardar el producto.';
+      setRequestError(message);
+      showToast('error', message);
     } finally {
       setSaving(false);
     }
@@ -411,24 +547,35 @@ export function AdminPanel() {
     const data = await response.json();
 
     if (!response.ok) {
-      setRequestError(data?.error || 'No se pudo eliminar el producto.');
+      const message = data?.error || 'No se pudo eliminar el producto.';
+      setRequestError(message);
+      showToast('error', message);
       return;
     }
 
-    await loadProducts();
+    showToast('success', 'Producto desactivado correctamente.');
+    await loadProducts(productPage, productQuery, productCategory, productStatus, productSort);
   }
 
   return (
     <main className="admin-main">
+      {toast ? (
+        <div className={`admin-toast admin-toast--${toast.type}`} role="status" aria-live="polite">
+          <span className="admin-toast-dot" aria-hidden="true" />
+          <p>{toast.message}</p>
+          <button type="button" aria-label="Cerrar notificación" onClick={() => setToast(null)}>
+            ×
+          </button>
+        </div>
+      ) : null}
+
       <section className="container admin-shell">
         <div className="section-header">
           <span className="section-kicker">Administración</span>
-         
-          
         </div>
 
         {loadingSession ? (
-          <div className="panel">Cargando sesión...</div>
+          <div className="panel admin-session-skeleton" aria-label="Cargando sesión" />
         ) : !user ? (
           <AdminLoginForm
             email={email}
@@ -460,6 +607,7 @@ export function AdminPanel() {
                 form={form}
                 colorRows={colorRows}
                 errors={formErrors}
+                categories={categories}
                 requestError={requestError}
                 saving={saving}
                 uploading={uploading}
@@ -483,6 +631,32 @@ export function AdminPanel() {
                 products={products}
                 loading={loadingProducts}
                 canDelete={canDelete}
+                query={productQuery}
+                category={productCategory}
+                status={productStatus}
+                sort={productSort}
+                page={productPage}
+                limit={20}
+                total={productTotal}
+                pages={productPages}
+                categories={categories}
+                onQueryChange={(value) => {
+                  setProductQuery(value);
+                  setProductPage(1);
+                }}
+                onCategoryChange={(value) => {
+                  setProductCategory(value);
+                  setProductPage(1);
+                }}
+                onStatusChange={(value) => {
+                  setProductStatus(value);
+                  setProductPage(1);
+                }}
+                onSortChange={(value) => {
+                  setProductSort(value);
+                  setProductPage(1);
+                }}
+                onPageChange={setProductPage}
                 onEdit={editProduct}
                 onDelete={(id) => void deleteProduct(id)}
               />

@@ -88,7 +88,7 @@ export function CategoriesSection() {
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <img src={category.image} alt={category.title} loading="lazy" decoding="async" />
+              <img src={category.image} alt={category.title} loading="lazy" decoding="async" width={900} height={700} />
 
               <div className="category-card-content">
                 <h3>{category.title}</h3>

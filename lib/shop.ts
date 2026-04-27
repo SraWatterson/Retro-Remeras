@@ -11,6 +11,8 @@ export type Product = {
   disponible: boolean;
   destacado: boolean;
   activo: boolean;
+  deletedAt?: string | Date | null;
+  deletedById?: string | null;
 };
 
 export type CartItem = {
@@ -30,7 +32,7 @@ export type CartItem = {
 const CART_STORAGE_KEY = 'retro_remeras_cart';
 const CART_UPDATED_EVENT = 'retro-cart:updated';
 
-export const CATEGORY_LIST = ['Todos', 'Fútbol', 'Anime', 'Cine / Películas', 'Videojuegos', 'Variados', 'Vintage'];
+export { CATEGORY_FILTERS as CATEGORY_LIST, PRODUCT_CATEGORIES } from '@/lib/categories';
 
 export function formatPrice(value: number) {
   return new Intl.NumberFormat('es-AR', {

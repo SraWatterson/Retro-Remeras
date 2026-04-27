@@ -107,7 +107,7 @@ export function ProductView({ product }: Props) {
         <div className="product-layout">
           <section className="product-gallery">
             <div className="product-gallery-main">
-              <img src={selectedImage} alt={product.nombre} width={1200} height={1200} />
+              <img src={selectedImage} alt={product.nombre} width={1200} height={1200} loading="eager" decoding="async" />
             </div>
           </section>
 
@@ -204,6 +204,8 @@ export function ProductView({ product }: Props) {
                       alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
                       width={900}
                       height={560}
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>

@@ -2,20 +2,22 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { CATEGORY_LIST, Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
+import { Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
 
 type Props = {
   initialCategory?: string;
   initialSearch?: string;
   initialProducts: Product[];
+  categories: string[];
 };
 
-export function CatalogView({ initialCategory, initialSearch, initialProducts }: Props) {
+export function CatalogView({ initialCategory, initialSearch, initialProducts, categories }: Props) {
   const products = useMemo(() => initialProducts, [initialProducts]);
   const loading = false;
   const [search, setSearch] = useState(initialSearch || '');
+  const categoryList = useMemo(() => ['Todos', ...categories], [categories]);
   const [activeCategory, setActiveCategory] = useState(
-    initialCategory && CATEGORY_LIST.includes(initialCategory) ? initialCategory : 'Todos'
+    initialCategory && categories.some((category) => category === initialCategory) ? initialCategory : 'Todos'
   );
 
 
@@ -64,7 +66,7 @@ export function CatalogView({ initialCategory, initialSearch, initialProducts }:
               <div className="form-group">
                 <span className="form-label">Categorías</span>
                 <div className="filter-pills">
-                  {CATEGORY_LIST.map((category) => (
+                  {categoryList.map((category) => (
                     <button
                       key={category}
                       className={`filter-pill ${activeCategory === category ? 'is-active' : ''}`}

@@ -59,17 +59,17 @@ export function HeroSection() {
         >
           <div className="poster-stack">
             <article className="poster-main poster-frame poster-frame--featured">
-              <img src="/assets/img/ejemplo-vintage.jpg" alt="Diseño vintage destacado" loading="eager" decoding="async" />
+              <img src="/assets/img/ejemplo-vintage.jpg" alt="Diseño vintage destacado" loading="eager" decoding="async" width={900} height={1100} />
               <div className="poster-badge">Colecciones con impronta retro</div>
             </article>
 
             <div className="poster-side" aria-label="Diseños destacados">
               <article className="poster-main poster-frame">
-                <img src="/assets/img/remera-goku.jpg" alt="Diseño anime destacado" loading="lazy" decoding="async" />
+                <img src="/assets/img/remera-goku.jpg" alt="Diseño anime destacado" loading="lazy" decoding="async" width={900} height={1100} />
               </article>
 
               <article className="poster-main poster-frame">
-                <img src="/assets/img/ejemplo-gaming.jpg" alt="Diseño videojuegos destacado" loading="lazy" decoding="async" />
+                <img src="/assets/img/ejemplo-gaming.jpg" alt="Diseño videojuegos destacado" loading="lazy" decoding="async" width={900} height={1100} />
               </article>
             </div>
           </div>
