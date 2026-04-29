@@ -3,6 +3,8 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Product } from '@/lib/shop';
 import { AdminLoginForm } from './AdminLoginForm';
+import { CategoryManager } from './CategoryManager';
+import { AuditLogPanel } from './AuditLogPanel';
 import { AdminSessionBar } from './AdminSessionBar';
 import { ProductEditorForm } from './ProductEditorForm';
 import { ProductSortOption, ProductStatusFilter, ProductTable } from './ProductTable';
@@ -16,6 +18,8 @@ type AdminToast = {
   type: 'success' | 'error' | 'info';
   message: string;
 };
+
+type AdminSection = 'products' | 'categories' | 'audit' | 'product-form';
 
 const EMPTY_FORM: ProductFormState = {
   legacyId: '',
@@ -163,6 +167,7 @@ export function AdminPanel() {
   const [productStatus, setProductStatus] = useState<ProductStatusFilter>('all');
   const [productSort, setProductSort] = useState<ProductSortOption>('featured');
   const [productPage, setProductPage] = useState(1);
+  const [productLimit, setProductLimit] = useState(20);
   const [productTotal, setProductTotal] = useState(0);
   const [productPages, setProductPages] = useState(1);
   const [requestError, setRequestError] = useState('');
@@ -174,6 +179,7 @@ export function AdminPanel() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<AdminToast | null>(null);
+  const [activeSection, setActiveSection] = useState<AdminSection>('products');
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -198,6 +204,16 @@ export function AdminPanel() {
     setFormErrors({});
     setRequestError('');
   }, []);
+
+  const openNewProductForm = useCallback(() => {
+    resetForm();
+    setActiveSection('product-form');
+  }, [resetForm]);
+
+  const closeProductForm = useCallback(() => {
+    resetForm();
+    setActiveSection('products');
+  }, [resetForm]);
 
   const performLogout = useCallback(async (message?: string) => {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -231,10 +247,10 @@ export function AdminPanel() {
 
   useEffect(() => {
     if (canManage) {
-      void loadProducts(productPage, productQuery, productCategory, productStatus, productSort);
+      void loadProducts(productPage, productQuery, productCategory, productStatus, productSort, productLimit);
       void loadCategories();
     }
-  }, [canManage, productPage, productQuery, productCategory, productStatus, productSort]);
+  }, [canManage, productPage, productQuery, productCategory, productStatus, productSort, productLimit]);
 
   useEffect(() => {
     if (!user) return;
@@ -318,7 +334,8 @@ export function AdminPanel() {
     query = productQuery,
     category = productCategory,
     status = productStatus,
-    sort = productSort
+    sort = productSort,
+    limit = productLimit
   ) {
     setLoadingProducts(true);
     setRequestError('');
@@ -326,7 +343,7 @@ export function AdminPanel() {
       const params = new URLSearchParams({
         includeInactive: 'true',
         page: String(page),
-        limit: '20',
+        limit: String(limit),
         status,
         sort,
       });
@@ -400,6 +417,7 @@ export function AdminPanel() {
     setColorRows(mapped.colorRows);
     setFormErrors({});
     setRequestError('');
+    setActiveSection('product-form');
     showToast('info', `Editando ${product.nombre}.`);
   }
 
@@ -527,8 +545,9 @@ export function AdminPanel() {
 
       showToast('success', editingId ? 'Producto actualizado correctamente.' : 'Producto creado correctamente.');
       resetForm();
+      setActiveSection('products');
       await Promise.all([
-        loadProducts(productPage, productQuery, productCategory, productStatus, productSort),
+        loadProducts(productPage, productQuery, productCategory, productStatus, productSort, productLimit),
         loadCategories(),
       ]);
     } catch {
@@ -541,20 +560,115 @@ export function AdminPanel() {
   }
 
   async function deleteProduct(productId: string) {
-    if (!confirm('¿Eliminar producto? Esta acción lo desactiva.')) return;
+    if (!confirm('¿Desactivar producto? El producto dejará de mostrarse en el sitio, pero seguirá disponible en el admin.')) return;
 
     const response = await fetch(`/api/products/${productId}`, { method: 'DELETE' });
     const data = await response.json();
 
     if (!response.ok) {
-      const message = data?.error || 'No se pudo eliminar el producto.';
+      const message = data?.error || 'No se pudo desactivar el producto.';
       setRequestError(message);
       showToast('error', message);
       return;
     }
 
     showToast('success', 'Producto desactivado correctamente.');
-    await loadProducts(productPage, productQuery, productCategory, productStatus, productSort);
+    await loadProducts(productPage, productQuery, productCategory, productStatus, productSort, productLimit);
+  }
+
+  async function hardDeleteProduct(product: Product) {
+    const confirmed = confirm(
+      `¿Eliminar definitivamente "${product.nombre}"?
+
+Esta acción borra el producto de la base de datos y no se puede deshacer.`
+    );
+
+    if (!confirmed) return;
+
+    const response = await fetch(`/api/products/${product.id}?hard=true`, { method: 'DELETE' });
+    const data = await response.json();
+
+    if (!response.ok) {
+      const message = data?.error || 'No se pudo eliminar definitivamente el producto.';
+      setRequestError(message);
+      showToast('error', message);
+      return;
+    }
+
+    if (editingId === product.id) {
+      resetForm();
+      setActiveSection('products');
+    }
+
+    showToast('success', 'Producto eliminado definitivamente.');
+    await Promise.all([
+      loadProducts(productPage, productQuery, productCategory, productStatus, productSort, productLimit),
+      loadCategories(),
+    ]);
+  }
+
+  async function renameCategory(from: string, to: string) {
+    const response = await fetch('/api/categories', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const message = data?.error || 'No se pudo editar la categoría.';
+      setRequestError(message);
+      showToast('error', message);
+      return;
+    }
+
+    if (productCategory === from) {
+      setProductCategory(to);
+      setProductPage(1);
+    }
+
+    if (form.categoria === from) {
+      setForm((prev) => ({ ...prev, categoria: to }));
+    }
+
+    showToast('success', `Categoría actualizada: ${from} → ${to}.`);
+    await Promise.all([
+      loadProducts(1, productQuery, productCategory === from ? to : productCategory, productStatus, productSort, productLimit),
+      loadCategories(),
+    ]);
+  }
+
+  async function deleteCategory(category: string) {
+    const response = await fetch('/api/categories', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      const message = data?.error || 'No se pudo eliminar la categoría.';
+      setRequestError(message);
+      showToast('error', message);
+      return;
+    }
+
+    if (productCategory === category) {
+      setProductCategory('');
+      setProductPage(1);
+    }
+
+    if (form.categoria === category) {
+      setForm((prev) => ({ ...prev, categoria: data?.movedTo || 'Variados' }));
+    }
+
+    showToast('success', `Categoría eliminada. ${data?.updated || 0} producto(s) movido(s) a ${data?.movedTo || 'Variados'}.`);
+    await Promise.all([
+      loadProducts(1, productQuery, productCategory === category ? '' : productCategory, productStatus, productSort, productLimit),
+      loadCategories(),
+    ]);
   }
 
   return (
@@ -600,66 +714,145 @@ export function AdminPanel() {
               onLogout={() => void performLogout()}
             />
 
-            <div className="admin-grid">
-              <ProductEditorForm
-                title={formTitle}
-                editing={Boolean(editingId)}
-                form={form}
-                colorRows={colorRows}
-                errors={formErrors}
-                categories={categories}
-                requestError={requestError}
-                saving={saving}
-                uploading={uploading}
-                onSubmit={handleSubmit}
-                onReset={resetForm}
-                onChange={(patch) => setForm((prev) => ({ ...prev, ...patch }))}
-                onMainUpload={(file) => void handleMainImageUpload(file)}
-                onMainDetach={() => void clearMainImage(false)}
-                onMainDeleteFile={() => void clearMainImage(true)}
-                onColorRowChange={(rowId, patch) =>
-                  setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, ...patch } : row)))
-                }
-                onColorUpload={(rowId, file) => void handleColorImageUpload(rowId, file)}
-                onColorDetach={(rowId) => void clearColorImage(rowId, false)}
-                onColorDeleteFile={(rowId) => void clearColorImage(rowId, true)}
-                onAddColorRow={() => setColorRows((prev) => [...prev, newColorRow()])}
-                onRemoveColorRow={(rowId) => setColorRows((prev) => prev.filter((row) => row.id !== rowId))}
-              />
+            <section className="panel admin-dashboard" aria-label="Panel de administración">
+              <div className="admin-dashboard-head">
+                <div>
+                  <span className="admin-panel-eyebrow">Panel</span>
+                  <h1>Gestión del sitio</h1>
+                  <p className="admin-muted">Administrá productos, categorías e historial sin depender de una página extensa.</p>
+                </div>
 
-              <ProductTable
-                products={products}
-                loading={loadingProducts}
-                canDelete={canDelete}
-                query={productQuery}
-                category={productCategory}
-                status={productStatus}
-                sort={productSort}
-                page={productPage}
-                limit={20}
-                total={productTotal}
-                pages={productPages}
-                categories={categories}
-                onQueryChange={(value) => {
-                  setProductQuery(value);
-                  setProductPage(1);
-                }}
-                onCategoryChange={(value) => {
-                  setProductCategory(value);
-                  setProductPage(1);
-                }}
-                onStatusChange={(value) => {
-                  setProductStatus(value);
-                  setProductPage(1);
-                }}
-                onSortChange={(value) => {
-                  setProductSort(value);
-                  setProductPage(1);
-                }}
-                onPageChange={setProductPage}
-                onEdit={editProduct}
-                onDelete={(id) => void deleteProduct(id)}
-              />
+                <button className="btn btn-primary admin-new-product-btn" type="button" onClick={openNewProductForm}>
+                  + Nuevo producto
+                </button>
+              </div>
+
+              <nav className="admin-section-tabs" aria-label="Secciones del panel">
+                <button
+                  type="button"
+                  className={`admin-section-tab ${activeSection === 'products' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('products')}
+                  aria-pressed={activeSection === 'products'}
+                >
+                  Productos
+                </button>
+                <button
+                  type="button"
+                  className={`admin-section-tab ${activeSection === 'categories' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('categories')}
+                  aria-pressed={activeSection === 'categories'}
+                >
+                  Categorías
+                </button>
+                <button
+                  type="button"
+                  className={`admin-section-tab ${activeSection === 'audit' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('audit')}
+                  aria-pressed={activeSection === 'audit'}
+                >
+                  Auditoría
+                </button>
+                {activeSection === 'product-form' ? (
+                  <button
+                    type="button"
+                    className="admin-section-tab is-active"
+                    onClick={() => setActiveSection('product-form')}
+                    aria-pressed="true"
+                  >
+                    {editingId ? 'Editar producto' : 'Nuevo producto'}
+                  </button>
+                ) : null}
+              </nav>
+            </section>
+
+            <div className="admin-section-content">
+              {activeSection === 'product-form' ? (
+                <ProductEditorForm
+                  title={formTitle}
+                  editing={Boolean(editingId)}
+                  form={form}
+                  colorRows={colorRows}
+                  errors={formErrors}
+                  categories={categories}
+                  requestError={requestError}
+                  saving={saving}
+                  uploading={uploading}
+                  onSubmit={handleSubmit}
+                  onReset={closeProductForm}
+                  onChange={(patch) => setForm((prev) => ({ ...prev, ...patch }))}
+                  onMainUpload={(file) => void handleMainImageUpload(file)}
+                  onMainDetach={() => void clearMainImage(false)}
+                  onMainDeleteFile={() => void clearMainImage(true)}
+                  onColorRowChange={(rowId, patch) =>
+                    setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, ...patch } : row)))
+                  }
+                  onColorUpload={(rowId, file) => void handleColorImageUpload(rowId, file)}
+                  onColorDetach={(rowId) => void clearColorImage(rowId, false)}
+                  onColorDeleteFile={(rowId) => void clearColorImage(rowId, true)}
+                  onAddColorRow={() => setColorRows((prev) => [...prev, newColorRow()])}
+                  onRemoveColorRow={(rowId) => setColorRows((prev) => prev.filter((row) => row.id !== rowId))}
+                />
+              ) : null}
+
+              {activeSection === 'categories' ? (
+                <CategoryManager
+                  categories={categories}
+                  loading={loadingProducts}
+                  canManage={canDelete}
+                  onRename={(from, to) => renameCategory(from, to)}
+                  onDelete={(category) => deleteCategory(category)}
+                />
+              ) : null}
+
+              {activeSection === 'products' ? (
+                <ProductTable
+                  products={products}
+                  loading={loadingProducts}
+                  canDelete={canDelete}
+                  query={productQuery}
+                  category={productCategory}
+                  status={productStatus}
+                  sort={productSort}
+                  page={productPage}
+                  limit={productLimit}
+                  total={productTotal}
+                  pages={productPages}
+                  categories={categories}
+                  onQueryChange={(value) => {
+                    setProductQuery(value);
+                    setProductPage(1);
+                  }}
+                  onCategoryChange={(value) => {
+                    setProductCategory(value);
+                    setProductPage(1);
+                  }}
+                  onStatusChange={(value) => {
+                    setProductStatus(value);
+                    setProductPage(1);
+                  }}
+                  onSortChange={(value) => {
+                    setProductSort(value);
+                    setProductPage(1);
+                  }}
+                  onLimitChange={(value) => {
+                    setProductLimit(value);
+                    setProductPage(1);
+                  }}
+                  onResetFilters={() => {
+                    setProductQuery('');
+                    setProductCategory('');
+                    setProductStatus('all');
+                    setProductSort('featured');
+                    setProductPage(1);
+                  }}
+                  onPageChange={setProductPage}
+                  onEdit={editProduct}
+                  onDelete={(id) => void deleteProduct(id)}
+                  onHardDelete={(product) => void hardDeleteProduct(product)}
+                />
+              ) : null}
+
+              {activeSection === 'audit' ? <AuditLogPanel /> : null}
             </div>
           </>
         )}

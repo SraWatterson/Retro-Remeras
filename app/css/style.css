@@ -6,14 +6,17 @@
 :root {
   /* ── Fondos ── */
   --bg: #090807;
-  --bg-alt: #0e0c09;
-  --bg-soft: #131009;
-  --surface: #1c1610;
-  --surface-raised: #251d15;
-  --surface-high: #2e2318;
+  --bg-alt: #100d0a;
+  --bg-soft: #17110b;
+  --bg-deep: #050403;
+  --bg-warm: #120b08;
+  --surface: #1d160f;
+  --surface-raised: #271d13;
+  --surface-high: #312417;
+  --surface-glass: rgba(29, 22, 15, 0.84);
   --footer-bg: #060504;
-  --panel: rgba(28, 22, 16, 0.88);
-  --panel-2: #1c1610;
+  --panel: rgba(29, 22, 15, 0.88);
+  --panel-2: #1d160f;
 
   /* ── Textos ── */
   --text: #f2e6cc;
@@ -29,8 +32,11 @@
   --yellow-light: #f7d060;
   --yellow-fill: rgba(244, 197, 66, 0.10);
   --red: #b82828;
-  --red-soft: #e24b45;
+  --red-soft: #d84238;
+  --red-deep: #5e1715;
   --red-fill: rgba(184, 40, 40, 0.12);
+  --amber-fill: rgba(244, 197, 66, 0.08);
+  --cream-fill: rgba(242, 230, 204, 0.055);
 
   /* ── Bordes (sistema unificado de 4 niveles) ── */
   --border-subtle: rgba(244, 197, 66, 0.08);
@@ -130,9 +136,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   background:
-    radial-gradient(circle at top right, rgba(184, 40, 40, 0.10), transparent 28%),
-    radial-gradient(circle at left center, rgba(244, 197, 66, 0.07), transparent 30%),
-    var(--bg);
+    radial-gradient(circle at 82% 0%, rgba(184, 40, 40, 0.16), transparent 34%),
+    radial-gradient(circle at 10% 22%, rgba(244, 197, 66, 0.10), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(94, 23, 21, 0.24), transparent 42%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 42%, var(--bg-warm) 100%);
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
@@ -243,6 +250,7 @@ ol {
 .section {
   padding: clamp(5.5rem, 9vw, 8rem) 0;
   position: relative;
+  isolation: isolate;
 }
 
 .section-header {
@@ -357,7 +365,11 @@ body.is-scrolled .navbar {
 .brand img {
   width: 56px;
   height: 56px;
+  max-width: 56px;
+  max-height: 56px;
   object-fit: contain;
+  image-rendering: auto;
+  transform: translateZ(0);
   transition: transform 0.32s var(--ease-out-expo), filter 0.32s ease, width 0.28s var(--ease-out-quart), height 0.28s var(--ease-out-quart);
 }
 
@@ -368,8 +380,8 @@ body.is-scrolled .brand img {
 
 .brand:hover img,
 .brand:focus-visible img {
-  transform: scale(1.045);
-  filter: drop-shadow(0 0 10px rgba(244, 197, 66, 0.28));
+  transform: translateZ(0) scale(1.035);
+  filter: drop-shadow(0 0 8px rgba(244, 197, 66, 0.22));
 }
 
 .nav-links,
@@ -911,7 +923,9 @@ body.is-scrolled .brand img {
 .poster-frame {
   isolation: isolate;
   border: 0;
-  background: #0d0d0d;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(244, 197, 66, 0.075), transparent 44%),
+    #0d0a08;
 }
 
 .poster-frame::before {
@@ -995,7 +1009,9 @@ body.is-scrolled .brand img {
 .benefit-card,
 .product-card,
 .panel {
-  background: var(--surface);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
@@ -1048,11 +1064,10 @@ body.is-scrolled .brand img {
 }
 
 /* Categorías destacadas
-   Cards con imagen decorativa, glass liviano y botón “Explorar” flotante. */
+   Cards con imagen decorativa, panel de lectura uniforme y botón “Explorar” flotante. */
 .category-card {
-  --category-border: rgba(255,255,255,0.06);
-  --category-glow: rgba(244,197,66,0.08);
-  --category-accent: rgba(255,255,255,0.12);
+  --category-border: rgba(255, 255, 255, 0.07);
+  --category-border-hover: rgba(244, 197, 66, 0.22);
   --category-image: none;
 
   position: relative;
@@ -1061,8 +1076,8 @@ body.is-scrolled .brand img {
   min-height: 188px;
   padding: 1.25rem;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  align-items: flex-start;
+  justify-content: flex-start;
   border-radius: var(--radius);
   border: 1px solid var(--category-border);
   background: #0d0d0d;
@@ -1083,59 +1098,20 @@ body.is-scrolled .brand img {
   pointer-events: none;
 }
 
-/* Imagen de fondo: visible pero decorativa. */
 .category-card::before {
   z-index: 0;
   background-image: var(--category-image);
   background-position: center;
   background-size: cover;
   transform: scale(1.015);
-  filter: brightness(0.72) contrast(1.04) saturate(0.96);
+  filter: brightness(0.74) contrast(1.06) saturate(0.98);
   transition:
     transform 0.48s var(--ease-out-expo),
     filter 0.48s ease;
 }
 
-/* ================================
-   IMÁGENES CATEGORY CARDS (MIGRACIÓN A TOKENS)
-   ================================
-   La imagen ahora se lee desde .category-card::before con:
-   background-image: var(--category-image);
-
-   TODO HTML: migrar cada card a una custom property inline, por ejemplo:
-   style="--category-image: url('/assets/category-cards/coleccion-futbol-retro.webp')"
-
-   Fallback anterior comentado para referencia:
-   - [data-category-link="Fútbol"] -> ../assets/category-cards/coleccion-futbol-retro.webp
-   - [data-category-link="Anime"] -> ../assets/category-cards/anime-retro.jpg
-   - [data-category-link="Cine / Películas"] -> ../assets/category-cards/cine-retro.jpg
-   - [data-category-link="Videojuegos"] -> ../assets/category-cards/retro-gaming.webp
-   - [data-category-link="Variados"] -> ../assets/category-cards/random-retro.jpg
-   - [data-category-link="Vintage"] -> ../assets/category-cards/vintage-retro.png
-*/
-
-/* Capa glass: más traslúcida, con blur suave y tintes de la marca. */
-.category-card::after {
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.24), rgba(10, 10, 10, 0.58)),
-    radial-gradient(circle at 72% 18%, rgba(244, 197, 66, 0.10), transparent 46%),
-    radial-gradient(circle at 18% 88%, rgba(200, 47, 47, 0.08), transparent 52%);
-  backdrop-filter: blur(3px) saturate(112%);
-  -webkit-backdrop-filter: blur(3px) saturate(112%);
-  box-shadow: var(--shadow-glass-inset);
-  transform: scale(1);
-  transform-origin: center;
-  transition:
-    transform 0.42s var(--ease-out-expo),
-    backdrop-filter 0.32s ease,
-    background 0.32s ease,
-    box-shadow 0.32s ease;
-}
-
-/* Imagen real dentro de la card: source of truth visual.
-   Se usa además de --category-image para evitar fallas de rutas en custom properties. */
-.category-card > img {
+.category-card > img,
+.category-card > span img {
   position: absolute;
   z-index: 0;
   inset: 0;
@@ -1145,74 +1121,76 @@ body.is-scrolled .brand img {
   object-fit: cover;
   border-radius: inherit;
   transform: scale(1.015);
-  filter: brightness(0.72) contrast(1.04) saturate(0.96);
+  filter: brightness(0.74) contrast(1.06) saturate(0.98);
   transition:
     transform 0.48s var(--ease-out-expo),
     filter 0.48s ease;
 }
 
-.category-card:hover > img,
-.category-card:focus-within > img {
-  transform: scale(1.065);
-  filter: brightness(0.8) contrast(1.08) saturate(1.04);
-}
-
-.category-card:hover,
-.category-card:focus-within {
-  transform: translateY(-5px);
-  border-color: var(--category-accent);
-  box-shadow: var(--shadow-card-hover), var(--glow-yellow-md);
-}
-
-.category-card:hover::before,
-.category-card:focus-within::before {
-  transform: scale(1.065);
-  filter: brightness(0.8) contrast(1.08) saturate(1.04);
-}
-
-/* El glass también “respira” en hover, pero queda contenido dentro de la card. */
-.category-card:hover::after,
-.category-card:focus-within::after {
-  transform: scale(1.045);
+.category-card::after {
+  z-index: 1;
   background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.18), rgba(10, 10, 10, 0.50)),
-    radial-gradient(circle at 72% 18%, rgba(244, 197, 66, 0.14), transparent 48%),
-    radial-gradient(circle at 18% 88%, rgba(200, 47, 47, 0.10), transparent 54%);
-  backdrop-filter: blur(4.5px) saturate(120%);
-  -webkit-backdrop-filter: blur(4.5px) saturate(120%);
-  box-shadow: var(--shadow-glass-inset-hover);
+    linear-gradient(180deg, rgba(8, 7, 6, 0.14), rgba(8, 7, 6, 0.58)),
+    linear-gradient(90deg, rgba(4, 3, 2, 0.58), rgba(4, 3, 2, 0.22) 56%, rgba(4, 3, 2, 0.08) 100%),
+    radial-gradient(circle at 78% 18%, rgba(244, 197, 66, 0.08), transparent 44%),
+    radial-gradient(circle at 20% 88%, rgba(184, 40, 40, 0.08), transparent 52%);
+  box-shadow: var(--shadow-glass-inset);
+  transition:
+    background 0.32s ease,
+    box-shadow 0.32s ease;
 }
 
 .category-card-content {
   position: relative;
   z-index: 2;
-  height: 100%;
-  padding-bottom: 3.4rem;
+  width: min(74%, 430px);
+  min-height: 128px;
+  padding: 1.15rem 1.2rem 3.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.38rem;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, rgba(4, 3, 2, 0.66), rgba(4, 3, 2, 0.42) 68%, rgba(4, 3, 2, 0.14) 100%);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(2.5px) saturate(108%);
+  -webkit-backdrop-filter: blur(2.5px) saturate(108%);
+  transition:
+    background 0.3s ease,
+    transform 0.34s var(--ease-out-expo),
+    box-shadow 0.3s ease;
 }
 
 .category-card h3 {
-  font-size: 1.35rem;
-  margin-bottom: 0.35rem;
+  margin: 0;
   color: var(--text-primary);
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.78);
+  font-size: clamp(1.16rem, 1.45vw, 1.36rem);
+  font-weight: 850;
+  letter-spacing: -0.018em;
+  line-height: 1.08;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.78),
+    0 10px 28px rgba(0, 0, 0, 0.58);
 }
 
 .category-card p {
   margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.88rem;
-  line-height: 1.5;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.76);
+  color: rgba(255, 239, 207, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.46;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.80),
+    0 8px 22px rgba(0, 0, 0, 0.54);
 }
 
-/* TODO HTML: usar <span class="btn btn-explore">Explorar</span> en lugar de btn-ghost.
-   Se mantiene .btn-ghost como fallback temporal por si alguna página aún no fue migrada. */
 .category-card .btn-explore,
 .category-card .btn-ghost {
   position: absolute;
   z-index: 4;
   left: 50%;
-  /* PRIORIDAD 1: sube el botón dentro del área visible para evitar clipping con overflow:hidden. */
   bottom: 1rem;
   width: min(62%, 170px);
   min-height: 42px;
@@ -1232,6 +1210,40 @@ body.is-scrolled .brand img {
     box-shadow 0.25s ease;
 }
 
+.category-card:hover,
+.category-card:focus-within {
+  transform: translateY(-5px);
+  border-color: var(--category-border-hover);
+  box-shadow: var(--shadow-card-hover), var(--glow-yellow-md);
+}
+
+.category-card:hover::before,
+.category-card:focus-within::before,
+.category-card:hover > img,
+.category-card:focus-within > img,
+.category-card:hover > span img,
+.category-card:focus-within > span img {
+  transform: scale(1.065);
+  filter: brightness(0.82) contrast(1.09) saturate(1.04);
+}
+
+.category-card:hover::after,
+.category-card:focus-within::after {
+  background:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.10), rgba(8, 7, 6, 0.52)),
+    linear-gradient(90deg, rgba(4, 3, 2, 0.62), rgba(4, 3, 2, 0.34) 62%, rgba(4, 3, 2, 0.08) 100%),
+    radial-gradient(circle at 78% 18%, rgba(244, 197, 66, 0.12), transparent 46%),
+    radial-gradient(circle at 20% 88%, rgba(184, 40, 40, 0.10), transparent 54%);
+  box-shadow: var(--shadow-glass-inset-hover);
+}
+
+.category-card:hover .category-card-content,
+.category-card:focus-within .category-card-content {
+  transform: translateY(-1px);
+  background:
+    linear-gradient(90deg, rgba(4, 3, 2, 0.70), rgba(4, 3, 2, 0.46) 68%, rgba(4, 3, 2, 0.16) 100%);
+}
+
 .category-card:hover .btn-explore,
 .category-card:focus-within .btn-explore,
 .category-card:hover .btn-ghost,
@@ -1247,20 +1259,40 @@ body.is-scrolled .brand img {
   transform: translate(-50%, -3px);
 }
 
-
-
-/* Aire extra entre cards de categorías para que el hover no se pise. */
-/* TODO HTML: agregar section--categories a la sección de Categorías destacadas. */
 .home-page .section--categories .grid-3,
 .home-page .section:nth-of-type(2) .grid-3 {
   gap: 1.25rem;
 }
 
 @media (min-width: 1024px) {
-  /* TODO HTML: agregar section--categories a la sección de Categorías destacadas. */
-.home-page .section--categories .grid-3,
-.home-page .section:nth-of-type(2) .grid-3 {
+  .home-page .section--categories .grid-3,
+  .home-page .section:nth-of-type(2) .grid-3 {
     gap: 1.35rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .category-card {
+    min-height: 176px;
+    padding: 1rem;
+  }
+
+  .category-card-content {
+    width: min(88%, 360px);
+    min-height: 112px;
+    padding: 0.95rem 1rem 3.55rem;
+  }
+
+  .category-card p {
+    font-size: 0.82rem;
+    line-height: 1.42;
+  }
+
+  .category-card .btn-explore,
+  .category-card .btn-ghost {
+    width: min(66%, 158px);
+    min-height: 40px;
+    bottom: 0.85rem;
   }
 }
 
@@ -1449,7 +1481,9 @@ body.is-scrolled .brand img {
   position: relative;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: #0f0f0f;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(244, 197, 66, 0.10), transparent 48%),
+    #0f0c09;
 }
 
 .product-media img,
@@ -1653,8 +1687,9 @@ body.is-scrolled .brand img {
   border-radius: calc(var(--radius) + 2px);
   border: 1px solid rgba(255, 255, 255, 0.07);
   background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.028) 0%, rgba(255, 255, 255, 0.008) 100%),
-    rgba(10, 10, 10, 0.94);
+    radial-gradient(circle at 50% 0%, rgba(244, 197, 66, 0.075), transparent 42%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%),
+    rgba(14, 11, 8, 0.96);
   box-shadow: var(--shadow-carousel-card);
   transition:
     transform 0.38s var(--ease-out-expo),
@@ -1681,7 +1716,9 @@ body.is-scrolled .brand img {
   aspect-ratio: 1 / 0.92;
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.055);
-  background: #0d0d0d;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(244, 197, 66, 0.075), transparent 44%),
+    #0d0a08;
 }
 
 .carousel-item .product-media img {
@@ -2168,8 +2205,8 @@ body.is-scrolled .brand img {
   }
 
   .brand img {
-    width: 68px;
-    height: 68px;
+    width: 56px;
+    height: 56px;
   }
 
   .section {
@@ -2283,13 +2320,13 @@ body.is-scrolled .brand img {
   }
 
   .brand img {
-    width: 86px;
-    height: 86px;
+    width: 56px;
+    height: 56px;
   }
 
   body.is-scrolled .brand img {
-    width: 68px;
-    height: 68px;
+    width: 50px;
+    height: 50px;
   }
 
   .menu-toggle,
@@ -2533,7 +2570,7 @@ body.is-scrolled .brand img {
   }
 
   .hero-title {
-    max-width: 10ch;
+    max-width: 11ch;
     font-size: clamp(3.7rem, 4.6vw, 5.8rem);
   }
 
@@ -2571,8 +2608,8 @@ body.is-scrolled .brand img {
   }
 
   .brand img {
-    width: 96px;
-    height: 96px;
+    width: 56px;
+    height: 56px;
   }
 
   .section {
@@ -2580,7 +2617,9 @@ body.is-scrolled .brand img {
   }
 
   .hero-title {
-    font-size: clamp(4rem, 5vw, 6rem);
+    /* Ajuste desktop grande: evita que el hero se sienta sobredimensionado en 1080p+ */
+    font-size: clamp(3.55rem, 4.25vw, 5.25rem);
+    line-height: 0.98;
   }
 }
 
@@ -2606,7 +2645,8 @@ body.is-scrolled .brand img {
 }
 
 .home-page .hero {
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   min-height: min(760px, calc(100svh - 32px - var(--header-height)));
   display: flex;
   align-items: center;
@@ -2993,7 +3033,7 @@ body.is-scrolled .brand img {
   }
 
   .home-page .hero-title {
-    max-width: 10ch;
+    max-width: none;
   }
 
   .home-page .hero-visual {
@@ -3037,6 +3077,35 @@ body.is-scrolled .brand img {
 }
 
 /* Fondos y separación visual de la landing */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .home-page .hero {
+    min-height: min(680px, calc(100svh - var(--header-height) - 1rem));
+    align-items: flex-start;
+    padding-top: clamp(1.5rem, 3vh, 3rem);
+    padding-bottom: clamp(1.5rem, 3vh, 3rem);
+  }
+
+  .home-page .hero-grid {
+    align-items: center;
+  }
+
+  .home-page .hero-visual,
+  .home-page .poster-stack {
+    min-height: clamp(380px, 55vh, 500px) !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .home-page .hero-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+    gap: clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+
+  .home-page .hero-title {
+    font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+  }
+}
+
 .home-page .hero,
 .home-page .section,
 .home-page .footer {
@@ -3063,117 +3132,98 @@ body.is-scrolled .brand img {
   opacity: 0.85;
 }
 
-/* Separador sutil entre secciones */
-.home-page .section + .section {
-  border-top: 1px solid rgba(244, 197, 66, 0.055);
+/* Sistema visual de fondos · sitio público
+   Paleta cálida retro: negro profundo, ámbar tenue, rojo ladrillo y crema. */
+.home-page {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(244, 197, 66, 0.08), transparent 30%),
+    radial-gradient(circle at 88% 8%, rgba(184, 40, 40, 0.085), transparent 32%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 46%, var(--bg-warm) 100%);
 }
 
-/* Fondo del hero */
 .home-page .hero {
   background:
-    radial-gradient(circle at 18% 16%, rgba(244, 197, 66, 0.12), transparent 26%),
-    radial-gradient(circle at 85% 18%, rgba(200, 47, 47, 0.14), transparent 30%),
-    linear-gradient(180deg, rgba(12, 12, 12, 0.96) 0%, rgba(8, 8, 8, 0.98) 100%);
+    radial-gradient(circle at 16% 18%, rgba(244, 197, 66, 0.16), transparent 30%),
+    radial-gradient(circle at 82% 22%, rgba(184, 40, 40, 0.15), transparent 34%),
+    radial-gradient(circle at 50% 110%, rgba(244, 197, 66, 0.08), transparent 42%),
+    linear-gradient(180deg, #11100d 0%, #090806 100%);
 }
 
-.home-page .hero::after {
+.home-page .hero::after,
+.home-page .section::after {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 28%),
-    radial-gradient(circle at 50% 110%, rgba(244, 197, 66, 0.06), transparent 42%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 34%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(244, 197, 66, 0.012) 0 1px,
+      transparent 1px 88px
+    );
+  opacity: 0.72;
 }
 
-/* Fondo: cómo funciona */
-.home-page #como-funciona.section {
-  background:
-    linear-gradient(180deg, rgba(10, 8, 5, 0.98) 0%, rgba(16, 12, 8, 0.98) 100%);
-}
-
-.home-page #como-funciona.section::before {
-  background:
-    radial-gradient(circle at 82% 24%, rgba(244, 197, 66, 0.10), transparent 30%),
-    radial-gradient(circle at 12% 78%, rgba(200, 47, 47, 0.08), transparent 32%);
-}
-
-.home-page #como-funciona.section::after {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0%, transparent 36%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.07), transparent);
-  opacity: 0.74;
-}
-
-/* Fondo: categorías */
 .home-page .section--categories,
 .home-page .section:nth-of-type(2) {
   background:
-    linear-gradient(180deg, rgba(6, 10, 18, 0.98) 0%, rgba(11, 12, 16, 0.98) 100%);
+    radial-gradient(circle at 12% 18%, rgba(244, 197, 66, 0.105), transparent 32%),
+    radial-gradient(circle at 88% 72%, rgba(184, 40, 40, 0.10), transparent 34%),
+    linear-gradient(180deg, #090806 0%, #0d0b08 58%, #120c07 100%);
 }
 
 .home-page .section--categories::before,
 .home-page .section:nth-of-type(2)::before {
   background:
-    radial-gradient(circle at 18% 18%, rgba(244, 197, 66, 0.12), transparent 30%),
-    radial-gradient(circle at 86% 76%, rgba(38, 123, 160, 0.08), transparent 28%);
+    linear-gradient(120deg, rgba(255, 255, 255, 0.024), transparent 32%),
+    radial-gradient(circle at 24% 78%, rgba(184, 40, 40, 0.075), transparent 34%);
+  opacity: 0.72;
 }
 
-.home-page .section--categories::after,
-.home-page .section:nth-of-type(2)::after {
+.home-page #como-funciona.section {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.014) 0%, transparent 34%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.06), transparent);
-  opacity: 0.78;
+    radial-gradient(circle at 84% 18%, rgba(244, 197, 66, 0.12), transparent 32%),
+    radial-gradient(circle at 12% 84%, rgba(184, 40, 40, 0.10), transparent 34%),
+    linear-gradient(180deg, #151008 0%, #0f0a07 54%, #090807 100%);
 }
 
-/* Fondo: beneficios */
-.home-page #beneficios.section {
-  background:
-    linear-gradient(180deg, rgba(10, 8, 8, 0.98) 0%, rgba(12, 12, 12, 0.98) 100%);
-}
-
-.home-page #beneficios.section::before {
-  background:
-    radial-gradient(circle at 84% 18%, rgba(200, 47, 47, 0.09), transparent 30%),
-    radial-gradient(circle at 16% 80%, rgba(244, 197, 66, 0.07), transparent 28%);
-}
-
-.home-page #beneficios.section::after {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, transparent 34%),
-    linear-gradient(90deg, transparent, rgba(200, 47, 47, 0.05), transparent);
-  opacity: 0.7;
-}
-
-/* Fondo: destacados */
 .home-page [data-carousel].section {
   background:
-    linear-gradient(180deg, rgba(10, 10, 10, 0.99) 0%, rgba(14, 9, 6, 0.98) 100%);
+    radial-gradient(circle at 18% 24%, rgba(244, 197, 66, 0.12), transparent 32%),
+    radial-gradient(circle at 84% 76%, rgba(184, 40, 40, 0.115), transparent 34%),
+    linear-gradient(180deg, #0a0807 0%, #120a07 54%, #080706 100%);
 }
 
-.home-page [data-carousel].section::before {
-  background:
-    radial-gradient(circle at 20% 24%, rgba(244, 197, 66, 0.12), transparent 30%),
-    radial-gradient(circle at 82% 74%, rgba(107, 34, 20, 0.08), transparent 28%);
+.home-page .section + .section {
+  border-top: 1px solid rgba(244, 197, 66, 0.075);
 }
 
-.home-page [data-carousel].section::after {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.016) 0%, transparent 30%),
-    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.06), transparent);
-  opacity: 0.8;
+.product-media,
+.cat-visual,
+.poster-main {
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.095), rgba(255,255,255,.04)),
+    radial-gradient(circle at 30% 20%, rgba(244,197,66,.10), transparent 34%),
+    linear-gradient(180deg, rgba(21,17,13,.95), rgba(10,10,10,.98));
+  background-size: 220% 100%, 100% 100%, 100% 100%;
+  animation: mediaSkeletonSheen 1.5s ease-in-out infinite;
 }
 
-/* Ajustes mobile de fondos */
+.product-media img,
+.cat-visual img,
+.poster-main img {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes mediaSkeletonSheen {
+  0% { background-position: 100% 0, 0 0, 0 0; }
+  100% { background-position: -100% 0, 0 0, 0 0; }
+}
+
 @media (max-width: 767.98px) {
   .home-page .hero::after,
   .home-page .section::after {
-    opacity: 0.68;
-  }
-
-  .home-page .hero,
-  .home-page .section {
-    background-attachment: scroll;
+    opacity: 0.58;
   }
 }
-
 
 /* Animaciones al scrollear */
 .home-page .scroll-reveal {
@@ -3302,10 +3352,10 @@ body.is-scrolled .brand img {
   box-shadow: var(--shadow-poster-frame);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .home-page .hero-grid {
-    grid-template-columns: minmax(0, 0.92fr) minmax(560px, 1.08fr);
-    gap: clamp(2.5rem, 4vw, 4rem);
+    grid-template-columns: minmax(0, 0.88fr) minmax(520px, 1fr);
+    gap: clamp(3.5rem, 5.5vw, 6rem);
   }
 
   .home-page .hero-visual {
@@ -3363,148 +3413,4 @@ body.is-scrolled .brand img {
     right: 0.85rem;
     font-size: 0.76rem;
   }
-}
-
-
-
-
-
-
-
-/* =========================================================
-   Ajuste visual 2026-04-27 · Landing premium
-   Fondos con más profundidad + legibilidad puntual en categorías.
-   ========================================================= */
-
-.home-page {
-  background:
-    radial-gradient(circle at 18% 0%, rgba(244, 197, 66, 0.075), transparent 28%),
-    radial-gradient(circle at 86% 8%, rgba(184, 40, 40, 0.075), transparent 30%),
-    linear-gradient(180deg, #080706 0%, #0b0907 48%, #070706 100%);
-}
-
-.home-page .section,
-.home-page .hero {
-  overflow: hidden;
-}
-
-.home-page .hero {
-  background:
-    radial-gradient(circle at 16% 18%, rgba(244, 197, 66, 0.16), transparent 28%),
-    radial-gradient(circle at 82% 22%, rgba(184, 40, 40, 0.15), transparent 32%),
-    radial-gradient(circle at 50% 112%, rgba(244, 197, 66, 0.08), transparent 40%),
-    linear-gradient(180deg, #11100d 0%, #090806 100%);
-}
-
-.home-page .section--categories,
-.home-page .section:nth-of-type(2) {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(244, 197, 66, 0.105), transparent 30%),
-    radial-gradient(circle at 88% 72%, rgba(184, 40, 40, 0.10), transparent 32%),
-    linear-gradient(180deg, #090806 0%, #0d0b08 58%, #120c07 100%);
-}
-
-.home-page .section--categories::before,
-.home-page .section:nth-of-type(2)::before {
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.024), transparent 32%),
-    radial-gradient(circle at 24% 78%, rgba(184, 40, 40, 0.075), transparent 34%),
-    repeating-linear-gradient(
-      90deg,
-      rgba(244, 197, 66, 0.018) 0 1px,
-      transparent 1px 84px
-    );
-  opacity: 0.72;
-}
-
-.home-page #como-funciona.section {
-  background:
-    radial-gradient(circle at 84% 18%, rgba(244, 197, 66, 0.12), transparent 30%),
-    radial-gradient(circle at 12% 84%, rgba(184, 40, 40, 0.10), transparent 34%),
-    linear-gradient(180deg, #151008 0%, #0f0a07 54%, #090807 100%);
-}
-
-.home-page [data-carousel].section {
-  background:
-    radial-gradient(circle at 18% 24%, rgba(244, 197, 66, 0.12), transparent 30%),
-    radial-gradient(circle at 84% 76%, rgba(184, 40, 40, 0.115), transparent 34%),
-    linear-gradient(180deg, #0a0807 0%, #120a07 54%, #080706 100%);
-}
-
-.home-page .section + .section {
-  border-top: 1px solid rgba(244, 197, 66, 0.075);
-}
-
-.category-card::after {
-  background:
-    linear-gradient(180deg, rgba(8, 7, 6, 0.18), rgba(8, 7, 6, 0.46)),
-    radial-gradient(circle at 72% 18%, rgba(244, 197, 66, 0.10), transparent 46%),
-    radial-gradient(circle at 18% 88%, rgba(184, 40, 40, 0.09), transparent 52%);
-}
-
-.category-card-content {
-  width: min(100%, 92%);
-  height: auto;
-  padding: 0.78rem 0.9rem 4.05rem;
-  margin: -0.2rem 0 0 -0.15rem;
-  border-radius: 16px;
-  background:
-    linear-gradient(90deg, rgba(4, 3, 2, 0.58), rgba(4, 3, 2, 0.30) 66%, transparent 100%);
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
-  backdrop-filter: blur(1.8px);
-  -webkit-backdrop-filter: blur(1.8px);
-}
-
-.category-card h3 {
-  color: var(--text-primary);
-  letter-spacing: -0.015em;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.75),
-    0 10px 28px rgba(0, 0, 0, 0.55);
-}
-
-.category-card p {
-  color: rgba(255, 239, 207, 0.88);
-  text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.78),
-    0 8px 22px rgba(0, 0, 0, 0.52);
-}
-
-.category-card:hover .category-card-content,
-.category-card:focus-within .category-card-content {
-  background:
-    linear-gradient(90deg, rgba(4, 3, 2, 0.64), rgba(4, 3, 2, 0.34) 68%, transparent 100%);
-}
-
-@media (max-width: 767.98px) {
-  .category-card-content {
-    width: 100%;
-    padding: 0.72rem 0.78rem 3.85rem;
-    margin-left: 0;
-  }
-}
-
-.product-media,
-.cat-visual,
-.poster-main {
-  background-image:
-    linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.095), rgba(255,255,255,.04)),
-    radial-gradient(circle at 30% 20%, rgba(244,197,66,.10), transparent 34%),
-    linear-gradient(180deg, rgba(21,17,13,.95), rgba(10,10,10,.98));
-  background-size: 220% 100%, 100% 100%, 100% 100%;
-  animation: mediaSkeletonSheen 1.5s ease-in-out infinite;
-}
-
-.product-media img,
-.cat-visual img,
-.poster-main img {
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes mediaSkeletonSheen {
-  0% { background-position: 100% 0, 0 0, 0 0; }
-  100% { background-position: -100% 0, 0 0, 0 0; }
 }

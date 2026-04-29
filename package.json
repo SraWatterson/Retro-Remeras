@@ -24,6 +24,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "dotenv-cli": "^11.0.0",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "typescript": "latest"

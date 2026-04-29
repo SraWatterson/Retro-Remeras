@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
@@ -103,7 +104,7 @@ export function CatalogView({ initialCategory, initialSearch, initialProducts, c
                     <article className="product-card product-card--linked" key={product.id}>
                       <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
                         <div className="product-media">
-                          <img src={normalizeImageUrl(product.imagen)} alt={product.nombre} loading="lazy" decoding="async" width={900} height={900} />
+                          <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={900} height={900} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 320px" />
                           {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
                         </div>
                       </Link>

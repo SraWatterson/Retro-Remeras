@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import type { CSSProperties } from 'react';
 import { motion } from 'framer-motion';
@@ -16,7 +17,7 @@ const CATEGORIES = [
     image: '/assets/category-cards/anime-retro.jpg',
   },
   {
-    title: 'Cine / Películas',
+    title: 'Cine',
     description: 'Posters, VHS, culto y referencias que sí se entienden.',
     image: '/assets/category-cards/cine-retro.jpg',
   },
@@ -88,7 +89,7 @@ export function CategoriesSection() {
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <img src={category.image} alt={category.title} loading="lazy" decoding="async" width={900} height={700} />
+              <Image src={category.image} alt={category.title} width={900} height={700} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 350px" />
 
               <div className="category-card-content">
                 <h3>{category.title}</h3>

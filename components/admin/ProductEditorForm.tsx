@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { ColorImageRow, ProductFormErrors, ProductFormState } from './types';
 
@@ -28,6 +29,24 @@ type Props = {
 };
 
 type CategoryMode = 'existing' | 'new';
+
+
+function normalizeAdminImageSrc(src?: string | null) {
+  if (!src) return null;
+
+  const value = String(src).trim();
+  if (!value) return null;
+
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    return value;
+  }
+
+  if (value.startsWith('/')) {
+    return value;
+  }
+
+  return `/${value.replace(/^\/+/, '')}`;
+}
 
 function normalizeCategory(value: string) {
   return value.trim().replace(/\s+/g, ' ');
@@ -187,7 +206,22 @@ export function ProductEditorForm({
         <div className="form-group admin-upload-box">
           <label className="form-label">Imagen principal *</label>
           <div className={`admin-preview-wrap ${uploading ? 'is-busy' : ''}`} aria-busy={uploading}>
-            {form.imagen ? <img className="admin-preview" src={form.imagen} alt="Imagen principal" loading="lazy" decoding="async" /> : <div className="admin-preview admin-preview--empty">Sin imagen</div>}
+            {(() => {
+              const previewSrc = normalizeAdminImageSrc(form.imagen);
+
+              return previewSrc ? (
+                <Image
+                  className="admin-preview"
+                  src={previewSrc}
+                  alt="Imagen principal"
+                  width={420}
+                  height={420}
+                  sizes="(max-width: 767px) 90vw, 420px"
+                />
+              ) : (
+                <div className="admin-preview admin-preview--empty">Sin imagen</div>
+              );
+            })()}
             {uploading ? <span className="admin-preview-loader" aria-hidden="true" /> : null}
           </div>
 
@@ -210,7 +244,22 @@ export function ProductEditorForm({
                 <input className="input" placeholder="Color (ej: Negro)" value={row.color} disabled={saving} onChange={(event) => onColorRowChange(row.id, { color: event.target.value })} />
 
                 <div className={`admin-preview-wrap ${uploading ? 'is-busy' : ''}`} aria-busy={uploading}>
-                  {row.path ? <img className="admin-preview admin-preview--small" src={row.path} alt={`Color ${row.color || 'sin nombre'}`} loading="lazy" decoding="async" /> : <div className="admin-preview admin-preview--small admin-preview--empty">Sin imagen</div>}
+                  {(() => {
+                    const previewSrc = normalizeAdminImageSrc(row.path);
+
+                    return previewSrc ? (
+                      <Image
+                        className="admin-preview admin-preview--small"
+                        src={previewSrc}
+                        alt={`Color ${row.color || 'sin nombre'}`}
+                        width={180}
+                        height={180}
+                        sizes="96px"
+                      />
+                    ) : (
+                      <div className="admin-preview admin-preview--small admin-preview--empty">Sin imagen</div>
+                    );
+                  })()}
                   {uploading ? <span className="admin-preview-loader" aria-hidden="true" /> : null}
                 </div>
 

@@ -2,6 +2,7 @@ import { AuditAction, Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { createAuditLog } from '@/lib/audit-log';
 import { getCurrentSession, isRoleAllowed } from '@/lib/auth';
+import { normalizeCategoryName } from '@/lib/category-utils';
 import { checkRateLimit, getClientIp, jsonServerError, rateLimitResponse } from '@/lib/api-helpers';
 import { normalizeProductOutput } from '@/lib/product-output';
 import { prisma } from '@/lib/prisma';
@@ -72,6 +73,7 @@ export async function PATCH(request: Request, context: Context) {
       where: { id },
       data: {
         ...parsed.data,
+        ...(parsed.data.categoria ? { categoria: normalizeCategoryName(parsed.data.categoria) } : {}),
         ...(parsed.data.activo === true ? { deletedAt: null, deletedById: null } : {}),
         updatedById: session.id,
       },
@@ -109,6 +111,30 @@ export async function DELETE(request: Request, context: Context) {
 
   try {
     const { id } = await context.params;
+    const hardDelete = new URL(request.url).searchParams.get('hard') === 'true';
+    const current = await prisma.product.findUnique({ where: { id } });
+
+    if (!current) {
+      return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });
+    }
+
+    if (hardDelete) {
+      await prisma.product.delete({ where: { id } });
+
+      await createAuditLog({
+        action: AuditAction.PRODUCT_DEACTIVATED,
+        entity: 'Product',
+        entityId: current.id,
+        actorId: session.id,
+        metadata: {
+          slug: current.slug,
+          nombre: current.nombre,
+          hardDelete: true,
+        },
+      });
+
+      return NextResponse.json({ ok: true, hardDeleted: true });
+    }
 
     const deleted = await prisma.product.update({
       where: { id },
@@ -128,10 +154,11 @@ export async function DELETE(request: Request, context: Context) {
       metadata: {
         slug: deleted.slug,
         nombre: deleted.nombre,
+        hardDelete: false,
       },
     });
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, hardDeleted: false });
   } catch (error) {
     return jsonServerError('PRODUCT_DELETE', 'No se pudo eliminar el producto', error);
   }

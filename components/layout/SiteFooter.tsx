@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 export function SiteFooter() {
@@ -6,7 +7,7 @@ export function SiteFooter() {
       <div className="container footer-grid">
         <div>
           <a className="brand" href="/" aria-label="Retro Remeras">
-            <img src="/assets/logo/icono-banner.png" alt="Retro Remeras" loading="lazy" decoding="async" />
+            <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={190} height={54} sizes="190px" />
           </a>
           <p>
             Remeras con estilo, nostalgia y personalidad. Diseños temáticos, atención cercana y pedidos simples por WhatsApp.

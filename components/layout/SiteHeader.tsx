@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { cartGetItemsCount, cartLoad, subscribeToCartUpdates } from '@/lib/shop';
@@ -24,7 +25,7 @@ export function SiteHeader({ active }: Props) {
     <header className="topbar">
       <div className="container navbar">
         <Link className="brand" href="/" aria-label="Ir al inicio de Retro Remeras">
-          <img src="/assets/logo/icono-banner.png" alt="Retro Remeras" decoding="async" />
+          <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={56} height={56} sizes="56px" priority />
         </Link>
 
         <button
@@ -54,7 +55,7 @@ export function SiteHeader({ active }: Props) {
 
         <div className={`nav-cta ${open ? 'is-open' : ''}`} data-nav-cta>
           <Link className="nav-cart-icon-btn" href="/carrito" aria-label="Ver carrito" onClick={() => setOpen(false)}>
-            <img src="/assets/icons/carrito-de-compras.png" alt="" className="nav-cart-icon" loading="lazy" decoding="async" />
+            <Image src="/assets/icons/carrito-de-compras.png" alt="" className="nav-cart-icon" width={28} height={28} />
             <span className="nav-cart-badge nav-cart-badge--icon" data-global-cart-count>
               {cartCount}
             </span>

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -49,7 +50,7 @@ export function CartView() {
                   <article className="cart-item" key={item.id}>
                     <div className="cart-item-body">
                       <div className="cart-item-thumb">
-                        <img src={item.image} alt={item.productName} loading="lazy" decoding="async" />
+                        <Image src={item.image} alt={item.productName} width={180} height={180} sizes="76px" />
                       </div>
                       <div className="cart-item-content">
                         <div className="cart-item-head">

@@ -1,9 +1,14 @@
 .catalog-main {
   padding: 2rem 0 4rem;
+  background:
+    radial-gradient(circle at 86% 4%, rgba(184, 40, 40, 0.11), transparent 30%),
+    radial-gradient(circle at 14% 18%, rgba(244, 197, 66, 0.075), transparent 32%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 52%, var(--bg-warm) 100%);
 }
 
 .catalog-hero {
   padding: 2.5rem 0 1.25rem;
+  position: relative;
 }
 
 .catalog-shell {
@@ -283,12 +288,16 @@
 
 /* Filters usa surface. Sin backdrop-filter sobre bg sólido. */
 .filters {
-  background: var(--surface);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(244, 197, 66, 0.07), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    var(--surface-glass);
   padding: 1.25rem;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  backdrop-filter: blur(10px) saturate(118%);
+  -webkit-backdrop-filter: blur(10px) saturate(118%);
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
 }
 
 /* Filter pill activa: fondo amarillo sólido es correcto para este caso.

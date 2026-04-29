@@ -1,5 +1,9 @@
 .cart-page {
   padding: 2rem 0 4rem;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(184, 40, 40, 0.105), transparent 30%),
+    radial-gradient(circle at 12% 18%, rgba(244, 197, 66, 0.075), transparent 32%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 54%, var(--bg-warm) 100%);
 }
 
 .cart-shell {
@@ -80,7 +84,9 @@
   padding: 1rem;
   border-radius: 20px;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    var(--surface);
 }
 
 .cart-item-body {

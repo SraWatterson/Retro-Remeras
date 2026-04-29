@@ -1,7 +1,7 @@
 export const PRODUCT_CATEGORIES = [
   'Fútbol',
   'Anime',
-  'Cine / Películas',
+  'Cine',
   'Videojuegos',
   'Variados',
   'Vintage',

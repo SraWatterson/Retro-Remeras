@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -59,17 +60,17 @@ export function HeroSection() {
         >
           <div className="poster-stack">
             <article className="poster-main poster-frame poster-frame--featured">
-              <img src="/assets/img/ejemplo-vintage.jpg" alt="Diseño vintage destacado" loading="eager" decoding="async" width={900} height={1100} />
+              <Image src="/assets/img/ejemplo-vintage.jpg" alt="Diseño vintage destacado" width={900} height={1100} sizes="(max-width: 767px) 72vw, (max-width: 1199px) 38vw, 430px" priority />
               <div className="poster-badge">Colecciones con impronta retro</div>
             </article>
 
             <div className="poster-side" aria-label="Diseños destacados">
               <article className="poster-main poster-frame">
-                <img src="/assets/img/remera-goku.jpg" alt="Diseño anime destacado" loading="lazy" decoding="async" width={900} height={1100} />
+                <Image src="/assets/img/remera-goku.jpg" alt="Diseño anime destacado" width={900} height={1100} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
               </article>
 
               <article className="poster-main poster-frame">
-                <img src="/assets/img/ejemplo-gaming.jpg" alt="Diseño videojuegos destacado" loading="lazy" decoding="async" width={900} height={1100} />
+                <Image src="/assets/img/ejemplo-gaming.jpg" alt="Diseño videojuegos destacado" width={900} height={1100} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
               </article>
             </div>
           </div>

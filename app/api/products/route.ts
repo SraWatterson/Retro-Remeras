@@ -2,6 +2,7 @@ import { AuditAction, Prisma, Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { createAuditLog } from '@/lib/audit-log';
 import { getCurrentSession, isRoleAllowed } from '@/lib/auth';
+import { getCategoryAliases, normalizeCategoryName } from '@/lib/category-utils';
 import { checkRateLimit, getClientIp, jsonServerError, parsePositiveInt, rateLimitResponse } from '@/lib/api-helpers';
 import { normalizeProductOutput } from '@/lib/product-output';
 import { prisma } from '@/lib/prisma';
@@ -46,7 +47,7 @@ export async function GET(request: Request) {
     }
 
     if (category) {
-      filters.push({ categoria: category });
+      filters.push({ OR: getCategoryAliases(category).map((alias) => ({ categoria: { equals: alias, mode: 'insensitive' } })) });
     }
 
     if (search) {
@@ -121,6 +122,7 @@ export async function POST(request: Request) {
     const created = await prisma.product.create({
       data: {
         ...parsed.data,
+        categoria: normalizeCategoryName(parsed.data.categoria),
         imagenesPorColor: parsed.data.imagenesPorColor || {},
         createdById: session.id,
         updatedById: session.id,

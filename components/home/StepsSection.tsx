@@ -6,14 +6,17 @@ const steps = [
   {
     number: '1',
     title: 'Elegí un diseño',
+    description: 'Recorré las categorías o entrá al catálogo completo para encontrar tu remera.',
   },
   {
     number: '2',
     title: 'Seleccioná color, tipo y talle',
+    description: 'Configurá el modelo con las opciones disponibles antes de armar el pedido.',
   },
   {
     number: '3',
     title: 'Confirmá por WhatsApp',
+    description: 'Enviá tu pedido listo para coordinar disponibilidad, pago y entrega.',
   },
 ];
 
@@ -67,6 +70,7 @@ export function StepsSection() {
             >
               <div className="step-number">{step.number}</div>
               <h3>{step.title}</h3>
+              <p>{step.description}</p>
             </motion.article>
           ))}
         </motion.div>

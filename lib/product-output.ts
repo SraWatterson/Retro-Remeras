@@ -1,3 +1,4 @@
+import { normalizeCategoryName } from '@/lib/category-utils';
 import { Product } from '@/lib/shop';
 
 type ProductLike = {
@@ -33,7 +34,7 @@ export function normalizeProductOutput(product: ProductLike): Product {
     legacyId: product.legacyId,
     slug: product.slug,
     nombre: product.nombre,
-    categoria: product.categoria,
+    categoria: normalizeCategoryName(product.categoria),
     precio: product.precio,
     imagen: product.imagen,
     imagenesPorColor: normalizeImageMap(product.imagenesPorColor),

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -107,7 +108,7 @@ export function ProductView({ product }: Props) {
         <div className="product-layout">
           <section className="product-gallery">
             <div className="product-gallery-main">
-              <img src={selectedImage} alt={product.nombre} width={1200} height={1200} loading="eager" decoding="async" />
+              <Image src={selectedImage} alt={product.nombre} width={1200} height={1200} sizes="(max-width: 767px) 94vw, (max-width: 1199px) 58vw, 760px" priority />
             </div>
           </section>
 
@@ -199,13 +200,12 @@ export function ProductView({ product }: Props) {
                     <strong>{SIZE_GUIDES[selectedFit]?.label ?? 'Regular'}</strong>
                   </div>
                   <div className="size-chart-card__media">
-                    <img
+                    <Image
                       src={SIZE_GUIDES[selectedFit]?.src ?? SIZE_GUIDES.regular.src}
                       alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
                       width={900}
                       height={560}
-                      loading="lazy"
-                      decoding="async"
+                      sizes="(max-width: 767px) 90vw, (max-width: 1199px) 44vw, 420px"
                     />
                   </div>
                 </div>

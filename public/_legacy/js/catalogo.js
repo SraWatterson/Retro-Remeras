@@ -7,7 +7,7 @@ const state = {
   search: ''
 };
 
-const categories = ['Todos', 'Fútbol', 'Anime', 'Cine / Películas', 'Videojuegos', 'Variados', 'Vintage'];
+const categories = ['Todos', 'Fútbol', 'Anime', 'Cine', 'Videojuegos', 'Variados', 'Vintage'];
 
 document.addEventListener('DOMContentLoaded', async () => {
   setupCategoryPills();

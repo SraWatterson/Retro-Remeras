@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -133,13 +134,12 @@ export function FeaturedProducts({ initialProducts }: Props) {
                         aria-label={`Ver ${activeProduct.nombre}`}
                       >
                         <div className="product-media">
-                          <img
+                          <Image
                             src={normalizeImageUrl(activeProduct.imagen)}
                             alt={activeProduct.nombre}
-                            loading="lazy"
-                            decoding="async"
                             width={900}
                             height={900}
+                            sizes="(max-width: 767px) 92vw, (max-width: 1199px) 48vw, 420px"
                           />
 
                           {activeProduct.destacado ? (
