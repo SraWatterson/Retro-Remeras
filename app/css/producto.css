@@ -1393,3 +1393,84 @@
   0% { background-position: 100% 0, 0 0, 0 0; }
   100% { background-position: -100% 0, 0 0, 0 0; }
 }
+
+/* =========================================================
+   Etapa 1 · Pulido front público producto
+   ========================================================= */
+.product-page {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(244, 197, 66, 0.10), transparent 32%),
+    radial-gradient(circle at 88% 18%, rgba(184, 40, 40, 0.09), transparent 31%),
+    radial-gradient(circle at 50% 100%, rgba(94, 23, 21, 0.18), transparent 42%),
+    linear-gradient(180deg, #090806 0%, #0d0907 48%, #070706 100%);
+}
+
+.product-gallery-main {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(244, 197, 66, 0.08), transparent 46%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    var(--surface);
+}
+
+.product-order-box {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(244, 197, 66, 0.06), transparent 36%),
+    rgba(20, 15, 10, 0.88);
+}
+
+.product-order-actions {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.product-action-btn--add {
+  min-height: 50px;
+}
+
+.product-action-btn--whatsapp,
+.product-action-btn--catalog {
+  min-height: 46px;
+}
+
+.product-action-clear {
+  width: fit-content;
+  justify-self: center;
+  color: rgba(216, 66, 56, 0.74);
+}
+
+.product-action-clear:hover {
+  background: rgba(184, 40, 40, 0.10);
+  color: var(--red-soft, #d84238);
+}
+
+.product-order-box .cart-empty-state--rich {
+  padding: 0.95rem;
+  min-height: auto;
+  border-style: dashed;
+  background: rgba(244, 197, 66, 0.045);
+}
+
+.product-order-box .cart-empty-state--rich h3 {
+  margin: 0;
+  color: var(--cream);
+  font-size: 0.98rem;
+}
+
+.product-order-box .cart-empty-state--rich p {
+  margin: 0;
+  max-width: 30ch;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 767.98px) {
+  .product-order-actions {
+    gap: 0.58rem;
+  }
+
+  .product-action-btn--add,
+  .product-action-btn--whatsapp,
+  .product-action-btn--catalog {
+    min-height: 52px;
+  }
+}

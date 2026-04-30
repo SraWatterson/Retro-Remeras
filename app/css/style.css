@@ -474,6 +474,8 @@ body.is-scrolled .brand img {
   background: rgba(255, 255, 255, 0.035);
   color: var(--cream);
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -1065,6 +1067,11 @@ body.is-scrolled .brand img {
 
 /* Categorías destacadas
    Cards con imagen decorativa, panel de lectura uniforme y botón “Explorar” flotante. */
+.category-card-shell {
+  min-width: 0;
+  height: 100%;
+}
+
 .category-card {
   --category-border: rgba(255, 255, 255, 0.07);
   --category-border-hover: rgba(244, 197, 66, 0.22);
@@ -1076,6 +1083,7 @@ body.is-scrolled .brand img {
   min-height: 188px;
   padding: 1.25rem;
   display: flex;
+  height: 100%;
   align-items: flex-start;
   justify-content: flex-start;
   border-radius: var(--radius);
@@ -1083,6 +1091,8 @@ body.is-scrolled .brand img {
   background: #0d0d0d;
   box-shadow: var(--shadow-card);
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
   transition:
     transform 0.38s var(--ease-out-expo),
     border-color 0.3s ease,
@@ -1104,7 +1114,7 @@ body.is-scrolled .brand img {
   background-position: center;
   background-size: cover;
   transform: scale(1.015);
-  filter: brightness(0.74) contrast(1.06) saturate(0.98);
+  filter: brightness(0.86) contrast(1.04) saturate(1.04);
   transition:
     transform 0.48s var(--ease-out-expo),
     filter 0.48s ease;
@@ -1121,7 +1131,7 @@ body.is-scrolled .brand img {
   object-fit: cover;
   border-radius: inherit;
   transform: scale(1.015);
-  filter: brightness(0.74) contrast(1.06) saturate(0.98);
+  filter: brightness(0.86) contrast(1.04) saturate(1.04);
   transition:
     transform 0.48s var(--ease-out-expo),
     filter 0.48s ease;
@@ -1130,8 +1140,8 @@ body.is-scrolled .brand img {
 .category-card::after {
   z-index: 1;
   background:
-    linear-gradient(180deg, rgba(8, 7, 6, 0.14), rgba(8, 7, 6, 0.58)),
-    linear-gradient(90deg, rgba(4, 3, 2, 0.58), rgba(4, 3, 2, 0.22) 56%, rgba(4, 3, 2, 0.08) 100%),
+    linear-gradient(180deg, rgba(8, 7, 6, 0.08), rgba(8, 7, 6, 0.46)),
+    linear-gradient(90deg, rgba(4, 3, 2, 0.46), rgba(4, 3, 2, 0.16) 56%, rgba(4, 3, 2, 0.04) 100%),
     radial-gradient(circle at 78% 18%, rgba(244, 197, 66, 0.08), transparent 44%),
     radial-gradient(circle at 20% 88%, rgba(184, 40, 40, 0.08), transparent 52%);
   box-shadow: var(--shadow-glass-inset);
@@ -1152,7 +1162,7 @@ body.is-scrolled .brand img {
   gap: 0.38rem;
   border-radius: 18px;
   background:
-    linear-gradient(90deg, rgba(4, 3, 2, 0.66), rgba(4, 3, 2, 0.42) 68%, rgba(4, 3, 2, 0.14) 100%);
+    linear-gradient(90deg, rgba(4, 3, 2, 0.58), rgba(4, 3, 2, 0.34) 68%, rgba(4, 3, 2, 0.14) 100%);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.26),
     inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -1204,6 +1214,10 @@ body.is-scrolled .brand img {
   color: var(--text-inverse);
   font-weight: 800;
   box-shadow: var(--shadow-category-btn);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   transition:
     transform 0.3s var(--ease-out-expo),
     opacity 0.25s ease,
@@ -1224,14 +1238,14 @@ body.is-scrolled .brand img {
 .category-card:hover > span img,
 .category-card:focus-within > span img {
   transform: scale(1.065);
-  filter: brightness(0.82) contrast(1.09) saturate(1.04);
+  filter: brightness(0.94) contrast(1.06) saturate(1.08);
 }
 
 .category-card:hover::after,
 .category-card:focus-within::after {
   background:
-    linear-gradient(180deg, rgba(8, 7, 6, 0.10), rgba(8, 7, 6, 0.52)),
-    linear-gradient(90deg, rgba(4, 3, 2, 0.62), rgba(4, 3, 2, 0.34) 62%, rgba(4, 3, 2, 0.08) 100%),
+    linear-gradient(180deg, rgba(8, 7, 6, 0.06), rgba(8, 7, 6, 0.42)),
+    linear-gradient(90deg, rgba(4, 3, 2, 0.50), rgba(4, 3, 2, 0.24) 62%, rgba(4, 3, 2, 0.05) 100%),
     radial-gradient(circle at 78% 18%, rgba(244, 197, 66, 0.12), transparent 46%),
     radial-gradient(circle at 20% 88%, rgba(184, 40, 40, 0.10), transparent 54%);
   box-shadow: var(--shadow-glass-inset-hover);
@@ -1241,7 +1255,7 @@ body.is-scrolled .brand img {
 .category-card:focus-within .category-card-content {
   transform: translateY(-1px);
   background:
-    linear-gradient(90deg, rgba(4, 3, 2, 0.70), rgba(4, 3, 2, 0.46) 68%, rgba(4, 3, 2, 0.16) 100%);
+    linear-gradient(90deg, rgba(4, 3, 2, 0.62), rgba(4, 3, 2, 0.38) 68%, rgba(4, 3, 2, 0.16) 100%);
 }
 
 .category-card:hover .btn-explore,
@@ -3412,5 +3426,31 @@ body.is-scrolled .brand img {
     left: 0.85rem;
     right: 0.85rem;
     font-size: 0.76rem;
+  }
+}
+
+/* =========================================================
+   Etapa 1 · Ajustes sistémicos de profundidad pública
+   ========================================================= */
+.home-page .hero,
+.home-page .section {
+  overflow: clip;
+}
+
+.home-page .section::before {
+  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+
+.home-page .section + .section::before {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(244, 197, 66, 0.055), transparent 48%),
+    linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.055), transparent);
+}
+
+@media (max-width: 767.98px) {
+  .home-page .hero,
+  .home-page .section {
+    overflow: hidden;
   }
 }

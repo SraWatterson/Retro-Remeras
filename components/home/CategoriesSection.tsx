@@ -8,31 +8,37 @@ import { motion } from 'framer-motion';
 const CATEGORIES = [
   {
     title: 'Fútbol',
+    slug: 'futbol',
     description: 'Clásicos, ídolos, momentos épicos y mística de cancha.',
     image: '/assets/category-cards/coleccion-futbol-retro.webp',
   },
   {
     title: 'Anime',
+    slug: 'anime',
     description: 'Diseños con energía, ciudad, nostalgia y mucha personalidad.',
     image: '/assets/category-cards/anime-retro.jpg',
   },
   {
     title: 'Cine',
+    slug: 'cine',
     description: 'Posters, VHS, culto y referencias que sí se entienden.',
     image: '/assets/category-cards/cine-retro.jpg',
   },
   {
     title: 'Videojuegos',
+    slug: 'videojuegos',
     description: 'Arcade, pixel, boss fights y una buena cuota de nostalgia.',
     image: '/assets/category-cards/retro-gaming.webp',
   },
   {
     title: 'Variados',
+    slug: 'variados',
     description: 'Rock, cultura urbana, conceptos visuales y diseños sueltos.',
     image: '/assets/category-cards/random-retro.jpg',
   },
   {
     title: 'Vintage',
+    slug: 'vintage',
     description: 'Cartelería, color cálido, tipografías con historia y buen gusto.',
     image: '/assets/category-cards/vintage-retro.png',
   },
@@ -82,24 +88,37 @@ export function CategoriesSection() {
           }}
         >
           {CATEGORIES.map((category) => (
-            <motion.article
+            <motion.div
               key={category.title}
-              className="category-card"
-              style={{ '--category-image': `url('${category.image}')` } as CSSProperties}
+              className="category-card-shell"
               variants={itemVariants}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Image src={category.image} alt={category.title} width={900} height={700} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 350px" />
+              <Link
+                className="category-card"
+                href={`/catalogo?categoria=${category.slug}`}
+                aria-label={`Explorar categoría ${category.title}`}
+                style={{ '--category-image': `url('${category.image}')` } as CSSProperties}
+              >
+                <Image
+                  src={category.image}
+                  alt={category.title}
+                  width={1100}
+                  height={820}
+                  quality={92}
+                  sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 420px"
+                />
 
-              <div className="category-card-content">
-                <h3>{category.title}</h3>
-                <p>{category.description}</p>
-              </div>
+                <div className="category-card-content">
+                  <h3>{category.title}</h3>
+                  <p>{category.description}</p>
+                </div>
 
-              <Link className="btn btn-explore" href="/catalogo">
-                Explorar
+                <span className="btn btn-explore" aria-hidden="true">
+                  Explorar
+                </span>
               </Link>
-            </motion.article>
+            </motion.div>
           ))}
         </motion.div>
       </div>

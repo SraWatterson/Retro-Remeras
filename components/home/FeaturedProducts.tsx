@@ -137,8 +137,9 @@ export function FeaturedProducts({ initialProducts }: Props) {
                           <Image
                             src={normalizeImageUrl(activeProduct.imagen)}
                             alt={activeProduct.nombre}
-                            width={900}
-                            height={900}
+                            width={1000}
+                            height={1000}
+                            quality={90}
                             sizes="(max-width: 767px) 92vw, (max-width: 1199px) 48vw, 420px"
                           />
 

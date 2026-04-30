@@ -69,6 +69,7 @@ export function ProductView({ product }: Props) {
     return normalizeImageUrl(byColor || product?.imagen);
   }, [product, selectedColor]);
 
+  const hasCartItems = items.length > 0;
   const orderLink = createWhatsAppLink(createCartMessage(items));
 
   function addToCart() {
@@ -92,6 +93,10 @@ export function ProductView({ product }: Props) {
   }
 
   function clearCurrentCart() {
+    if (!hasCartItems) return;
+    const confirmed = window.confirm('¿Seguro que querés vaciar todo el pedido?');
+    if (!confirmed) return;
+
     const empty = cartClear();
     setItems(empty);
   }
@@ -108,7 +113,7 @@ export function ProductView({ product }: Props) {
         <div className="product-layout">
           <section className="product-gallery">
             <div className="product-gallery-main">
-              <Image src={selectedImage} alt={product.nombre} width={1200} height={1200} sizes="(max-width: 767px) 94vw, (max-width: 1199px) 58vw, 760px" priority />
+              <Image src={selectedImage} alt={product.nombre} width={1400} height={1400} quality={94} sizes="(max-width: 767px) 94vw, (max-width: 1199px) 58vw, 760px" priority />
             </div>
           </section>
 
@@ -203,8 +208,9 @@ export function ProductView({ product }: Props) {
                     <Image
                       src={SIZE_GUIDES[selectedFit]?.src ?? SIZE_GUIDES.regular.src}
                       alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
-                      width={900}
-                      height={560}
+                      width={1000}
+                      height={620}
+                      quality={92}
                       sizes="(max-width: 767px) 90vw, (max-width: 1199px) 44vw, 420px"
                     />
                   </div>
@@ -229,7 +235,10 @@ export function ProductView({ product }: Props) {
                     </div>
                   ))
                 ) : (
-                  <div className="cart-empty-state">Todavía no agregaste productos al pedido.</div>
+                  <div className="cart-empty-state cart-empty-state--rich">
+                    <h3>Pedido en preparación</h3>
+                    <p>Elegí talle, color y tipo de remera para agregar este diseño.</p>
+                  </div>
                 )}
               </div>
 
@@ -243,13 +252,21 @@ export function ProductView({ product }: Props) {
                   Agregar al pedido
                 </button>
 
-                <a className="btn btn-secondary product-action-btn product-action-btn--whatsapp" href={orderLink} target="_blank" rel="noopener noreferrer">
-                  Finalizar por WhatsApp
-                </a>
+                {hasCartItems ? (
+                  <>
+                    <a className="btn btn-secondary product-action-btn product-action-btn--whatsapp" href={orderLink} target="_blank" rel="noopener noreferrer">
+                      Finalizar por WhatsApp
+                    </a>
 
-                <button className="cart-clear-btn product-action-clear" type="button" onClick={clearCurrentCart}>
-                  Vaciar pedido
-                </button>
+                    <button className="cart-clear-btn product-action-clear" type="button" onClick={clearCurrentCart}>
+                      Vaciar pedido
+                    </button>
+                  </>
+                ) : (
+                  <Link className="btn btn-secondary product-action-btn product-action-btn--catalog" href="/catalogo">
+                    Seguir viendo diseños
+                  </Link>
+                )}
               </div>
             </div>
           </aside>

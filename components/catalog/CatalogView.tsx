@@ -12,21 +12,36 @@ type Props = {
   categories: string[];
 };
 
+function findCategoryFromUrl(value: string | undefined, categories: string[]) {
+  if (!value) return 'Todos';
+
+  const decodedValue = decodeURIComponent(value);
+  const normalizedValue = normalizeText(decodedValue);
+  const matchedCategory = categories.find((category) => normalizeText(category) === normalizedValue);
+
+  return matchedCategory || decodedValue;
+}
+
 export function CatalogView({ initialCategory, initialSearch, initialProducts, categories }: Props) {
   const products = useMemo(() => initialProducts, [initialProducts]);
   const loading = false;
   const [search, setSearch] = useState(initialSearch || '');
-  const categoryList = useMemo(() => ['Todos', ...categories], [categories]);
-  const [activeCategory, setActiveCategory] = useState(
-    initialCategory && categories.some((category) => category === initialCategory) ? initialCategory : 'Todos'
-  );
+  const initialCategoryValue = useMemo(() => findCategoryFromUrl(initialCategory, categories), [categories, initialCategory]);
+  const categoryList = useMemo(() => {
+    if (initialCategoryValue !== 'Todos' && !categories.some((category) => category === initialCategoryValue)) {
+      return ['Todos', ...categories, initialCategoryValue];
+    }
 
+    return ['Todos', ...categories];
+  }, [categories, initialCategoryValue]);
+  const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
 
   const filtered = useMemo(() => {
     const searchText = normalizeText(search);
+    const categoryText = normalizeText(activeCategory);
 
     return products.filter((product) => {
-      const matchCategory = activeCategory === 'Todos' || product.categoria === activeCategory;
+      const matchCategory = activeCategory === 'Todos' || normalizeText(product.categoria) === categoryText;
       const haystack = normalizeText(`${product.nombre} ${product.categoria} ${product.descripcion}`);
       const matchSearch = !searchText || haystack.includes(searchText);
       return matchCategory && matchSearch;
@@ -104,7 +119,7 @@ export function CatalogView({ initialCategory, initialSearch, initialProducts, c
                     <article className="product-card product-card--linked" key={product.id}>
                       <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
                         <div className="product-media">
-                          <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={900} height={900} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 320px" />
+                          <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={1000} height={1000} quality={90} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 360px" />
                           {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
                         </div>
                       </Link>

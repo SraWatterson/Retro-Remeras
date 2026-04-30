@@ -20,6 +20,10 @@ import {
 export function CartView() {
   const [items, setItems] = useState<CartItem[]>([]);
 
+  const hasItems = items.length > 0;
+  const itemCount = cartGetItemsCount(items);
+  const total = cartGetTotal(items);
+
   useEffect(() => {
     setItems(cartLoad());
   }, []);
@@ -31,20 +35,34 @@ export function CartView() {
     cartSave(next);
   }
 
+  function clearCart() {
+    if (!hasItems) return;
+    const confirmed = window.confirm('¿Seguro que querés vaciar todo el pedido?');
+    if (!confirmed) return;
+    updateCart(cartClear());
+  }
+
   return (
     <main className="cart-page">
       <section className="container cart-shell">
-        <div className="section-header">
+        <div className="section-header cart-page-header">
           <span className="section-kicker">Tu pedido</span>
           <h1 className="section-title">Carrito de compras</h1>
           <p className="section-subtitle">Revisá tu pedido, ajustá cantidades y confirmalo por WhatsApp.</p>
         </div>
 
-        <div className="cart-layout">
+        <div className={`cart-layout ${!hasItems ? 'cart-layout--empty' : ''}`}>
           <section className="cart-main panel">
             <div className="cart-list cart-page-list">
-              {!items.length ? (
-                <div className="cart-empty-state">Todavía no agregaste productos al pedido.</div>
+              {!hasItems ? (
+                <div className="cart-empty-state cart-empty-state--rich">
+                  <span className="cart-empty-state__icon" aria-hidden="true">🛒</span>
+                  <h2>Tu carrito está vacío</h2>
+                  <p>Elegí una remera del catálogo y volvé acá para cerrar el pedido por WhatsApp.</p>
+                  <Link className="btn btn-primary cart-empty-state__btn" href="/catalogo">
+                    Ver catálogo
+                  </Link>
+                </div>
               ) : (
                 items.map((item) => (
                   <article className="cart-item" key={item.id}>
@@ -90,23 +108,34 @@ export function CartView() {
           <aside className="cart-summary panel">
             <h2>Resumen</h2>
             <ul className="summary-list">
-              <li><span>Productos</span><strong>{cartGetItemsCount(items)}</strong></li>
-              <li><span>Total estimado</span><strong>{formatPrice(cartGetTotal(items))}</strong></li>
+              <li><span>Productos</span><strong>{itemCount}</strong></li>
+              <li><span>Total estimado</span><strong>{formatPrice(total)}</strong></li>
             </ul>
 
-            <div className="cart-summary-actions">
-              <a className="btn btn-primary" href={orderLink} target="_blank" rel="noopener noreferrer">
-                Finalizar por WhatsApp
-              </a>
-              <Link className="btn btn-secondary" href="/catalogo">
-                Seguir comprando
-              </Link>
-              <button className="btn btn-ghost" type="button" onClick={() => updateCart(cartClear())}>
-                Vaciar pedido
-              </button>
-            </div>
+            {hasItems ? (
+              <>
+                <div className="cart-summary-actions">
+                  <a className="btn btn-primary cart-summary-whatsapp" href={orderLink} target="_blank" rel="noopener noreferrer">
+                    Finalizar por WhatsApp
+                  </a>
+                  <Link className="btn btn-secondary cart-summary-secondary" href="/catalogo">
+                    Seguir comprando
+                  </Link>
+                  <button className="cart-summary-clear" type="button" onClick={clearCart}>
+                    Vaciar pedido
+                  </button>
+                </div>
 
-            <div className="notice">El pedido se envía por WhatsApp con todos los productos, talles, colores y cantidades.</div>
+                <div className="notice">El pedido se envía por WhatsApp con todos los productos, talles, colores y cantidades.</div>
+              </>
+            ) : (
+              <div className="cart-summary-empty">
+                <p>Cuando agregues productos, acá vas a ver el total y la opción para finalizar.</p>
+                <Link className="btn btn-secondary" href="/catalogo">
+                  Explorar diseños
+                </Link>
+              </div>
+            )}
           </aside>
         </div>
       </section>

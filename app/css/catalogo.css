@@ -316,3 +316,86 @@
 }
 
 
+
+/* =========================================================
+   Etapa 1 · Pulido front público catálogo
+   ========================================================= */
+.catalog-main {
+  background:
+    radial-gradient(circle at 86% 5%, rgba(184, 40, 40, 0.14), transparent 31%),
+    radial-gradient(circle at 12% 12%, rgba(244, 197, 66, 0.095), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(94, 23, 21, 0.18), transparent 42%),
+    linear-gradient(180deg, var(--bg-deep) 0%, #0d0907 50%, var(--bg-warm) 100%);
+}
+
+.catalog-hero {
+  isolation: isolate;
+}
+
+.catalog-hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(244, 197, 66, 0.16), transparent);
+  pointer-events: none;
+}
+
+.filters,
+.catalog-stats {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(244, 197, 66, 0.065), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.006)),
+    rgba(29, 22, 15, 0.92);
+}
+
+.filters {
+  overflow: hidden;
+}
+
+.catalog-grid .empty-state {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  min-height: 260px;
+  align-content: center;
+  background: rgba(244, 197, 66, 0.045);
+}
+
+.catalog-grid .empty-state h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(1.35rem, 3vw, 1.8rem);
+}
+
+.catalog-grid .empty-state p {
+  margin: 0;
+  max-width: 36ch;
+  color: var(--muted);
+}
+
+.catalog-stats strong {
+  color: var(--text-primary);
+}
+
+.catalog-meta span {
+  color: var(--yellow);
+}
+
+@media (min-width: 1024px) {
+  .catalog-main {
+    padding-bottom: 5rem;
+  }
+
+  .catalog-shell {
+    gap: 1.45rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .catalog-grid .empty-state {
+    min-height: 220px;
+    padding: 1.6rem 1rem;
+  }
+}
