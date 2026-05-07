@@ -5,24 +5,26 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { getProductCategories } from '@/lib/category-queries';
 import { getPublicProducts } from '@/lib/product-queries';
+import { getSiteContent } from '@/lib/site-content';
 
 export const revalidate = 60;
 type PageProps = {
-  searchParams: Promise<{ categoria?: string; buscar?: string }>;
+  searchParams: Promise<{ categoria?: string }>; 
 };
 
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
-  const [products, categories] = await Promise.all([
+  const [products, categories, siteContent] = await Promise.all([
     getPublicProducts(),
     getProductCategories(),
+    getSiteContent(),
   ]);
 
   return (
     <>
-      <PromoBar />
+      <PromoBar content={siteContent} />
       <SiteHeader active="catalogo" />
-      <CatalogView initialCategory={params.categoria} initialSearch={params.buscar} initialProducts={products} categories={categories} />
+      <CatalogView initialCategory={params.categoria} initialProducts={products} categories={categories} />
       <SiteFooter />
     </>
   );

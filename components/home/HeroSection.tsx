@@ -3,8 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { DEFAULT_SITE_CONTENT, type SiteContentData } from '@/lib/site-content-defaults';
 
-export function HeroSection() {
+type Props = {
+  content?: SiteContentData | null;
+};
+
+export function HeroSection({ content }: Props) {
+  const hero = content || DEFAULT_SITE_CONTENT;
+
   return (
     <section className="hero">
       <div className="container hero-grid">
@@ -15,7 +22,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            Tienda temática · Buenos Aires
+            {hero.heroEyebrow}
           </motion.span>
 
           <motion.h1
@@ -24,7 +31,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
           >
-            Remeras con <span>estilo</span>, nostalgia y personalidad
+            {hero.heroTitlePrefix} <span>{hero.heroTitleAccent}</span>, {hero.heroTitleSuffix}
           </motion.h1>
 
           <motion.p
@@ -33,8 +40,7 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.16 }}
           >
-            En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría,
-            encontrá tu estilo y armá tu pedido desde la página de cada producto.
+            {hero.heroText}
           </motion.p>
 
           <motion.div
@@ -43,11 +49,11 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.24 }}
           >
-            <Link className="btn btn-primary" href="/catalogo">
-              Ver catálogo
+            <Link className="btn btn-primary" href={hero.heroPrimaryButtonHref || '/catalogo'}>
+              {hero.heroPrimaryButtonText}
             </Link>
-            <Link className="btn btn-secondary" href="/carrito">
-              Ver carrito
+            <Link className="btn btn-secondary" href={hero.heroSecondaryButtonHref || '/carrito'}>
+              {hero.heroSecondaryButtonText}
             </Link>
           </motion.div>
         </div>
@@ -60,17 +66,17 @@ export function HeroSection() {
         >
           <div className="poster-stack">
             <article className="poster-main poster-frame poster-frame--featured">
-              <Image src="/assets/img/ejemplo-vintage.jpg" alt="Diseño vintage destacado" width={1100} height={1320} quality={92} sizes="(max-width: 767px) 72vw, (max-width: 1199px) 38vw, 430px" priority />
-              <div className="poster-badge">Colecciones con impronta retro</div>
+              <Image src={hero.heroMainImage} alt={hero.heroMainImageAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 72vw, (max-width: 1199px) 38vw, 430px" priority />
+              <div className="poster-badge">{hero.heroBadgeText}</div>
             </article>
 
             <div className="poster-side" aria-label="Diseños destacados">
               <article className="poster-main poster-frame">
-                <Image src="/assets/img/remera-goku.jpg" alt="Diseño anime destacado" width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
+                <Image src={hero.heroSideImageOne} alt={hero.heroSideImageOneAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
               </article>
 
               <article className="poster-main poster-frame">
-                <Image src="/assets/img/ejemplo-gaming.jpg" alt="Diseño videojuegos destacado" width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
+                <Image src={hero.heroSideImageTwo} alt={hero.heroSideImageTwoAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
               </article>
             </div>
           </div>

@@ -18,12 +18,10 @@ import {
   normalizeImageUrl,
 } from '@/lib/shop';
 
-const COLORS = [
-  { name: 'Negro', swatchClass: 'swatch-dot--negro' },
-  { name: 'Blanco', swatchClass: 'swatch-dot--blanco' },
-];
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-const FITS = [
+type FitKey = 'regular' | 'oversize';
+
+const FITS: Array<{ key: FitKey; label: string; note: string }> = [
   { key: 'regular', label: 'Regular', note: 'Calce clásico' },
   { key: 'oversize', label: 'Oversize', note: 'Más amplio y relajado' },
 ];
@@ -41,7 +39,7 @@ const SIZE_GUIDES = {
   },
 };
 
-function getAvailableSizes(fit: string) {
+function getAvailableSizes(fit: FitKey) {
   return fit === 'oversize' ? ['M', 'L', 'XL', 'XXL'] : SIZES;
 }
 
@@ -54,33 +52,47 @@ type Props = {
 };
 
 export function ProductView({ product }: Props) {
-  const [selectedColor, setSelectedColor] = useState(COLORS[0].name);
+  const availableColors = useMemo(() => Object.values(product.imagenesPorColor || {}), [product.imagenesPorColor]);
+  const firstColor = availableColors[0] || null;
+  const [selectedColor, setSelectedColor] = useState(firstColor?.colorSlug || '');
   const [selectedSize, setSelectedSize] = useState('M');
-  const [selectedFit, setSelectedFit] = useState('regular');
+  const [selectedFit, setSelectedFit] = useState<FitKey>('regular');
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
     setItems(cartLoad());
   }, []);
 
+  useEffect(() => {
+    if (!availableColors.length) return;
+
+    const stillAvailable = availableColors.some((color) => color.colorSlug === selectedColor);
+    if (!stillAvailable) {
+      setSelectedColor(availableColors[0].colorSlug);
+    }
+  }, [availableColors, selectedColor]);
+
+  const selectedColorOption = useMemo(
+    () => availableColors.find((color) => color.colorSlug === selectedColor) || firstColor,
+    [availableColors, firstColor, selectedColor]
+  );
 
   const selectedImage = useMemo(() => {
-    const byColor = product?.imagenesPorColor?.[selectedColor];
-    return normalizeImageUrl(byColor || product?.imagen);
-  }, [product, selectedColor]);
+    return normalizeImageUrl(selectedColorOption?.path || product?.imagen);
+  }, [product, selectedColorOption]);
 
   const hasCartItems = items.length > 0;
   const orderLink = createWhatsAppLink(createCartMessage(items));
 
   function addToCart() {
     const nextItem: CartItem = {
-      id: `${product.id}-${selectedColor}-${selectedSize}-${selectedFit}`,
+      id: `${product.id}-${selectedColorOption?.colorSlug || 'principal'}-${selectedSize}-${selectedFit}`,
       productId: product.id,
       productName: product.nombre,
       category: product.categoria,
       image: selectedImage,
       unitPrice: product.precio,
-      color: selectedColor,
+      color: selectedColorOption?.colorName || 'Color principal',
       size: selectedSize,
       fit: selectedFit,
       fitLabel: FITS.find((fit) => fit.key === selectedFit)?.label || 'Regular',
@@ -180,22 +192,26 @@ export function ProductView({ product }: Props) {
               <div className="config-block">
                 <div className="config-head">
                   <span className="config-label">Color</span>
-                  <strong className="config-value">{selectedColor}</strong>
+                  <strong className="config-value">{selectedColorOption?.colorName || 'Color principal'}</strong>
                 </div>
-                <div className="swatches product-swatches">
-                  {COLORS.map((color) => (
-                    <button
-                      key={color.name}
-                      className={`swatch-card ${selectedColor === color.name ? 'is-selected' : ''}`}
-                      type="button"
-                      onClick={() => setSelectedColor(color.name)}
-                      aria-label={color.name}
-                    >
-                      <span className={`swatch-dot-lg ${color.swatchClass}`} />
-                      <span className="swatch-name">{color.name}</span>
-                    </button>
-                  ))}
-                </div>
+                {availableColors.length ? (
+                  <div className="swatches product-swatches">
+                    {availableColors.map((color) => (
+                      <button
+                        key={color.colorSlug}
+                        className={`swatch-card ${selectedColor === color.colorSlug ? 'is-selected' : ''}`}
+                        type="button"
+                        onClick={() => setSelectedColor(color.colorSlug)}
+                        aria-label={color.colorName}
+                      >
+                        <span className="swatch-dot-lg" style={{ backgroundColor: color.colorHex }} />
+                        <span className="swatch-name">{color.colorName}</span>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="product-color-fallback">Este diseño usa la imagen principal como referencia de color.</p>
+                )}
               </div>
 
               <div className="config-block size-chart-block">

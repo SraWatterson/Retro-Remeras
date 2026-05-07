@@ -1,14 +1,16 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { normalizeColorSlug, uniqueColorOptions, ProductColorOption } from '@/lib/colors';
 import { Product } from '@/lib/shop';
 import { AdminLoginForm } from './AdminLoginForm';
 import { CategoryManager } from './CategoryManager';
 import { AuditLogPanel } from './AuditLogPanel';
 import { AdminSessionBar } from './AdminSessionBar';
 import { ProductEditorForm } from './ProductEditorForm';
+import { SiteContentEditor } from './SiteContentEditor';
 import { ProductSortOption, ProductStatusFilter, ProductTable } from './ProductTable';
-import { ColorImageRow, ProductFormErrors, ProductFormState, SessionUser } from './types';
+import { ColorDraft, ColorImageRow, ProductFormErrors, ProductFormState, SessionUser, SiteContentErrors, SiteContentFormState } from './types';
 
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 const SESSION_REFRESH_INTERVAL_MS = 90 * 60 * 1000;
@@ -19,7 +21,9 @@ type AdminToast = {
   message: string;
 };
 
-type AdminSection = 'products' | 'categories' | 'audit' | 'product-form';
+type AdminSection = 'products' | 'categories' | 'visual-content' | 'audit' | 'product-form';
+
+const EMPTY_COLOR_DRAFT: ColorDraft = { name: '', hex: '#59F7FF' };
 
 const EMPTY_FORM: ProductFormState = {
   legacyId: '',
@@ -34,22 +38,53 @@ const EMPTY_FORM: ProductFormState = {
   activo: true,
 };
 
+const EMPTY_SITE_CONTENT_FORM: SiteContentFormState = {
+  promoEnabled: true,
+  promoText: 'LLEVANDO 3 PRODUCTOS TENÉS 5% DE DESCUENTO',
+  promoHref: '',
+  heroEyebrow: 'Tienda temática · Buenos Aires',
+  heroTitlePrefix: 'Remeras con',
+  heroTitleAccent: 'estilo',
+  heroTitleSuffix: 'nostalgia y personalidad',
+  heroText:
+    'En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.',
+  heroPrimaryButtonText: 'Ver catálogo',
+  heroPrimaryButtonHref: '/catalogo',
+  heroSecondaryButtonText: 'Ver carrito',
+  heroSecondaryButtonHref: '/carrito',
+  heroMainImage: '/assets/img/ejemplo-vintage.jpg',
+  heroMainImageAlt: 'Diseño vintage destacado',
+  heroBadgeText: 'Colecciones con impronta retro',
+  heroSideImageOne: '/assets/img/remera-goku.jpg',
+  heroSideImageOneAlt: 'Diseño anime destacado',
+  heroSideImageTwo: '/assets/img/ejemplo-gaming.jpg',
+  heroSideImageTwoAlt: 'Diseño videojuegos destacado',
+};
+
+type SiteImageField = 'heroMainImage' | 'heroSideImageOne' | 'heroSideImageTwo';
+
+
 function newColorRow(initial?: Partial<ColorImageRow>): ColorImageRow {
   return {
     id: crypto.randomUUID(),
-    color: initial?.color || '',
+    colorSlug: initial?.colorSlug || '',
+    colorName: initial?.colorName || '',
+    colorHex: initial?.colorHex || '#111111',
     path: initial?.path || '',
   };
 }
 
 function colorRowsToRecord(rows: ColorImageRow[]) {
-  const record: Record<string, string> = {};
+  const record: Record<string, { colorSlug: string; colorName: string; colorHex: string; path: string }> = {};
 
   rows.forEach((row) => {
-    const color = row.color.trim();
+    const colorSlug = normalizeColorSlug(row.colorSlug || row.colorName);
+    const colorName = row.colorName.trim();
+    const colorHex = row.colorHex.trim();
     const path = row.path.trim();
-    if (color && path) {
-      record[color] = path;
+
+    if (colorSlug && colorName && colorHex && path) {
+      record[colorSlug] = { colorSlug, colorName, colorHex, path };
     }
   });
 
@@ -60,10 +95,73 @@ function normalizeCategoryInput(value: string) {
   return value.trim().replace(/\s+/g, ' ');
 }
 
+function slugifyProductName(value: string) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+
+function normalizeSiteContentResponse(data: Partial<SiteContentFormState> | null | undefined): SiteContentFormState {
+  return {
+    ...EMPTY_SITE_CONTENT_FORM,
+    ...(data || {}),
+    promoHref: data?.promoHref || '',
+  };
+}
+
+function validateSiteContentInput(values: SiteContentFormState) {
+  const errors: SiteContentErrors = {};
+  const requiredFields: Array<keyof SiteContentFormState> = [
+    'promoText',
+    'heroEyebrow',
+    'heroTitlePrefix',
+    'heroTitleAccent',
+    'heroTitleSuffix',
+    'heroText',
+    'heroPrimaryButtonText',
+    'heroPrimaryButtonHref',
+    'heroSecondaryButtonText',
+    'heroSecondaryButtonHref',
+    'heroMainImage',
+    'heroMainImageAlt',
+    'heroBadgeText',
+    'heroSideImageOne',
+    'heroSideImageOneAlt',
+    'heroSideImageTwo',
+    'heroSideImageTwoAlt',
+  ];
+
+  requiredFields.forEach((field) => {
+    const value = String(values[field] || '').trim();
+    if (value.length < 2) errors[field] = 'Campo requerido.';
+  });
+
+  const linkFields: Array<keyof SiteContentFormState> = ['promoHref', 'heroPrimaryButtonHref', 'heroSecondaryButtonHref'];
+  linkFields.forEach((field) => {
+    const value = String(values[field] || '').trim();
+    if (value && !value.startsWith('/') && !value.startsWith('#') && !value.startsWith('https://') && !value.startsWith('http://')) {
+      errors[field] = 'Usá un link interno, ancla o URL válida.';
+    }
+  });
+
+  const imageFields: Array<keyof SiteContentFormState> = ['heroMainImage', 'heroSideImageOne', 'heroSideImageTwo'];
+  imageFields.forEach((field) => {
+    const value = String(values[field] || '').trim();
+    const valid = value.startsWith('/assets/') || value.startsWith('/uploads/home/') || value.startsWith('/uploads/products/') || value.startsWith('https://') || value.startsWith('http://');
+    if (!valid) errors[field] = 'Usá una ruta pública de imagen válida.';
+  });
+
+  return errors;
+}
+
 function validateProductInput(values: ProductFormState, colorRows: ColorImageRow[]) {
   const errors: ProductFormErrors = {};
 
-  const slug = values.slug.trim();
+  const slug = values.slug.trim() || slugifyProductName(values.nombre);
   if (slug.length < 2 || !/^[a-z0-9-]+$/.test(slug)) {
     errors.slug = 'Slug inválido. Usar minúsculas, números y guiones.';
   }
@@ -97,7 +195,7 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
   }
 
   const invalidRow = colorRows.some((row) => {
-    const hasColor = Boolean(row.color.trim());
+    const hasColor = Boolean(normalizeColorSlug(row.colorSlug || row.colorName));
     const hasPath = Boolean(row.path.trim());
     return hasColor !== hasPath;
   });
@@ -111,7 +209,7 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
 
 function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
   const payload: Record<string, unknown> = {
-    slug: values.slug.trim(),
+    slug: values.slug.trim() || slugifyProductName(values.nombre),
     nombre: values.nombre.trim(),
     categoria: normalizeCategoryInput(values.categoria),
     precio: Number(values.precio),
@@ -131,8 +229,13 @@ function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
 }
 
 function fromProduct(product: Product) {
-  const rows = Object.entries(product.imagenesPorColor || {}).map(([color, path]) =>
-    newColorRow({ color, path })
+  const rows = Object.entries(product.imagenesPorColor || {}).map(([colorSlug, data]) =>
+    newColorRow({
+      colorSlug: data.colorSlug || colorSlug,
+      colorName: data.colorName,
+      colorHex: data.colorHex,
+      path: data.path,
+    })
   );
 
   return {
@@ -161,6 +264,10 @@ export function AdminPanel() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [colors, setColors] = useState<ProductColorOption[]>([]);
+  const [colorDraft, setColorDraft] = useState<ColorDraft>(EMPTY_COLOR_DRAFT);
+  const [colorSaving, setColorSaving] = useState(false);
+  const [colorError, setColorError] = useState('');
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [productQuery, setProductQuery] = useState('');
   const [productCategory, setProductCategory] = useState('');
@@ -172,6 +279,10 @@ export function AdminPanel() {
   const [productPages, setProductPages] = useState(1);
   const [requestError, setRequestError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [siteContent, setSiteContent] = useState<SiteContentFormState>(EMPTY_SITE_CONTENT_FORM);
+  const [siteContentErrors, setSiteContentErrors] = useState<SiteContentErrors>({});
+  const [siteContentLoading, setSiteContentLoading] = useState(false);
+  const [siteContentSaving, setSiteContentSaving] = useState(false);
 
   const [form, setForm] = useState<ProductFormState>(EMPTY_FORM);
   const [colorRows, setColorRows] = useState<ColorImageRow[]>([newColorRow()]);
@@ -249,6 +360,8 @@ export function AdminPanel() {
     if (canManage) {
       void loadProducts(productPage, productQuery, productCategory, productStatus, productSort, productLimit);
       void loadCategories();
+      void loadColors();
+      void loadSiteContent();
     }
   }, [canManage, productPage, productQuery, productCategory, productStatus, productSort, productLimit]);
 
@@ -326,6 +439,45 @@ export function AdminPanel() {
       setCategories(Array.isArray(data.items) ? data.items : []);
     } catch {
       setCategories([]);
+    }
+  }
+
+  async function loadColors() {
+    try {
+      const response = await fetch('/api/colors', { cache: 'no-store' });
+      if (!response.ok) return;
+      const data = await response.json();
+      setColors(uniqueColorOptions(Array.isArray(data.items) ? data.items : []));
+    } catch {
+      setColors(uniqueColorOptions([]));
+    }
+  }
+
+
+
+  async function loadSiteContent() {
+    setSiteContentLoading(true);
+    setRequestError('');
+
+    try {
+      const response = await fetch('/api/site-content', { cache: 'no-store' });
+      const data = await response.json();
+
+      if (!response.ok) {
+        const message = data?.error || 'No se pudo cargar contenido visual.';
+        setRequestError(message);
+        showToast('error', message);
+        return;
+      }
+
+      setSiteContent(normalizeSiteContentResponse(data));
+      setSiteContentErrors({});
+    } catch {
+      const message = 'No se pudo cargar contenido visual.';
+      setRequestError(message);
+      showToast('error', message);
+    } finally {
+      setSiteContentLoading(false);
     }
   }
 
@@ -421,9 +573,10 @@ export function AdminPanel() {
     showToast('info', `Editando ${product.nombre}.`);
   }
 
-  async function uploadFile(file: File) {
+  async function uploadFile(file: File, context: 'products' | 'home' = 'products') {
     const body = new FormData();
     body.append('file', file);
+    body.append('context', context);
 
     const response = await fetch('/api/uploads', {
       method: 'POST',
@@ -440,7 +593,7 @@ export function AdminPanel() {
   }
 
   async function removeUploadedFile(path: string) {
-    if (!path.startsWith('/uploads/products/')) return;
+    if (!path.startsWith('/uploads/products/') && !path.startsWith('/uploads/home/')) return;
 
     await fetch('/api/uploads', {
       method: 'DELETE',
@@ -507,6 +660,183 @@ export function AdminPanel() {
 
     setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, path: '' } : row)));
     showToast('info', removeFile ? 'Imagen de color eliminada.' : 'Imagen de color quitada.');
+  }
+
+
+
+  async function handleSiteImageUpload(field: SiteImageField, file: File | null) {
+    if (!file) return;
+
+    setUploading(true);
+    setRequestError('');
+
+    try {
+      const newPath = await uploadFile(file, 'home');
+      const oldPath = String(siteContent[field] || '');
+      setSiteContent((prev) => ({ ...prev, [field]: newPath }));
+      if (oldPath.startsWith('/uploads/home/')) await removeUploadedFile(oldPath);
+      showToast('success', 'Imagen del hero actualizada. Guardá el contenido para publicarla.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo subir imagen del hero.';
+      setRequestError(message);
+      showToast('error', message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function clearSiteImage(field: SiteImageField, removeFile: boolean) {
+    const currentPath = String(siteContent[field] || '');
+    if (removeFile && currentPath.startsWith('/uploads/home/')) await removeUploadedFile(currentPath);
+    setSiteContent((prev) => ({ ...prev, [field]: '' }));
+    showToast('info', removeFile ? 'Imagen del hero eliminada.' : 'Imagen del hero quitada.');
+  }
+
+  async function saveSiteContent(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const errors = validateSiteContentInput(siteContent);
+    setSiteContentErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      showToast('error', 'Revisá el contenido visual antes de guardar.');
+      return;
+    }
+
+    setSiteContentSaving(true);
+    setRequestError('');
+
+    try {
+      const payload = {
+        ...siteContent,
+        promoHref: siteContent.promoHref.trim() || null,
+      };
+
+      const response = await fetch('/api/site-content', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const message = data?.error || 'No se pudo guardar contenido visual.';
+        setRequestError(message);
+        showToast('error', message);
+        return;
+      }
+
+      setSiteContent(normalizeSiteContentResponse(data));
+      setSiteContentErrors({});
+      showToast('success', 'Contenido visual actualizado correctamente.');
+    } catch {
+      const message = 'No se pudo guardar contenido visual.';
+      setRequestError(message);
+      showToast('error', message);
+    } finally {
+      setSiteContentSaving(false);
+    }
+  }
+
+  function patchColorRowFromSlug(rowId: string, colorSlug: string) {
+    const selected = uniqueColorOptions(colors).find((color) => color.slug === colorSlug);
+    if (!selected) return;
+
+    setColorRows((prev) =>
+      prev.map((row) =>
+        row.id === rowId
+          ? { ...row, colorSlug: selected.slug, colorName: selected.name, colorHex: selected.hex }
+          : row
+      )
+    );
+  }
+
+  async function deleteCustomColor(color: ProductColorOption) {
+    if (!color.canDelete) {
+      showToast('error', 'Los colores base no se pueden eliminar.');
+      return;
+    }
+
+    const confirmed = window.confirm('¿Eliminar definitivamente el color ' + color.name + '? Esta acción no se puede deshacer.');
+    if (!confirmed) return;
+
+    setColorSaving(true);
+    setColorError('');
+
+    try {
+      const response = await fetch('/api/colors?slug=' + encodeURIComponent(color.slug), {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        const productNames = Array.isArray(data?.products)
+          ? data.products.map((product: { nombre?: string }) => product.nombre).filter(Boolean).join(', ')
+          : '';
+        const message = productNames ? (data?.error || 'No se pudo eliminar el color.') + ' Productos: ' + productNames + '.' : data?.error || 'No se pudo eliminar el color.';
+        setColorError(message);
+        showToast('error', message);
+        return;
+      }
+
+      setColors((prev) => uniqueColorOptions(prev.filter((item) => item.slug !== color.slug)));
+      setColorRows((prev) =>
+        prev.map((row) =>
+          row.colorSlug === color.slug
+            ? { ...row, colorSlug: '', colorName: '', colorHex: '#111111' }
+            : row
+        )
+      );
+      showToast('success', 'Color eliminado: ' + color.name + '.');
+    } catch {
+      const message = 'No se pudo eliminar el color.';
+      setColorError(message);
+      showToast('error', message);
+    } finally {
+      setColorSaving(false);
+    }
+  }
+
+  async function createColorFromDraft() {
+    const name = colorDraft.name.trim();
+    const hex = colorDraft.hex.trim();
+
+    if (name.length < 2) {
+      setColorError('Ingresá un nombre de color válido.');
+      return;
+    }
+
+    setColorSaving(true);
+    setColorError('');
+
+    try {
+      const response = await fetch('/api/colors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, hex }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const message = data?.error || 'No se pudo crear el color.';
+        setColorError(message);
+        showToast('error', message);
+        return;
+      }
+
+      const nextColors = uniqueColorOptions([...colors, data]);
+      setColors(nextColors);
+      setColorDraft(EMPTY_COLOR_DRAFT);
+      showToast('success', 'Color creado: ' + data.name + '.');
+    } catch {
+      const message = 'No se pudo crear el color.';
+      setColorError(message);
+      showToast('error', message);
+    } finally {
+      setColorSaving(false);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -746,6 +1076,14 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                 </button>
                 <button
                   type="button"
+                  className={`admin-section-tab ${activeSection === 'visual-content' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('visual-content')}
+                  aria-pressed={activeSection === 'visual-content'}
+                >
+                  Contenido visual
+                </button>
+                <button
+                  type="button"
                   className={`admin-section-tab ${activeSection === 'audit' ? 'is-active' : ''}`}
                   onClick={() => setActiveSection('audit')}
                   aria-pressed={activeSection === 'audit'}
@@ -774,6 +1112,10 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                   colorRows={colorRows}
                   errors={formErrors}
                   categories={categories}
+                  colors={uniqueColorOptions(colors)}
+                  colorDraft={colorDraft}
+                  colorSaving={colorSaving}
+                  colorError={colorError}
                   requestError={requestError}
                   saving={saving}
                   uploading={uploading}
@@ -783,14 +1125,39 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                   onMainUpload={(file) => void handleMainImageUpload(file)}
                   onMainDetach={() => void clearMainImage(false)}
                   onMainDeleteFile={() => void clearMainImage(true)}
-                  onColorRowChange={(rowId, patch) =>
-                    setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, ...patch } : row)))
-                  }
+                  onColorRowChange={(rowId, patch) => {
+                    if (patch.colorSlug) {
+                      patchColorRowFromSlug(rowId, patch.colorSlug);
+                      return;
+                    }
+
+                    setColorRows((prev) => prev.map((row) => (row.id === rowId ? { ...row, ...patch } : row)));
+                  }}
                   onColorUpload={(rowId, file) => void handleColorImageUpload(rowId, file)}
                   onColorDetach={(rowId) => void clearColorImage(rowId, false)}
                   onColorDeleteFile={(rowId) => void clearColorImage(rowId, true)}
                   onAddColorRow={() => setColorRows((prev) => [...prev, newColorRow()])}
                   onRemoveColorRow={(rowId) => setColorRows((prev) => prev.filter((row) => row.id !== rowId))}
+                  onColorDraftChange={(patch) => setColorDraft((prev) => ({ ...prev, ...patch }))}
+                  onCreateColor={() => void createColorFromDraft()}
+                  onDeleteColor={(color) => void deleteCustomColor(color)}
+                />
+              ) : null}
+
+              {activeSection === 'visual-content' ? (
+                <SiteContentEditor
+                  form={siteContent}
+                  errors={siteContentErrors}
+                  loading={siteContentLoading}
+                  saving={siteContentSaving}
+                  uploading={uploading}
+                  requestError={requestError}
+                  onChange={(patch) => setSiteContent((prev) => ({ ...prev, ...patch }))}
+                  onSubmit={saveSiteContent}
+                  onReload={() => void loadSiteContent()}
+                  onImageUpload={(field, file) => void handleSiteImageUpload(field, file)}
+                  onImageDetach={(field) => void clearSiteImage(field, false)}
+                  onImageDeleteFile={(field) => void clearSiteImage(field, true)}
                 />
               ) : null}
 

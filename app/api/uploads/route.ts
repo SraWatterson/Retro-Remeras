@@ -8,7 +8,7 @@ import { getCurrentSession, isRoleAllowed } from '@/lib/auth';
 import { checkRateLimit, jsonServerError, rateLimitResponse } from '@/lib/api-helpers';
 
 const MANAGER_ROLES: Role[] = [Role.ADMIN, Role.EDITOR];
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'products');
+const UPLOAD_ROOT = path.join(process.cwd(), 'public', 'uploads');
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MIME_TO_EXTENSION: Record<string, string> = {
@@ -32,8 +32,12 @@ function sanitizeFileName(name: string, mimeType: string) {
   return `${base || 'image'}-${randomUUID().slice(0, 8)}${extension}`;
 }
 
+function getUploadContext(value: FormDataEntryValue | null) {
+  return value === 'home' ? 'home' : 'products';
+}
+
 function isSafeUploadPath(filePath: string) {
-  return filePath.startsWith('/uploads/products/') && !filePath.includes('..');
+  return (filePath.startsWith('/uploads/products/') || filePath.startsWith('/uploads/home/')) && !filePath.includes('..');
 }
 
 function hasValidImageSignature(buffer: Buffer, mimeType: string) {
@@ -91,14 +95,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'El contenido del archivo no coincide con una imagen válida' }, { status: 400 });
     }
 
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
+    const context = getUploadContext(formData.get('context'));
+    const uploadDir = path.join(UPLOAD_ROOT, context);
+
+    await fs.mkdir(uploadDir, { recursive: true });
 
     const fileName = sanitizeFileName(file.name || 'image', file.type);
-    const absolutePath = path.join(UPLOAD_DIR, fileName);
+    const absolutePath = path.join(uploadDir, fileName);
 
     await fs.writeFile(absolutePath, buffer);
 
-    const publicPath = `/uploads/products/${fileName}`;
+    const publicPath = `/uploads/${context}/${fileName}`;
 
     await createAuditLog({
       action: AuditAction.IMAGE_UPLOADED,
@@ -109,6 +116,7 @@ export async function POST(request: Request) {
         fileName,
         size: file.size,
         mimeType: file.type,
+        context,
       },
     });
 

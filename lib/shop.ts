@@ -1,3 +1,5 @@
+import { ProductColorImage } from '@/lib/colors';
+
 export type Product = {
   id: string;
   legacyId?: number | null;
@@ -6,7 +8,7 @@ export type Product = {
   categoria: string;
   precio: number;
   imagen?: string | null;
-  imagenesPorColor?: Record<string, string>;
+  imagenesPorColor?: Record<string, ProductColorImage>;
   descripcion: string;
   disponible: boolean;
   destacado: boolean;

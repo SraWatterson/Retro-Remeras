@@ -7,7 +7,6 @@ import { Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeT
 
 type Props = {
   initialCategory?: string;
-  initialSearch?: string;
   initialProducts: Product[];
   categories: string[];
 };
@@ -22,10 +21,9 @@ function findCategoryFromUrl(value: string | undefined, categories: string[]) {
   return matchedCategory || decodedValue;
 }
 
-export function CatalogView({ initialCategory, initialSearch, initialProducts, categories }: Props) {
+export function CatalogView({ initialCategory, initialProducts, categories }: Props) {
   const products = useMemo(() => initialProducts, [initialProducts]);
   const loading = false;
-  const [search, setSearch] = useState(initialSearch || '');
   const initialCategoryValue = useMemo(() => findCategoryFromUrl(initialCategory, categories), [categories, initialCategory]);
   const categoryList = useMemo(() => {
     if (initialCategoryValue !== 'Todos' && !categories.some((category) => category === initialCategoryValue)) {
@@ -35,18 +33,25 @@ export function CatalogView({ initialCategory, initialSearch, initialProducts, c
     return ['Todos', ...categories];
   }, [categories, initialCategoryValue]);
   const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
+  const [priceOrder, setPriceOrder] = useState('default');
 
   const filtered = useMemo(() => {
-    const searchText = normalizeText(search);
     const categoryText = normalizeText(activeCategory);
 
-    return products.filter((product) => {
-      const matchCategory = activeCategory === 'Todos' || normalizeText(product.categoria) === categoryText;
-      const haystack = normalizeText(`${product.nombre} ${product.categoria} ${product.descripcion}`);
-      const matchSearch = !searchText || haystack.includes(searchText);
-      return matchCategory && matchSearch;
+    const result = products.filter((product) => {
+      return activeCategory === 'Todos' || normalizeText(product.categoria) === categoryText;
     });
-  }, [activeCategory, products, search]);
+
+    if (priceOrder === 'price-asc') {
+      return [...result].sort((a, b) => Number(a.precio || 0) - Number(b.precio || 0));
+    }
+
+    if (priceOrder === 'price-desc') {
+      return [...result].sort((a, b) => Number(b.precio || 0) - Number(a.precio || 0));
+    }
+
+    return result;
+  }, [activeCategory, priceOrder, products]);
 
   return (
     <main className="catalog-main">
@@ -54,104 +59,98 @@ export function CatalogView({ initialCategory, initialSearch, initialProducts, c
         <div className="container">
           <span className="section-kicker">Catálogo</span>
           <h1 className="section-title">Todos nuestros diseños disponibles</h1>
-          <p className="section-subtitle">Filtrá por categoría, buscá por nombre y entrá al detalle de cada remera.</p>
+          <p className="section-subtitle">Filtrá por categoría y entrá al detalle de cada remera.</p>
         </div>
       </section>
 
-      <section>
+      <section className="catalog-section" aria-label="Catálogo de productos">
         <div className="container catalog-shell">
-          <aside className="filters panel">
-            <div className="section-header">
-              <h2>Buscá tu estilo</h2>
-              <p className="section-subtitle">Filtrá por categoría o escribí una palabra clave.</p>
-            </div>
-
-            <div className="filters-fields">
-              <div className="form-group">
-                <label className="form-label" htmlFor="catalog-search">Buscar producto</label>
-                <input
-                  className="input"
-                  id="catalog-search"
-                  type="search"
-                  placeholder="Ej: maradona, arcade, vintage..."
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <span className="form-label">Categorías</span>
-                <div className="filter-pills">
-                  {categoryList.map((category) => (
-                    <button
-                      key={category}
-                      className={`filter-pill ${activeCategory === category ? 'is-active' : ''}`}
-                      type="button"
-                      onClick={() => setActiveCategory(category)}
-                    >
-                      {category}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          <div>
-            <div className="catalog-stats panel">
-              <div>
-                <strong>{loading ? 'Cargando...' : `${filtered.length} diseño${filtered.length === 1 ? '' : 's'}`}</strong>
-                <p className="catalog-meta">Filtro activo: <span>{activeCategory === 'Todos' ? 'Todas las categorías' : activeCategory}</span></p>
+          <div className="catalog-controls catalog-controls--simple panel">
+            <div className="form-group catalog-category-field">
+              <span className="form-label">Categorías</span>
+              <div className="filter-pills" role="list" aria-label="Filtrar por categoría">
+                {categoryList.map((category) => (
+                  <button
+                    key={category}
+                    className={`filter-pill ${activeCategory === category ? 'is-active' : ''}`}
+                    type="button"
+                    onClick={() => setActiveCategory(category)}
+                  >
+                    {category}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <div className="catalog-grid">
-              {!loading && !filtered.length ? (
-                <div className="empty-state">
-                  <h3>No encontramos resultados</h3>
-                  <p>Probá con otra categoría o cambiando el texto de búsqueda.</p>
-                </div>
-              ) : (
-                filtered.map((product) => {
-                  const message = `Hola! Me interesa la remera ${product.nombre}. ¿Está disponible?`;
+            <div className="form-group catalog-order-field">
+              <label className="form-label" htmlFor="catalog-price-order">Ordenar por</label>
+              <select
+                className="input catalog-select"
+                id="catalog-price-order"
+                value={priceOrder}
+                onChange={(event) => setPriceOrder(event.target.value)}
+              >
+                <option value="default">Orden original</option>
+                <option value="price-asc">Menor precio</option>
+                <option value="price-desc">Mayor precio</option>
+              </select>
+            </div>
+          </div>
 
-                  return (
-                    <article className="product-card product-card--linked" key={product.id}>
-                      <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
-                        <div className="product-media">
-                          <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={1000} height={1000} quality={90} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 360px" />
-                          {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
-                        </div>
-                      </Link>
+          <div className="catalog-results-bar panel" aria-live="polite">
+            <strong>{loading ? 'Cargando...' : `${filtered.length} diseño${filtered.length === 1 ? '' : 's'} encontrado${filtered.length === 1 ? '' : 's'}`}</strong>
+            {activeCategory !== 'Todos' ? (
+              <p className="catalog-meta">Filtro activo: <span>{activeCategory}</span></p>
+            ) : null}
+          </div>
 
-                      <div className="product-content">
-                        <div className="product-category">{product.categoria}</div>
-                        <h3 className="product-title">
-                          <Link className="product-title-link" href={`/producto?id=${product.id}`}>
-                            {product.nombre}
-                          </Link>
-                        </h3>
-                        <p className="product-description">{product.descripcion}</p>
+          <div className="catalog-grid" data-catalog-grid>
+            {!loading && !filtered.length ? (
+              <div className="empty-state">
+                <span className="section-kicker">Sin resultados</span>
+                <h3>No encontramos diseños para esa categoría</h3>
+                <p>Probá con otra categoría o volvé a ver todos los diseños.</p>
+              </div>
+            ) : (
+              filtered.map((product) => {
+                const message = `Hola! Me interesa la remera ${product.nombre}. ¿Está disponible?`;
 
-                        <div className="price-row">
-                          <span className="product-price">{formatPrice(product.precio)}</span>
-                          <span className="tag">{product.disponible ? 'Disponible' : 'Consultar'}</span>
-                        </div>
-
-                        <div className="product-actions product-actions--spaced">
-                          <Link className="btn btn-secondary" href={`/producto?id=${product.id}`}>
-                            Ver producto
-                          </Link>
-                          <a className="btn btn-primary" href={createWhatsAppLink(message)} target="_blank" rel="noopener noreferrer">
-                            WhatsApp
-                          </a>
-                        </div>
+                return (
+                  <article className="product-card product-card--linked" key={product.id}>
+                    <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
+                      <div className="product-media">
+                        <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={1000} height={1000} quality={90} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 360px" />
+                        {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
                       </div>
-                    </article>
-                  );
-                })
-              )}
-            </div>
+                    </Link>
+
+                    <div className="product-content">
+                      <div className="product-category">{product.categoria}</div>
+                      <h3 className="product-title">
+                        <Link className="product-title-link" href={`/producto?id=${product.id}`}>
+                          {product.nombre}
+                        </Link>
+                      </h3>
+                      <p className="product-description">{product.descripcion}</p>
+
+                      <div className="price-row">
+                        <span className="product-price">{formatPrice(product.precio)}</span>
+                        <span className="tag">{product.disponible ? 'Disponible' : 'Consultar'}</span>
+                      </div>
+
+                      <div className="product-actions product-actions--spaced">
+                        <Link className="btn btn-primary" href={`/producto?id=${product.id}`}>
+                          Ver producto
+                        </Link>
+                        <a className="btn btn-secondary btn-whatsapp-soft" href={createWhatsAppLink(message)} target="_blank" rel="noopener noreferrer">
+                          Consultar
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            )}
           </div>
         </div>
       </section>

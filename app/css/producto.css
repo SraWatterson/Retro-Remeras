@@ -10,17 +10,43 @@
 
 .product-page {
   padding: 0.75rem 0 2rem;
+  /* Fondo replicado del hero de landing: mismo tono, misma luz y misma base. */
   background:
-    radial-gradient(circle at 82% 6%, rgba(184, 40, 40, 0.105), transparent 30%),
-    radial-gradient(circle at 14% 18%, rgba(244, 197, 66, 0.075), transparent 32%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 50%, var(--bg-warm) 100%);
+    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
+    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
+    linear-gradient(180deg, #0a0705 0%, #0b0704 60%, #100905 100%);
+  position: relative;
+  isolation: isolate;
 }
+
+.product-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* Grain replicado del hero de landing: misma textura, escala y opacidad. */
+  background:
+    var(--grain-url),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.010), transparent 44%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(216, 148, 37, 0.006) 0 1px,
+      transparent 1px 116px
+    );
+  background-size: 220px 220px, 100% 100%, 100% 100%;
+  background-blend-mode: overlay, normal, normal;
+  opacity: 0.17;
+}
+
 
 .product-shell {
   display: grid;
   gap: 0.75rem;
   width: var(--container-wide);
   margin-inline: auto;
+  position: relative;
+  z-index: 1;
 }
 
 
@@ -70,10 +96,10 @@
 .product-gallery-main {
   overflow: hidden;
   border-radius: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(216, 148, 37, 0.18);
   background:
-    radial-gradient(circle at 50% 0%, rgba(244, 197, 66, 0.06), transparent 48%),
-    var(--surface);
+    radial-gradient(circle at 50% 0%, rgba(216, 148, 37, 0.045), transparent 48%),
+    rgba(38, 24, 16, 0.88);
   box-shadow: var(--shadow);
   height: clamp(300px, 42vw, 500px);
 }
@@ -98,11 +124,11 @@
   gap: 1rem;
   padding: 1.1rem;
   border-radius: 22px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(216, 148, 37, 0.18);
   background:
-    radial-gradient(circle at 16% 0%, rgba(244, 197, 66, 0.07), transparent 40%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.024), rgba(255, 255, 255, 0.006)),
-    var(--surface-high);
+    radial-gradient(circle at 16% 0%, rgba(216, 148, 37, 0.045), transparent 40%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.022), rgba(241, 221, 178, 0.004)),
+    rgba(38, 24, 16, 0.88);
   box-shadow: var(--shadow);
   align-self: start;
 }
@@ -1143,20 +1169,21 @@
 /* Ajustes visuales de producto */
 
 .product-page {
+  /* Mantiene exactamente la misma receta visual del hero de landing. */
   background:
-    radial-gradient(circle at 16% 8%, rgba(244, 197, 66, 0.07), transparent 32%),
-    radial-gradient(circle at 88% 18%, rgba(184, 40, 40, 0.055), transparent 30%),
-    linear-gradient(180deg, #090806 0%, #0d0907 48%, #070706 100%);
+    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
+    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
+    linear-gradient(180deg, #0a0705 0%, #0b0704 60%, #100905 100%);
 }
 
 .product-buybox {
   background:
-    radial-gradient(circle at 8% 0%, rgba(244, 197, 66, 0.075), transparent 34%),
-    linear-gradient(180deg, rgba(46, 35, 24, 0.96), rgba(28, 20, 13, 0.98));
-  border-color: rgba(244, 197, 66, 0.20);
+    radial-gradient(circle at 12% 0%, rgba(216, 148, 37, 0.052), transparent 34%),
+    linear-gradient(180deg, rgba(21, 18, 14, 0.94), rgba(10, 8, 7, 0.96));
+  border-color: rgba(216, 148, 37, 0.16);
   box-shadow:
-    0 22px 52px rgba(4, 3, 2, 0.54),
-    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    0 24px 58px rgba(3, 2, 1, 0.56),
+    inset 0 1px 0 rgba(255, 255, 255, 0.032);
 }
 
 .product-category {
@@ -1196,30 +1223,30 @@
 .size-option,
 .swatch-card {
   background:
-    linear-gradient(180deg, rgba(36, 27, 18, 0.96), rgba(22, 16, 11, 0.98));
-  border-color: rgba(244, 197, 66, 0.18);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    linear-gradient(180deg, rgba(24, 21, 17, 0.94), rgba(12, 10, 8, 0.96));
+  border-color: rgba(216, 148, 37, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.022);
 }
 
 .fit-option:hover,
 .size-option:hover,
 .swatch-card:hover {
   background:
-    linear-gradient(180deg, rgba(48, 36, 22, 0.98), rgba(24, 17, 11, 0.98));
-  border-color: rgba(244, 197, 66, 0.42);
+    linear-gradient(180deg, rgba(31, 27, 21, 0.98), rgba(14, 11, 9, 0.98));
+  border-color: rgba(216, 148, 37, 0.34);
 }
 
 .fit-option.is-selected,
 .size-option.is-selected,
 .swatch-card.is-selected {
   background:
-    radial-gradient(circle at 16% 0%, rgba(244, 197, 66, 0.18), transparent 46%),
-    linear-gradient(180deg, rgba(61, 45, 23, 0.98), rgba(30, 21, 12, 0.98));
-  border-color: rgba(244, 197, 66, 0.72);
+    radial-gradient(circle at 16% 0%, rgba(216, 148, 37, 0.145), transparent 46%),
+    linear-gradient(180deg, rgba(35, 29, 19, 0.98), rgba(16, 12, 8, 0.98));
+  border-color: rgba(244, 197, 66, 0.58);
   box-shadow:
-    0 0 0 1px rgba(244, 197, 66, 0.16),
+    0 0 0 1px rgba(244, 197, 66, 0.12),
     0 10px 26px rgba(4, 3, 2, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .fit-option-title {
@@ -1241,11 +1268,11 @@
 
 .product-order-box {
   background:
-    linear-gradient(180deg, rgba(25, 18, 12, 0.98), rgba(16, 12, 9, 0.98));
-  border-color: rgba(244, 197, 66, 0.18);
+    linear-gradient(180deg, rgba(18, 15, 12, 0.98), rgba(9, 8, 7, 0.98));
+  border-color: rgba(216, 148, 37, 0.15);
   box-shadow:
     0 18px 42px rgba(4, 3, 2, 0.34),
-    inset 0 1px 0 rgba(255, 255, 255, 0.032);
+    inset 0 1px 0 rgba(255, 255, 255, 0.028);
 }
 
 .product-order-box-head h2 {
@@ -1473,4 +1500,271 @@
   .product-action-btn--catalog {
     min-height: 52px;
   }
+}
+
+.product-color-fallback {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(245, 234, 212, 0.14);
+  border-radius: 14px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.92rem;
+}
+
+/* =========================================================
+   Etapa 4.1.3 · Producto unificado con catálogo/carrito
+   ========================================================= */
+.product-page {
+  background:
+    radial-gradient(ellipse at 90% -8%, rgba(200, 58, 31, 0.18), transparent 36%),
+    radial-gradient(ellipse at 10% 10%, rgba(216, 148, 37, 0.17), transparent 38%),
+    radial-gradient(ellipse at 54% 112%, rgba(241, 221, 178, 0.075), transparent 44%),
+    linear-gradient(180deg, #080604 0%, #160c06 44%, #1f1209 100%);
+}
+
+.product-gallery-main,
+.product-buybox,
+.product-order-box,
+.size-chart-card,
+.fit-option,
+.size-option,
+.color-option,
+.cart-item {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.060), transparent 40%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.034), rgba(241, 221, 178, 0.006)),
+    rgba(35, 21, 12, 0.88);
+  border-color: rgba(216, 148, 37, 0.18);
+  box-shadow: 0 14px 34px rgba(3, 2, 1, 0.38), 0 4px 14px rgba(200, 58, 31, 0.08);
+}
+
+.product-buybox,
+.product-order-box {
+  border-color: rgba(216, 148, 37, 0.22);
+}
+
+.fit-option:hover,
+.size-option:hover,
+.color-option:hover,
+.fit-option.is-selected,
+.size-option.is-selected,
+.color-option.is-selected {
+  border-color: rgba(216, 148, 37, 0.44);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.11), transparent 40%),
+    rgba(45, 28, 17, 0.92);
+  box-shadow: 0 12px 28px rgba(3, 2, 1, 0.36), 0 0 0 1px rgba(216, 148, 37, 0.12);
+}
+
+.product-category,
+.config-label,
+.product-description,
+.product-price-note {
+  color: rgba(241, 221, 178, 0.72);
+}
+
+.product-page-title,
+.product-price,
+.config-value {
+  color: var(--brand-cream-soft);
+}
+
+.product-actions .btn-primary,
+.product-order-box .btn-primary {
+  background: linear-gradient(135deg, var(--brand-gold-soft), var(--brand-gold));
+  color: #120b07;
+  border-color: rgba(216, 148, 37, 0.56);
+  box-shadow: 0 10px 24px rgba(216, 148, 37, 0.28), 0 2px 8px rgba(3, 2, 1, 0.24);
+}
+
+
+/* =========================================================
+   Ajuste final · Grain y superficies de producto unificadas
+   ========================================================= */
+.product-gallery-main,
+.product-buybox,
+.product-order-box,
+.size-chart-card,
+.fit-option,
+.size-option,
+.color-option,
+.cart-item {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.045), transparent 42%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.026), rgba(7, 6, 4, 0.12)),
+    rgba(18, 11, 7, 0.86);
+  border-color: rgba(216, 148, 37, 0.17);
+  box-shadow: 0 14px 34px rgba(3, 2, 1, 0.42), 0 4px 14px rgba(200, 58, 31, 0.07);
+}
+
+.product-buybox,
+.product-order-box {
+  border-color: rgba(216, 148, 37, 0.22);
+}
+
+.fit-option:hover,
+.size-option:hover,
+.color-option:hover,
+.fit-option.is-selected,
+.size-option.is-selected,
+.color-option.is-selected {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.09), transparent 42%),
+    rgba(26, 16, 9, 0.92);
+  border-color: rgba(216, 148, 37, 0.42);
+}
+
+/* =========================================================
+   Fuente visual única · Producto con fondo EXACTO del hero
+   - Replica literal del background final de .home-page .hero.
+   - Replica literal del grain final de .home-page .hero::after.
+   ========================================================= */
+.product-page {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(246, 185, 53, 0.15), transparent 32%),
+    radial-gradient(circle at 84% 20%, rgba(200, 58, 31, 0.13), transparent 35%),
+    linear-gradient(180deg, #0a0604 0%, #0f0805 100%);
+}
+
+.product-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    var(--grain-url),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.014), transparent 36%),
+    repeating-linear-gradient(90deg, rgba(246, 185, 53, 0.010) 0 1px, transparent 1px 90px);
+  background-size: 200px 200px, 100% 100%, 100% 100%;
+  background-blend-mode: overlay, normal, normal;
+  opacity: 0.20;
+}
+
+.product-shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* Superficies adaptadas al fondo hero: carbón/asfalto cálido, sin chocolate pesado. */
+.product-gallery-main,
+.product-buybox,
+.product-order-box,
+.size-chart-card,
+.fit-option,
+.size-option,
+.swatch-card,
+.cart-item {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(246, 185, 53, 0.055), transparent 42%),
+    linear-gradient(180deg, rgba(24, 22, 18, 0.92), rgba(8, 7, 6, 0.96));
+  border-color: rgba(216, 148, 37, 0.18);
+  box-shadow:
+    0 18px 44px rgba(3, 2, 1, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.030);
+}
+
+.product-gallery-main {
+  border-color: rgba(216, 148, 37, 0.24);
+  box-shadow:
+    0 22px 54px rgba(3, 2, 1, 0.56),
+    0 0 0 1px rgba(216, 148, 37, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.product-buybox,
+.product-order-box {
+  border-color: rgba(216, 148, 37, 0.20);
+}
+
+.product-category,
+.config-label,
+.product-description,
+.product-price-note,
+.cart-item-meta li {
+  color: rgba(241, 221, 178, 0.72);
+}
+
+.product-page-title,
+.product-price,
+.config-value,
+.cart-item-meta strong {
+  color: var(--brand-cream-soft);
+}
+
+.config-block,
+.product-order-actions,
+.cart-total-row {
+  border-color: rgba(216, 148, 37, 0.12);
+}
+
+.fit-option:hover,
+.size-option:hover,
+.swatch-card:hover {
+  border-color: rgba(216, 148, 37, 0.34);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(246, 185, 53, 0.075), transparent 42%),
+    linear-gradient(180deg, rgba(29, 26, 21, 0.94), rgba(10, 9, 8, 0.96));
+  box-shadow:
+    0 18px 44px rgba(3, 2, 1, 0.50),
+    0 0 0 1px rgba(216, 148, 37, 0.06);
+}
+
+.fit-option.is-selected,
+.size-option.is-selected,
+.swatch-card.is-selected {
+  border-color: rgba(216, 148, 37, 0.48);
+  background:
+    radial-gradient(circle at 18% 0%, rgba(246, 185, 53, 0.105), transparent 42%),
+    linear-gradient(180deg, rgba(35, 30, 22, 0.96), rgba(12, 10, 8, 0.96));
+  box-shadow:
+    0 16px 38px rgba(3, 2, 1, 0.46),
+    0 0 0 1px rgba(216, 148, 37, 0.12);
+}
+
+.size-option.is-selected {
+  color: var(--brand-gold-soft);
+}
+
+.swatch-card.is-selected .swatch-dot-lg {
+  box-shadow: 0 0 12px rgba(216, 148, 37, 0.30);
+}
+
+.cart-count-badge,
+.cart-empty-state,
+.product-order-box .cart-empty-state--rich {
+  background: rgba(246, 185, 53, 0.045);
+  border-color: rgba(216, 148, 37, 0.18);
+}
+
+.product-action-btn--add,
+.product-actions .btn-primary,
+.product-order-box .btn-primary {
+  background: linear-gradient(135deg, var(--brand-gold-soft), var(--brand-gold));
+  color: #100b07;
+  border-color: rgba(216, 148, 37, 0.52);
+  box-shadow: 0 10px 24px rgba(216, 148, 37, 0.24), 0 2px 8px rgba(3, 2, 1, 0.28);
+}
+
+.product-action-btn--add:hover,
+.product-actions .btn-primary:hover,
+.product-order-box .btn-primary:hover {
+  box-shadow: 0 14px 30px rgba(216, 148, 37, 0.30), 0 3px 10px rgba(3, 2, 1, 0.32);
+}
+
+.product-action-btn--whatsapp,
+.product-action-btn--catalog {
+  background: rgba(13, 12, 10, 0.82);
+  border-color: rgba(216, 148, 37, 0.24);
+  color: rgba(241, 221, 178, 0.88);
+}
+
+.product-action-btn--whatsapp:hover,
+.product-action-btn--catalog:hover {
+  background: rgba(246, 185, 53, 0.055);
+  border-color: rgba(216, 148, 37, 0.36);
+  color: var(--brand-gold-soft);
 }

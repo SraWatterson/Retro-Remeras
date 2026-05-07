@@ -2,13 +2,18 @@
 
 import Image from 'next/image';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { ColorImageRow, ProductFormErrors, ProductFormState } from './types';
+import { ProductColorOption } from '@/lib/colors';
+import { ColorDraft, ColorImageRow, ProductFormErrors, ProductFormState } from './types';
 
 type Props = {
   title: string;
   editing: boolean;
   form: ProductFormState;
   colorRows: ColorImageRow[];
+  colors: ProductColorOption[];
+  colorDraft: ColorDraft;
+  colorSaving: boolean;
+  colorError: string;
   errors: ProductFormErrors;
   categories: string[];
   requestError: string;
@@ -26,10 +31,12 @@ type Props = {
   onColorDeleteFile: (rowId: string) => void;
   onAddColorRow: () => void;
   onRemoveColorRow: (rowId: string) => void;
+  onColorDraftChange: (patch: Partial<ColorDraft>) => void;
+  onCreateColor: () => void;
+  onDeleteColor: (color: ProductColorOption) => void;
 };
 
 type CategoryMode = 'existing' | 'new';
-
 
 function normalizeAdminImageSrc(src?: string | null) {
   if (!src) return null;
@@ -37,13 +44,8 @@ function normalizeAdminImageSrc(src?: string | null) {
   const value = String(src).trim();
   if (!value) return null;
 
-  if (value.startsWith('http://') || value.startsWith('https://')) {
-    return value;
-  }
-
-  if (value.startsWith('/')) {
-    return value;
-  }
+  if (value.startsWith('http://') || value.startsWith('https://')) return value;
+  if (value.startsWith('/')) return value;
 
   return `/${value.replace(/^\/+/, '')}`;
 }
@@ -60,9 +62,7 @@ function uniqueCategories(categories: string[]) {
     if (!normalized) return;
 
     const key = normalized.toLowerCase();
-    if (!byKey.has(key)) {
-      byKey.set(key, normalized);
-    }
+    if (!byKey.has(key)) byKey.set(key, normalized);
   });
 
   return Array.from(byKey.values()).sort((a, b) => a.localeCompare(b, 'es'));
@@ -130,9 +130,7 @@ function CategoryField({ value, categories, error, onChange }: CategoryFieldProp
             onChange={(event) => onChange(event.target.value)}
             required
           />
-          <p className="admin-help">
-            Se va a crear automáticamente cuando guardes el producto con esta categoría.
-          </p>
+          <p className="admin-help">Se va a crear automáticamente cuando guardes el producto con esta categoría.</p>
         </div>
       ) : null}
 
@@ -146,6 +144,10 @@ export function ProductEditorForm({
   editing,
   form,
   colorRows,
+  colors,
+  colorDraft,
+  colorSaving,
+  colorError,
   errors,
   categories,
   requestError,
@@ -163,7 +165,12 @@ export function ProductEditorForm({
   onColorDeleteFile,
   onAddColorRow,
   onRemoveColorRow,
+  onColorDraftChange,
+  onCreateColor,
+  onDeleteColor,
 }: Props) {
+  const customColors = colors.filter((color) => color.canDelete);
+
   return (
     <section className="panel admin-form-panel">
       <div className="admin-form-heading">
@@ -172,18 +179,6 @@ export function ProductEditorForm({
       </div>
 
       <form className="filters" onSubmit={onSubmit} noValidate>
-        <div className="form-group">
-          <label className="form-label" htmlFor="legacyId">Legacy ID (opcional)</label>
-          <input id="legacyId" className="input" value={form.legacyId} onChange={(event) => onChange({ legacyId: event.target.value ? Number.parseInt(event.target.value, 10) || '' : '' })} />
-          {errors.legacyId ? <p className="admin-error">{errors.legacyId}</p> : null}
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="slug">Slug *</label>
-          <input id="slug" className="input" value={form.slug} onChange={(event) => onChange({ slug: event.target.value })} required />
-          {errors.slug ? <p className="admin-error">{errors.slug}</p> : null}
-        </div>
-
         <div className="form-group">
           <label className="form-label" htmlFor="nombre">Nombre *</label>
           <input id="nombre" className="input" value={form.nombre} onChange={(event) => onChange({ nombre: event.target.value })} required />
@@ -203,6 +198,23 @@ export function ProductEditorForm({
           {errors.precio ? <p className="admin-error">{errors.precio}</p> : null}
         </div>
 
+        <details className="admin-advanced-fields">
+          <summary>Ajustes técnicos avanzados</summary>
+          <p className="admin-help">Normalmente no hace falta tocar esto. El slug se usa para URLs y compatibilidad interna.</p>
+          <div className="admin-advanced-grid">
+            <div className="form-group">
+              <label className="form-label" htmlFor="slug">Slug</label>
+              <input id="slug" className="input" value={form.slug} placeholder="Se genera desde el nombre si queda vacío" onChange={(event) => onChange({ slug: event.target.value })} />
+              {errors.slug ? <p className="admin-error">{errors.slug}</p> : null}
+            </div>
+            <div className="form-group">
+              <label className="form-label" htmlFor="legacyId">Legacy ID</label>
+              <input id="legacyId" className="input" value={form.legacyId} onChange={(event) => onChange({ legacyId: event.target.value ? Number.parseInt(event.target.value, 10) || '' : '' })} />
+              {errors.legacyId ? <p className="admin-error">{errors.legacyId}</p> : null}
+            </div>
+          </div>
+        </details>
+
         <div className="form-group admin-upload-box">
           <label className="form-label">Imagen principal *</label>
           <div className={`admin-preview-wrap ${uploading ? 'is-busy' : ''}`} aria-busy={uploading}>
@@ -210,14 +222,7 @@ export function ProductEditorForm({
               const previewSrc = normalizeAdminImageSrc(form.imagen);
 
               return previewSrc ? (
-                <Image
-                  className="admin-preview"
-                  src={previewSrc}
-                  alt="Imagen principal"
-                  width={420}
-                  height={420}
-                  sizes="(max-width: 767px) 90vw, 420px"
-                />
+                <Image className="admin-preview" src={previewSrc} alt="Imagen principal" width={420} height={420} sizes="(max-width: 767px) 90vw, 420px" />
               ) : (
                 <div className="admin-preview admin-preview--empty">Sin imagen</div>
               );
@@ -237,25 +242,81 @@ export function ProductEditorForm({
         </div>
 
         <div className="form-group">
-          <label className="form-label">Imágenes por color</label>
+          <div className="admin-color-section-head">
+            <div>
+              <label className="form-label">Imágenes por color</label>
+              <p className="admin-help">El producto público solo mostrará los colores que tengan color e imagen cargados acá.</p>
+            </div>
+          </div>
+
+          <div className="admin-new-color-box">
+            <div>
+              <strong>Agregar nuevo color</strong>
+              <p className="admin-help">Crealo una vez y después reutilizalo en cualquier producto.</p>
+            </div>
+            <input className="input" placeholder="Nombre del color" value={colorDraft.name} disabled={saving || colorSaving} onChange={(event) => onColorDraftChange({ name: event.target.value })} />
+            <label className="admin-color-picker-label">
+              <span className="admin-color-preview" style={{ backgroundColor: colorDraft.hex }} aria-hidden="true" />
+              <input type="color" value={colorDraft.hex} disabled={saving || colorSaving} onChange={(event) => onColorDraftChange({ hex: event.target.value })} />
+              <span>{colorDraft.hex.toUpperCase()}</span>
+            </label>
+            <button className="btn btn-secondary" type="button" disabled={saving || uploading || colorSaving} onClick={onCreateColor}>
+              {colorSaving ? 'Creando...' : '+ Crear color'}
+            </button>
+          </div>
+          {colorError ? <p className="admin-error">{colorError}</p> : null}
+
+          {customColors.length ? (
+            <div className="admin-custom-colors-box">
+              <div>
+                <strong>Colores personalizados</strong>
+                <p className="admin-help">Podés eliminar definitivamente los colores creados manualmente si no están en uso.</p>
+              </div>
+              <div className="admin-custom-colors-list">
+                {customColors.map((color) => (
+                  <div className="admin-custom-color-chip" key={color.slug}>
+                    <span className="admin-color-preview" style={{ backgroundColor: color.hex }} aria-hidden="true" />
+                    <span>{color.name}</span>
+                    <button className="btn btn-ghost btn-danger-soft" type="button" disabled={saving || uploading || colorSaving} onClick={() => onDeleteColor(color)}>
+                      Eliminar definitivamente
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           <div className="admin-color-list">
             {colorRows.map((row) => (
               <div className="admin-color-row" key={row.id}>
-                <input className="input" placeholder="Color (ej: Negro)" value={row.color} disabled={saving} onChange={(event) => onColorRowChange(row.id, { color: event.target.value })} />
+                <div className="admin-color-select-stack">
+                  <label className="form-label" htmlFor={`color-${row.id}`}>Color</label>
+                  <select
+                    id={`color-${row.id}`}
+                    className="input"
+                    value={row.colorSlug}
+                    disabled={saving}
+                    onChange={(event) => onColorRowChange(row.id, { colorSlug: event.target.value })}
+                  >
+                    <option value="">Seleccionar color</option>
+                    {colors.map((color) => (
+                      <option value={color.slug} key={color.slug}>{color.name}</option>
+                    ))}
+                  </select>
+                  {row.colorName ? (
+                    <span className="admin-selected-color">
+                      <span className="admin-color-preview" style={{ backgroundColor: row.colorHex }} aria-hidden="true" />
+                      {row.colorName}
+                    </span>
+                  ) : null}
+                </div>
 
                 <div className={`admin-preview-wrap ${uploading ? 'is-busy' : ''}`} aria-busy={uploading}>
                   {(() => {
                     const previewSrc = normalizeAdminImageSrc(row.path);
 
                     return previewSrc ? (
-                      <Image
-                        className="admin-preview admin-preview--small"
-                        src={previewSrc}
-                        alt={`Color ${row.color || 'sin nombre'}`}
-                        width={180}
-                        height={180}
-                        sizes="96px"
-                      />
+                      <Image className="admin-preview admin-preview--small" src={previewSrc} alt={`Color ${row.colorName || 'sin nombre'}`} width={180} height={180} sizes="96px" />
                     ) : (
                       <div className="admin-preview admin-preview--small admin-preview--empty">Sin imagen</div>
                     );
@@ -276,7 +337,7 @@ export function ProductEditorForm({
             ))}
           </div>
 
-          <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={onAddColorRow}>Agregar color</button>
+          <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={onAddColorRow}>Agregar imagen por color</button>
           {errors.colorImages ? <p className="admin-error">{errors.colorImages}</p> : null}
         </div>
 

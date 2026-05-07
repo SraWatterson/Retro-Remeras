@@ -11,7 +11,12 @@ type AuditActionFilter =
   | 'PRODUCT_REACTIVATED'
   | 'PRODUCT_DEACTIVATED'
   | 'IMAGE_UPLOADED'
-  | 'IMAGE_DELETED';
+  | 'IMAGE_DELETED'
+  | 'COLOR_CREATED'
+  | 'COLOR_UPDATED'
+  | 'COLOR_DEACTIVATED'
+  | 'COLOR_DELETED'
+  | 'SITE_CONTENT_UPDATED';
 
 type AuditRangeFilter = 'all' | 'today' | '7d' | '30d';
 
@@ -44,6 +49,11 @@ const ACTION_OPTIONS: Array<{ value: AuditActionFilter; label: string }> = [
   { value: 'PRODUCT_DEACTIVATED', label: 'Producto eliminado/desactivado' },
   { value: 'IMAGE_UPLOADED', label: 'Imagen subida' },
   { value: 'IMAGE_DELETED', label: 'Imagen eliminada' },
+  { value: 'COLOR_CREATED', label: 'Color creado' },
+  { value: 'COLOR_UPDATED', label: 'Color editado' },
+  { value: 'COLOR_DEACTIVATED', label: 'Color desactivado' },
+  { value: 'COLOR_DELETED', label: 'Color eliminado' },
+  { value: 'SITE_CONTENT_UPDATED', label: 'Contenido visual editado' },
 ];
 
 const RANGE_OPTIONS: Array<{ value: AuditRangeFilter; label: string }> = [
@@ -127,6 +137,26 @@ function getAuditPresentation(item: AuditLogItem) {
     return { label: 'Imagen eliminada', tone: 'warning' as const };
   }
 
+  if (item.action === 'COLOR_CREATED') {
+    return { label: 'Color creado', tone: 'success' as const };
+  }
+
+  if (item.action === 'COLOR_UPDATED') {
+    return { label: 'Color editado', tone: 'info' as const };
+  }
+
+  if (item.action === 'COLOR_DEACTIVATED') {
+    return { label: 'Color desactivado', tone: 'warning' as const };
+  }
+
+  if (item.action === 'COLOR_DELETED') {
+    return { label: 'Color eliminado', tone: 'danger' as const };
+  }
+
+  if (item.action === 'SITE_CONTENT_UPDATED') {
+    return { label: 'Contenido visual editado', tone: 'info' as const };
+  }
+
   return { label: item.action.replaceAll('_', ' ').toLowerCase(), tone: 'info' as const };
 }
 
@@ -142,6 +172,8 @@ function summarizeAudit(item: AuditLogItem) {
   const movedTo = getString(item.metadata, 'movedTo');
   const updatedProducts = getNumber(item.metadata, 'updatedProducts');
   const path = getString(item.metadata, 'path');
+  const promoText = getString(item.metadata, 'promoText');
+  const heroTitle = getString(item.metadata, 'heroTitle');
 
   if (item.entity === 'Category' && deletedCategory) {
     return `Se eliminó "${deletedCategory}" y se movieron ${updatedProducts ?? 0} producto(s) a "${movedTo || 'Variados'}".`;
@@ -165,6 +197,10 @@ function summarizeAudit(item: AuditLogItem) {
 
   if (item.action === 'IMAGE_DELETED') {
     return `Archivo eliminado${path ? `: ${path}` : ''}.`;
+  }
+
+  if (item.action === 'SITE_CONTENT_UPDATED') {
+    return `Contenido visual actualizado${heroTitle ? ` · Hero: ${heroTitle}` : ''}${promoText ? ` · Promo: ${promoText}` : ''}.`;
   }
 
   if (nombre) {

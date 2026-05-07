@@ -3,11 +3,16 @@ import { CartView } from '@/components/cart/CartView';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { getSiteContent } from '@/lib/site-content';
 
-export default function Page() {
+export const revalidate = 60;
+
+export default async function Page() {
+  const siteContent = await getSiteContent();
+
   return (
     <>
-      <PromoBar />
+      <PromoBar content={siteContent} />
       <SiteHeader active="carrito" />
       <CartView />
       <SiteFooter />

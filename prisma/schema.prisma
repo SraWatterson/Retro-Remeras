@@ -22,6 +22,11 @@ enum AuditAction {
   LOGIN_FAILED
   IMAGE_UPLOADED
   IMAGE_DELETED
+  COLOR_CREATED
+  COLOR_UPDATED
+  COLOR_DEACTIVATED
+  COLOR_DELETED
+  SITE_CONTENT_UPDATED
 }
 
 model User {
@@ -70,6 +75,42 @@ model Product {
 }
 
 
+model Color {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  hex       String
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([activo])
+}
+
+model SiteContent {
+  id                      String   @id @default("home")
+  promoEnabled            Boolean  @default(true)
+  promoText               String   @default("LLEVANDO 3 PRODUCTOS TENÉS 5% DE DESCUENTO")
+  promoHref               String?
+  heroEyebrow             String   @default("Tienda temática · Buenos Aires")
+  heroTitlePrefix         String   @default("Remeras con")
+  heroTitleAccent         String   @default("estilo")
+  heroTitleSuffix         String   @default("nostalgia y personalidad")
+  heroText                String   @default("En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.")
+  heroPrimaryButtonText   String   @default("Ver catálogo")
+  heroPrimaryButtonHref   String   @default("/catalogo")
+  heroSecondaryButtonText String   @default("Ver carrito")
+  heroSecondaryButtonHref String   @default("/carrito")
+  heroMainImage           String   @default("/assets/img/ejemplo-vintage.jpg")
+  heroMainImageAlt        String   @default("Diseño vintage destacado")
+  heroBadgeText           String   @default("Colecciones con impronta retro")
+  heroSideImageOne        String   @default("/assets/img/remera-goku.jpg")
+  heroSideImageOneAlt     String   @default("Diseño anime destacado")
+  heroSideImageTwo        String   @default("/assets/img/ejemplo-gaming.jpg")
+  heroSideImageTwoAlt     String   @default("Diseño videojuegos destacado")
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
 
 model RefreshToken {
   id         String    @id @default(cuid())

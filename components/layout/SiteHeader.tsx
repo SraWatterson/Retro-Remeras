@@ -21,6 +21,34 @@ export function SiteHeader({ active }: Props) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      document.body.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-open', open);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.classList.remove('nav-open');
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open]);
+
   return (
     <header className="topbar">
       <div className="container navbar">
@@ -31,39 +59,41 @@ export function SiteHeader({ active }: Props) {
         <button
           className={`menu-toggle ${open ? 'is-open' : ''}`}
           type="button"
-          aria-label="Abrir menú"
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={open}
           onClick={() => setOpen((prev) => !prev)}
         >
           <span />
         </button>
 
-        <nav className={`nav-links ${open ? 'is-open' : ''}`} aria-label="Navegación principal" data-nav-links>
-          <Link className={active === 'inicio' ? 'is-active' : ''} href="/" onClick={() => setOpen(false)}>
-            Inicio
-          </Link>
-          <Link className={active === 'catalogo' ? 'is-active' : ''} href="/catalogo" onClick={() => setOpen(false)}>
-            Catálogo
-          </Link>
-          <Link href="/#como-funciona" onClick={() => setOpen(false)}>
-            Cómo funciona
-          </Link>
-          <Link href="/#beneficios" onClick={() => setOpen(false)}>
-            Beneficios
-          </Link>
-        </nav>
+        <div className={`nav-mobile-panel ${open ? 'is-open' : ''}`} data-nav-mobile-panel>
+          <nav className={`nav-links ${open ? 'is-open' : ''}`} aria-label="Navegación principal" data-nav-links>
+            <Link className={active === 'inicio' ? 'is-active' : ''} href="/" onClick={() => setOpen(false)}>
+              Inicio
+            </Link>
+            <Link className={active === 'catalogo' ? 'is-active' : ''} href="/catalogo" onClick={() => setOpen(false)}>
+              Catálogo
+            </Link>
+            <Link href="/#como-funciona" onClick={() => setOpen(false)}>
+              Cómo funciona
+            </Link>
+            <Link href="/#ubicacion" onClick={() => setOpen(false)}>
+              Ubicación
+            </Link>
+          </nav>
 
-        <div className={`nav-cta ${open ? 'is-open' : ''}`} data-nav-cta>
-          <Link className="nav-cart-icon-btn" href="/carrito" aria-label="Ver carrito" onClick={() => setOpen(false)}>
-            <Image src="/assets/icons/carrito-de-compras.png" alt="" className="nav-cart-icon" width={28} height={28} />
-            <span className="nav-cart-badge nav-cart-badge--icon" data-global-cart-count>
-              {cartCount}
-            </span>
-          </Link>
+          <div className={`nav-cta ${open ? 'is-open' : ''}`} data-nav-cta>
+            <Link className="nav-cart-icon-btn" href="/carrito" aria-label="Ver carrito" onClick={() => setOpen(false)}>
+              <Image src="/assets/icons/carrito-de-compras.png" alt="" className="nav-cart-icon" width={28} height={28} />
+              <span className="nav-cart-badge nav-cart-badge--icon" data-global-cart-count>
+                {cartCount}
+              </span>
+            </Link>
 
-          <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/catalogo" onClick={() => setOpen(false)}>
-            Ver catálogo
-          </Link>
+            <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/catalogo" onClick={() => setOpen(false)}>
+              Ver catálogo
+            </Link>
+          </div>
         </div>
       </div>
     </header>

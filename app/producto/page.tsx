@@ -5,6 +5,7 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { ProductView } from '@/components/product/ProductView';
 import { getPublicProductById } from '@/lib/product-queries';
+import { getSiteContent } from '@/lib/site-content';
 
 export const revalidate = 60;
 type PageProps = {
@@ -19,7 +20,7 @@ export default async function Page({ searchParams }: PageProps) {
     notFound();
   }
 
-  const product = await getPublicProductById(productId);
+  const [product, siteContent] = await Promise.all([getPublicProductById(productId), getSiteContent()]);
 
   if (!product) {
     notFound();
@@ -27,7 +28,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <>
-      <PromoBar />
+      <PromoBar content={siteContent} />
       <SiteHeader active="catalogo" />
       <ProductView product={product} />
       <SiteFooter />

@@ -80,6 +80,25 @@ async function main() {
     });
   }
 
+  const baseColors = [
+    { name: 'Negro', slug: 'negro', hex: '#111111' },
+    { name: 'Blanco', slug: 'blanco', hex: '#F2F2F2' },
+  ];
+
+  for (const color of baseColors) {
+    await prisma.color.upsert({
+      where: { slug: color.slug },
+      update: { name: color.name, hex: color.hex, activo: true },
+      create: { ...color, activo: true },
+    });
+  }
+
+  await prisma.siteContent.upsert({
+    where: { id: 'home' },
+    update: {},
+    create: { id: 'home' },
+  });
+
   console.info(`Seed completado. Admin: ${adminEmail}`);
 }
 

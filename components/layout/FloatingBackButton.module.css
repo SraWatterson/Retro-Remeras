@@ -4,27 +4,27 @@
   bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 80;
 
-  min-width: 2.75rem;
-  height: 2.75rem;
-  padding: 0 0.85rem;
+  min-width: 2.55rem;
+  height: 2.55rem;
+  padding: 0 0.76rem;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
 
-  border: 1px solid rgba(244, 197, 66, 0.38);
+  border: 1px solid rgba(244, 197, 66, 0.16);
   border-radius: 999px;
 
   background:
-    linear-gradient(135deg, rgba(18, 14, 10, 0.88), rgba(8, 7, 6, 0.74)),
-    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.14), transparent 52%);
+    linear-gradient(135deg, rgba(12, 12, 10, 0.72), rgba(7, 7, 6, 0.62)),
+    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.040), transparent 54%);
 
-  color: #fff3da;
+  color: rgba(255, 243, 218, 0.78);
   box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(255, 239, 207, 0.045),
-    inset 0 1px 0 rgba(255, 255, 255, 0.075);
+    0 10px 24px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 239, 207, 0.030),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -35,10 +35,10 @@
 }
 
 .floatingBackButton:hover {
-  border-color: rgba(244, 197, 66, 0.62);
+  border-color: rgba(244, 197, 66, 0.44);
   background:
-    linear-gradient(135deg, rgba(24, 18, 12, 0.94), rgba(10, 8, 6, 0.82)),
-    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.18), transparent 52%);
+    linear-gradient(135deg, rgba(22, 20, 17, 0.88), rgba(10, 9, 8, 0.76)),
+    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.12), transparent 54%);
 }
 
 .floatingBackButton:focus-visible {
@@ -59,7 +59,7 @@
 }
 
 .text {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.015em;
 }

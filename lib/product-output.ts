@@ -1,4 +1,5 @@
 import { normalizeCategoryName } from '@/lib/category-utils';
+import { colorHexFromSlug, colorLabelFromSlug, normalizeColorSlug, ProductColorImage } from '@/lib/colors';
 import { Product } from '@/lib/shop';
 
 type ProductLike = {
@@ -18,14 +19,44 @@ type ProductLike = {
   deletedById?: string | null;
 };
 
-export function normalizeImageMap(value: unknown): Record<string, string> {
+export function normalizeImageMap(value: unknown): Record<string, ProductColorImage> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
 
-  return Object.fromEntries(
-    Object.entries(value as Record<string, unknown>).filter(
-      ([color, path]) => color.trim().length > 0 && typeof path === 'string' && path.trim().length > 0
-    ) as Array<[string, string]>
-  );
+  const normalized: Record<string, ProductColorImage> = {};
+
+  Object.entries(value as Record<string, unknown>).forEach(([rawColor, rawData]) => {
+    const fallbackSlug = normalizeColorSlug(rawColor);
+    if (!fallbackSlug) return;
+
+    if (typeof rawData === 'string') {
+      const path = rawData.trim();
+      if (!path) return;
+
+      normalized[fallbackSlug] = {
+        colorSlug: fallbackSlug,
+        colorName: colorLabelFromSlug(fallbackSlug),
+        colorHex: colorHexFromSlug(fallbackSlug),
+        path,
+      };
+      return;
+    }
+
+    if (!rawData || typeof rawData !== 'object' || Array.isArray(rawData)) return;
+
+    const data = rawData as Record<string, unknown>;
+    const colorSlug = normalizeColorSlug(String(data.colorSlug || data.slug || rawColor));
+    const path = String(data.path || data.image || data.url || '').trim();
+    if (!colorSlug || !path) return;
+
+    normalized[colorSlug] = {
+      colorSlug,
+      colorName: String(data.colorName || data.name || colorLabelFromSlug(colorSlug)).trim() || colorLabelFromSlug(colorSlug),
+      colorHex: String(data.colorHex || data.hex || colorHexFromSlug(colorSlug)).trim() || colorHexFromSlug(colorSlug),
+      path,
+    };
+  });
+
+  return normalized;
 }
 
 export function normalizeProductOutput(product: ProductLike): Product {

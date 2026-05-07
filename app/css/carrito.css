@@ -1,15 +1,32 @@
 .cart-page {
   padding: clamp(1.35rem, 3vw, 2.4rem) 0 clamp(3.25rem, 6vw, 5rem);
   background:
-    radial-gradient(circle at 86% 6%, rgba(184, 40, 40, 0.14), transparent 31%),
-    radial-gradient(circle at 12% 14%, rgba(244, 197, 66, 0.10), transparent 34%),
-    radial-gradient(circle at 50% 100%, rgba(94, 23, 21, 0.18), transparent 44%),
-    linear-gradient(180deg, var(--bg-deep) 0%, #0d0907 48%, var(--bg-warm) 100%);
+    radial-gradient(ellipse at 86% -6%, rgba(200, 58, 31, 0.13), transparent 34%),
+    radial-gradient(ellipse at 12% 12%, rgba(216, 148, 37, 0.13), transparent 36%),
+    radial-gradient(ellipse at 58% 108%, rgba(241, 221, 178, 0.055), transparent 44%),
+    linear-gradient(180deg, #070604 0%, #120905 46%, #1a1008 100%);
+  position: relative;
+  isolation: isolate;
 }
+
+.cart-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--grain-url);
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.20;
+}
+
 
 .cart-shell {
   display: grid;
   gap: 1.35rem;
+  position: relative;
+  z-index: 1;
 }
 
 .cart-page-header {
@@ -41,8 +58,8 @@
   pointer-events: none;
   border-radius: inherit;
   background:
-    radial-gradient(circle at 18% 0%, rgba(244, 197, 66, 0.065), transparent 38%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.024), transparent 44%);
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.045), transparent 38%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.02), transparent 44%);
   opacity: 0.78;
 }
 
@@ -445,4 +462,90 @@
     height: auto;
     aspect-ratio: 1 / 0.78;
   }
+}
+
+/* =========================================================
+   Etapa 4.1.3 · Carrito unificado con catálogo/producto
+   ========================================================= */
+.cart-page {
+  background:
+    radial-gradient(ellipse at 90% -8%, rgba(200, 58, 31, 0.18), transparent 36%),
+    radial-gradient(ellipse at 10% 10%, rgba(216, 148, 37, 0.17), transparent 38%),
+    radial-gradient(ellipse at 54% 112%, rgba(241, 221, 178, 0.075), transparent 44%),
+    linear-gradient(180deg, #080604 0%, #160c06 44%, #1f1209 100%);
+}
+
+.cart-main,
+.cart-summary,
+.cart-item,
+.cart-empty-state {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.060), transparent 40%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.034), rgba(241, 221, 178, 0.006)),
+    rgba(35, 21, 12, 0.88);
+  border-color: rgba(216, 148, 37, 0.18);
+  box-shadow: 0 14px 34px rgba(3, 2, 1, 0.38), 0 4px 14px rgba(200, 58, 31, 0.08);
+}
+
+.cart-summary {
+  border-color: rgba(216, 148, 37, 0.22);
+}
+
+.cart-page-header .section-title,
+.cart-summary h2,
+.cart-item-copy h4,
+.cart-empty-state h2,
+.cart-empty-state h3 {
+  color: var(--brand-cream-soft);
+}
+
+.cart-page-header .section-subtitle,
+.cart-summary-empty p,
+.cart-empty-state p,
+.cart-item-copy p,
+.cart-item-meta li span,
+.summary-list li span {
+  color: rgba(241, 221, 178, 0.72);
+}
+
+.cart-summary-whatsapp,
+.cart-summary-actions .btn-primary,
+.cart-empty-state__btn {
+  background: linear-gradient(135deg, var(--brand-gold-soft), var(--brand-gold));
+  color: #120b07;
+  border-color: rgba(216, 148, 37, 0.56);
+  box-shadow: 0 10px 24px rgba(216, 148, 37, 0.28), 0 2px 8px rgba(3, 2, 1, 0.24);
+}
+
+.cart-summary-secondary {
+  background: rgba(23, 13, 7, 0.46);
+  border-color: rgba(216, 148, 37, 0.22);
+  color: rgba(241, 221, 178, 0.88);
+}
+
+
+/* =========================================================
+   Ajuste final · Grain y superficies de carrito unificadas
+   ========================================================= */
+.cart-main,
+.cart-summary,
+.cart-item,
+.cart-empty-state {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.045), transparent 42%),
+    linear-gradient(180deg, rgba(241, 221, 178, 0.026), rgba(7, 6, 4, 0.12)),
+    rgba(18, 11, 7, 0.86);
+  border-color: rgba(216, 148, 37, 0.17);
+  box-shadow: 0 14px 34px rgba(3, 2, 1, 0.42), 0 4px 14px rgba(200, 58, 31, 0.07);
+}
+
+.cart-summary {
+  border-color: rgba(216, 148, 37, 0.22);
+}
+
+.cart-summary-secondary,
+.cart-item,
+.qty-control,
+.cart-remove-btn {
+  background-color: rgba(10, 7, 5, 0.58);
 }
