@@ -54,6 +54,7 @@ model Product {
   precio           Int
   imagen           String?
   imagenesPorColor Json?
+  sizeGuide        Json?
   descripcion      String
   disponible       Boolean  @default(true)
   destacado        Boolean  @default(false)

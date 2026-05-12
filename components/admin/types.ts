@@ -1,5 +1,5 @@
 import { ProductColorOption } from '@/lib/colors';
-import { Product } from '@/lib/shop';
+import { Product, ProductSizeGuide } from '@/lib/shop';
 
 export type SessionUser = {
   id: string;
@@ -28,6 +28,7 @@ export type ProductFormState = {
   categoria: string;
   precio: string;
   imagen: string;
+  sizeGuide: ProductSizeGuide;
   descripcion: string;
   disponible: boolean;
   destacado: boolean;
@@ -36,6 +37,7 @@ export type ProductFormState = {
 
 export type ProductFormErrors = Partial<Record<keyof ProductFormState, string>> & {
   colorImages?: string;
+  sizeGuide?: string;
 };
 
 export type PaginatedProductsResponse = {

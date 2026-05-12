@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { ProductColorOption } from '@/lib/colors';
+import { ProductSizeGuide, SizeGuideTable } from '@/lib/shop';
 import { ColorDraft, ColorImageRow, ProductFormErrors, ProductFormState } from './types';
 
 type Props = {
@@ -139,6 +140,202 @@ function CategoryField({ value, categories, error, onChange }: CategoryFieldProp
   );
 }
 
+
+type SizeGuideEditorProps = {
+  value: ProductSizeGuide;
+  disabled: boolean;
+  error?: string;
+  onChange: (value: ProductSizeGuide) => void;
+};
+
+const SIZE_GUIDE_LABELS: Record<'regular' | 'oversize', string> = {
+  regular: 'Regular',
+  oversize: 'Oversize',
+};
+
+function emptyTable(): SizeGuideTable {
+  return {
+    columns: ['Talle', 'Ancho', 'Largo'],
+    rows: [],
+  };
+}
+
+function normalizeTable(table?: SizeGuideTable): SizeGuideTable {
+  const columns = table?.columns?.length ? table.columns : ['Talle', 'Ancho', 'Largo'];
+  const rows = table?.rows || [];
+  return { columns, rows };
+}
+
+function SizeGuideEditor({ value, disabled, error, onChange }: SizeGuideEditorProps) {
+  const updateTable = (fit: 'regular' | 'oversize', table: SizeGuideTable) => {
+    onChange({
+      ...value,
+      [fit]: table,
+    });
+  };
+
+  const updateColumn = (fit: 'regular' | 'oversize', columnIndex: number, nextValue: string) => {
+    const table = normalizeTable(value[fit]);
+    const columns = table.columns.map((column, index) => (index === columnIndex ? nextValue : column));
+    updateTable(fit, { ...table, columns });
+  };
+
+  const addColumn = (fit: 'regular' | 'oversize') => {
+    const table = normalizeTable(value[fit]);
+    const columns = [...table.columns, `Columna ${table.columns.length + 1}`];
+    const rows = table.rows.map((row) => [...row, '']);
+    updateTable(fit, { columns, rows });
+  };
+
+  const removeColumn = (fit: 'regular' | 'oversize', columnIndex: number) => {
+    const table = normalizeTable(value[fit]);
+    if (table.columns.length <= 1) return;
+
+    const columns = table.columns.filter((_, index) => index !== columnIndex);
+    const rows = table.rows.map((row) => row.filter((_, index) => index !== columnIndex));
+    updateTable(fit, { columns, rows });
+  };
+
+  const addRow = (fit: 'regular' | 'oversize') => {
+    const table = normalizeTable(value[fit]);
+    updateTable(fit, {
+      ...table,
+      rows: [...table.rows, table.columns.map(() => '')],
+    });
+  };
+
+  const removeRow = (fit: 'regular' | 'oversize', rowIndex: number) => {
+    const table = normalizeTable(value[fit]);
+    updateTable(fit, {
+      ...table,
+      rows: table.rows.filter((_, index) => index !== rowIndex),
+    });
+  };
+
+  const updateCell = (fit: 'regular' | 'oversize', rowIndex: number, columnIndex: number, nextValue: string) => {
+    const table = normalizeTable(value[fit]);
+    const rows = table.rows.map((row, currentRowIndex) => {
+      if (currentRowIndex !== rowIndex) return row;
+
+      const nextRow = [...row];
+      while (nextRow.length < table.columns.length) nextRow.push('');
+      nextRow[columnIndex] = nextValue;
+      return nextRow;
+    });
+
+    updateTable(fit, { ...table, rows });
+  };
+
+  return (
+    <details className="admin-size-guide-editor">
+      <summary>
+        <span>Tabla de talles editable</span>
+      </summary>
+
+      <div className="admin-size-guide-intro">
+        <p className="admin-help">
+          Editá los nombres de columnas y completá las medidas. La página pública va a mostrar exactamente esta estructura.
+        </p>
+      </div>
+
+      <div className="admin-size-guide-groups">
+        {(['regular', 'oversize'] as const).map((fit) => {
+          const table = normalizeTable(value[fit]);
+
+          return (
+            <div className="admin-size-guide-group" key={fit}>
+              <div className="admin-size-guide-head">
+                <div>
+                  <strong>{SIZE_GUIDE_LABELS[fit]}</strong>
+                  <p>{fit === 'regular' ? 'Medidas para corte clásico.' : 'Medidas para corte más amplio.'}</p>
+                </div>
+              </div>
+
+              <div className="admin-size-guide-columns" aria-label={`Columnas de tabla ${SIZE_GUIDE_LABELS[fit]}`}>
+                <div className="admin-size-guide-subhead">
+                  <span className="admin-size-guide-label">Columnas</span>
+                  <button className="btn btn-secondary" type="button" disabled={disabled} onClick={() => addColumn(fit)}>
+                    + Columna
+                  </button>
+                </div>
+
+                <div className="admin-size-guide-column-list">
+                  {table.columns.map((column, columnIndex) => (
+                    <div className="admin-size-guide-column-editor" key={`${fit}-column-${columnIndex}`}>
+                      <input
+                        className="input"
+                        value={column}
+                        placeholder={`Columna ${columnIndex + 1}`}
+                        disabled={disabled}
+                        onChange={(event) => updateColumn(fit, columnIndex, event.target.value)}
+                        aria-label={`Nombre de columna ${columnIndex + 1}`}
+                      />
+                      <button
+                        className="admin-size-guide-remove-column"
+                        type="button"
+                        disabled={disabled || table.columns.length <= 1}
+                        onClick={() => removeColumn(fit, columnIndex)}
+                        aria-label={`Quitar columna ${column || columnIndex + 1}`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="admin-size-guide-rows">
+                <div className="admin-size-guide-subhead">
+                  <span className="admin-size-guide-label">Medidas</span>
+                </div>
+
+                <div className="admin-size-guide-table" role="table" aria-label={`Tabla de talles ${SIZE_GUIDE_LABELS[fit]}`}>
+                  {table.rows.length ? (
+                    table.rows.map((row, rowIndex) => (
+                      <div className="admin-size-guide-row" role="row" key={`${fit}-row-${rowIndex}`}>
+                        {table.columns.map((column, columnIndex) => (
+                          <input
+                            className="input"
+                            key={`${fit}-${rowIndex}-${columnIndex}`}
+                            value={row[columnIndex] || ''}
+                            placeholder={column}
+                            disabled={disabled}
+                            onChange={(event) => updateCell(fit, rowIndex, columnIndex, event.target.value)}
+                            aria-label={`${SIZE_GUIDE_LABELS[fit]} fila ${rowIndex + 1}, ${column}`}
+                          />
+                        ))}
+                        <button
+                          className="admin-size-guide-remove-row"
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => removeRow(fit, rowIndex)}
+                          aria-label={`Quitar fila ${rowIndex + 1} de ${SIZE_GUIDE_LABELS[fit]}`}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="admin-size-guide-empty">
+                      Sin filas cargadas para {SIZE_GUIDE_LABELS[fit]}. Usá “+ Fila” para agregar una.
+                    </div>
+                  )}
+                </div>
+
+                <button className="btn btn-secondary admin-size-guide-add-row" type="button" disabled={disabled} onClick={() => addRow(fit)}>
+                  + Agregar fila
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {error ? <p className="admin-error">{error}</p> : null}
+    </details>
+  );
+}
+
 export function ProductEditorForm({
   title,
   editing,
@@ -214,6 +411,16 @@ export function ProductEditorForm({
             </div>
           </div>
         </details>
+
+
+        <div className="form-group">
+          <SizeGuideEditor
+            value={form.sizeGuide}
+            disabled={saving || uploading}
+            error={errors.sizeGuide}
+            onChange={(sizeGuide) => onChange({ sizeGuide })}
+          />
+        </div>
 
         <div className="form-group admin-upload-box">
           <label className="form-label">Imagen principal *</label>

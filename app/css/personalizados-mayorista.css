@@ -1,0 +1,677 @@
+/* =========================================================
+   ETAPA 11B.3 — Personalizados / Mayorista
+   Fondo y cortes visuales replicados desde la landing.
+   ========================================================= */
+
+/* Landing: sección única con dos caminos comerciales */
+.section--personalizados-mayorista {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 24% 18%, rgba(246, 185, 53, 0.08), transparent 38%),
+    radial-gradient(ellipse at 78% 72%, rgba(200, 58, 31, 0.10), transparent 46%),
+    linear-gradient(180deg, #120904 0%, #1a1008 50%, #120905 100%);
+}
+
+.section--personalizados-mayorista::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgba(7, 6, 4, 0.58) 0%,
+      rgba(8, 6, 4, 0.34) 10%,
+      rgba(12, 8, 5, 0.12) 22%,
+      transparent 38%,
+      transparent 78%,
+      rgba(12, 8, 5, 0.12) 100%
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.030), transparent 48%);
+  opacity: 0.76;
+}
+
+.section--personalizados-mayorista::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    var(--grain-url),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.010), transparent 44%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(216, 148, 37, 0.006) 0 1px,
+      transparent 1px 116px
+    );
+  background-size: 220px 220px, 100% 100%, 100% 100%;
+  background-blend-mode: overlay, normal, normal;
+  opacity: 0.17;
+}
+
+.personalizados-mayorista-section__header,
+.personalizados-mayorista-cards {
+  position: relative;
+  z-index: 1;
+}
+
+.personalizados-mayorista-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.4rem);
+}
+
+.personalizados-mayorista-card {
+  min-width: 0;
+}
+
+/* Mismo marco animado del hero (.poster-frame). */
+@keyframes personalizadosMayoristaPosterFrameSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.personalizados-mayorista-card__link,
+.sales-hero__visual {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 0;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(244, 197, 66, 0.075), transparent 44%),
+    #0d0a08;
+  box-shadow:
+    0 24px 62px rgba(0, 0, 0, 0.46),
+    0 8px 20px rgba(75, 43, 23, 0.16);
+}
+
+.personalizados-mayorista-card__link {
+  min-height: clamp(360px, 31vw, 470px);
+  display: block;
+  border-radius: 34px;
+  color: var(--brand-cream-soft, #fff0cb);
+  text-decoration: none;
+  transform: translateZ(0);
+}
+
+.personalizados-mayorista-card__link::before,
+.sales-hero__visual::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  width: 165%;
+  height: 165%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(244, 197, 66, 0) 0deg,
+    rgba(244, 197, 66, 0.98) 42deg,
+    rgba(200, 47, 47, 0.95) 92deg,
+    rgba(244, 197, 66, 0.98) 146deg,
+    rgba(244, 197, 66, 0) 210deg,
+    rgba(244, 197, 66, 0) 360deg
+  );
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center;
+  animation: personalizadosMayoristaPosterFrameSpin 4.8s linear infinite;
+  opacity: 0.9;
+}
+
+.personalizados-mayorista-card__link::after,
+.sales-hero__visual::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 5px;
+  border-radius: calc(34px - 6px);
+  background: #0d0d0d;
+  pointer-events: none;
+}
+
+.personalizados-mayorista-card__link > img,
+.sales-hero__visual img {
+  position: absolute;
+  z-index: 2;
+  inset: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  border-radius: calc(34px - 8px);
+  object-fit: cover;
+  filter: brightness(0.72) contrast(1.06) saturate(0.96);
+  transition:
+    transform 520ms var(--ease-out-expo),
+    filter 320ms ease;
+}
+
+.personalizados-mayorista-card__link:hover > img,
+.personalizados-mayorista-card__link:focus-visible > img {
+  filter: brightness(0.82) contrast(1.08) saturate(1.04);
+  transform: scale(1.045);
+}
+
+.personalizados-mayorista-card__link[href="/personalizados"] > img {
+  object-position: center 16%;
+}
+
+.personalizados-mayorista-card__link[href="/mayorista"] > img {
+  object-position: center 42%;
+}
+
+.personalizados-mayorista-card__link > .personalizados-mayorista-card__badge,
+.personalizados-mayorista-card__arrow,
+.personalizados-mayorista-card__content {
+  position: absolute;
+  z-index: 3;
+}
+
+.personalizados-mayorista-card__badge,
+.personalizados-mayorista-card__arrow {
+  top: clamp(1rem, 2vw, 1.35rem);
+}
+
+.personalizados-mayorista-card__badge {
+  left: clamp(1rem, 2vw, 1.35rem);
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid rgba(255, 240, 203, 0.20);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.76);
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.035);
+}
+
+.personalizados-mayorista-card__arrow {
+  right: clamp(1rem, 2vw, 1.35rem);
+  width: 42px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 240, 203, 0.18);
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.76);
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: 1.15rem;
+  backdrop-filter: blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.035);
+  transition:
+    transform 220ms var(--ease-out-expo),
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.personalizados-mayorista-card__link:hover .personalizados-mayorista-card__arrow,
+.personalizados-mayorista-card__link:focus-visible .personalizados-mayorista-card__arrow {
+  transform: translateX(3px);
+  border-color: rgba(216, 148, 37, 0.38);
+  background: rgba(216, 148, 37, 0.18);
+}
+
+.personalizados-mayorista-card__content {
+  left: clamp(1rem, 2.6vw, 1.7rem);
+  right: clamp(1rem, 2.6vw, 1.7rem);
+  bottom: clamp(1rem, 2.6vw, 1.7rem);
+  display: grid;
+  gap: 0.75rem;
+}
+
+.personalizados-mayorista-card__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -0.8rem -0.85rem;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.18), rgba(8, 7, 6, 0.78)),
+    radial-gradient(circle at 20% 100%, rgba(216, 148, 37, 0.10), transparent 54%);
+  filter: blur(0.2px);
+}
+
+.personalizados-mayorista-card__content h3 {
+  max-width: 12ch;
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(1.95rem, 3.4vw, 2.9rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+  text-shadow: 0 14px 34px rgba(0, 0, 0, 0.54);
+}
+
+.personalizados-mayorista-card__content p {
+  max-width: 42ch;
+  margin: 0;
+  color: rgba(255, 240, 203, 0.78);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.personalizados-mayorista-card__cta {
+  width: fit-content;
+  min-height: 42px;
+  padding-inline: 1rem;
+}
+
+/* Páginas internas: replica sistema de fondos de .home-page */
+
+.sales-page {
+  --pm-bg-top: #070604;
+  --pm-bg-mid: #100905;
+  --pm-bg-low: #160c07;
+  --pm-red-haze: rgba(154, 45, 27, 0.090);
+  --pm-red-haze-soft: rgba(154, 45, 27, 0.058);
+  --pm-gold-haze: rgba(216, 148, 37, 0.085);
+
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 13% 2%, var(--pm-gold-haze), transparent 40%),
+    radial-gradient(ellipse at 90% 14%, var(--pm-red-haze-soft), transparent 42%),
+    linear-gradient(180deg,
+      var(--pm-bg-top) 0%,
+      #0b0704 22%,
+      var(--pm-bg-mid) 48%,
+      #130a06 72%,
+      var(--pm-bg-low) 100%
+    );
+}
+
+.sales-hero,
+.sales-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.sales-hero::before,
+.sales-section::before,
+.sales-hero::after,
+.sales-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.sales-hero::before,
+.sales-section::before {
+  z-index: -2;
+}
+
+.sales-hero::after,
+.sales-section::after {
+  z-index: -1;
+}
+
+.sales-hero {
+  padding: clamp(2.6rem, 4.8vw, 4.6rem) 0 clamp(2.2rem, 3.8vw, 3.6rem);
+  background:
+    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
+    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
+    linear-gradient(180deg, #0a0705 0%, #0b0704 60%, #100905 100%);
+}
+
+.sales-hero::after,
+.sales-section::after {
+  background:
+    var(--grain-url),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.010), transparent 44%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(216, 148, 37, 0.006) 0 1px,
+      transparent 1px 116px
+    );
+  background-size: 220px 220px, 100% 100%, 100% 100%;
+  background-blend-mode: overlay, normal, normal;
+  opacity: 0.17;
+}
+
+.sales-hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+  gap: clamp(1.4rem, 3.4vw, 3.2rem);
+  align-items: center;
+}
+
+.sales-hero__copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.sales-hero__copy h1 {
+  max-width: 11ch;
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(3rem, 7.2vw, 6rem);
+  line-height: 0.90;
+  letter-spacing: -0.075em;
+  text-shadow: 0 20px 58px rgba(0, 0, 0, 0.44);
+}
+
+.sales-hero__copy h1 span {
+  color: var(--brand-gold-soft, #efb84e);
+}
+
+.sales-hero__copy p {
+  max-width: 58ch;
+  margin: 0;
+  color: rgba(241, 221, 178, 0.76);
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  line-height: 1.72;
+}
+
+.sales-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.sales-hero__visual {
+  justify-self: end;
+  width: min(100%, 440px);
+  aspect-ratio: 4 / 5;
+  min-height: 0;
+  border-radius: 30px;
+}
+
+.sales-hero__visual::after {
+  border-radius: calc(30px - 6px);
+}
+
+.sales-hero__visual img {
+  border-radius: calc(30px - 8px);
+}
+
+.sales-hero__visual img[alt*="personalizadas"] {
+  object-position: center 16%;
+}
+
+.sales-hero__visual img[alt*="mayorista"] {
+  object-position: center 42%;
+}
+
+.sales-section {
+  padding: clamp(5.5rem, 8vw, 7rem) 0;
+}
+
+/* Primera sección de contenido: equivalente visual a Categorías destacadas. */
+.sales-page > .sales-section:first-of-type {
+  background:
+    radial-gradient(ellipse at 24% 18%, rgba(246, 185, 53, 0.08), transparent 38%),
+    radial-gradient(ellipse at 78% 72%, rgba(200, 58, 31, 0.10), transparent 46%),
+    linear-gradient(180deg, #120904 0%, #1a1008 50%, #120905 100%);
+}
+
+.sales-page > .sales-section:first-of-type::before {
+  background:
+    linear-gradient(180deg,
+      rgba(7, 6, 4, 0.58) 0%,
+      rgba(8, 6, 4, 0.34) 10%,
+      rgba(12, 8, 5, 0.12) 22%,
+      transparent 38%,
+      transparent 78%,
+      rgba(12, 8, 5, 0.12) 100%
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.030), transparent 48%);
+  opacity: 0.76;
+}
+
+/* Proceso: equivalente visual a Cómo funciona. */
+.sales-section--process {
+  color: var(--text);
+  background:
+    linear-gradient(180deg, #120905 0%, #130a06 28%, #140a06 62%, #140a06 100%),
+    radial-gradient(ellipse at 84% 16%, rgba(216, 148, 37, 0.068), transparent 50%),
+    radial-gradient(ellipse at 18% 86%, rgba(154, 45, 27, 0.060), transparent 56%);
+  box-shadow: inset 0 1px 0 rgba(241, 221, 178, 0.014);
+}
+
+.sales-section--process::before {
+  background:
+    linear-gradient(180deg,
+      rgba(7, 6, 4, 0.56) 0%,
+      rgba(9, 7, 5, 0.32) 9%,
+      rgba(12, 8, 5, 0.12) 22%,
+      transparent 38%,
+      transparent 74%,
+      rgba(20, 10, 6, 0.16) 100%
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.030), transparent 54%);
+  opacity: 0.72;
+}
+
+.sales-section__header {
+  display: grid;
+  gap: 0.45rem;
+  max-width: 760px;
+  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
+}
+
+.sales-section__header h2,
+.sales-cta-card h2 {
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(2rem, 4.4vw, 4rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.sales-benefits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.sales-benefit-card,
+.sales-process-card,
+.sales-cta-card {
+  border: 1px solid rgba(216, 148, 37, 0.12);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.034), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.016), rgba(0, 0, 0, 0.050)),
+    rgba(10, 8, 7, 0.82);
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 240, 203, 0.024);
+}
+
+.sales-benefit-card {
+  min-height: 210px;
+  padding: 1rem;
+}
+
+.sales-benefit-card h3,
+.sales-process-card h3 {
+  margin: 0 0 0.55rem;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: 1.08rem;
+  line-height: 1.18;
+}
+
+.sales-benefit-card p,
+.sales-process-card p {
+  margin: 0;
+  color: rgba(241, 221, 178, 0.69);
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.sales-process {
+  display: grid;
+  gap: 1rem;
+}
+
+.sales-process__steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.sales-process-card {
+  padding: 1rem;
+}
+
+.sales-process-card span {
+  width: 38px;
+  height: 38px;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand-gold-soft, #efb84e), var(--brand-gold, #d89425));
+  color: #120c07;
+  font-size: 0.78rem;
+  font-weight: 950;
+  box-shadow: 0 10px 24px rgba(216, 148, 37, 0.13);
+}
+
+.sales-section--cta {
+  padding-bottom: clamp(4rem, 6vw, 6rem);
+  background:
+    linear-gradient(180deg, #120905 0%, #100805 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.045), transparent 46%);
+}
+
+.sales-cta-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: clamp(1.2rem, 2.6vw, 1.8rem);
+}
+
+.sales-cta-card > div {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.sales-cta-card .btn {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1180px) {
+  .sales-benefits,
+  .sales-process__steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sales-hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.78fr);
+  }
+
+  .sales-hero__visual {
+    width: min(100%, 390px);
+  }
+}
+
+@media (max-width: 900px) {
+  .personalizados-mayorista-cards,
+  .sales-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .personalizados-mayorista-card__link {
+    min-height: 340px;
+  }
+
+  .sales-hero__visual {
+    justify-self: start;
+    width: min(100%, 380px);
+  }
+
+  .sales-cta-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .section--personalizados-mayorista {
+    padding-top: clamp(2.8rem, 10vw, 4rem);
+  }
+
+  .personalizados-mayorista-card__link {
+    min-height: 320px;
+    border-radius: 24px;
+  }
+
+  .personalizados-mayorista-card__link::after {
+    border-radius: calc(24px - 6px);
+  }
+
+  .personalizados-mayorista-card__link > img {
+    border-radius: calc(24px - 8px);
+  }
+
+  .personalizados-mayorista-card__content h3 {
+    font-size: clamp(1.85rem, 9.4vw, 2.5rem);
+  }
+
+  .personalizados-mayorista-card__content p {
+    font-size: 0.9rem;
+  }
+
+  .personalizados-mayorista-card__cta {
+    width: 100%;
+  }
+
+  .sales-hero {
+    padding-top: 3rem;
+  }
+
+  .sales-hero__copy h1 {
+    max-width: 12ch;
+    font-size: clamp(2.8rem, 17vw, 4.5rem);
+  }
+
+  .sales-hero__actions,
+  .sales-hero__actions .btn,
+  .sales-cta-card .btn {
+    width: 100%;
+  }
+
+  .sales-hero__visual {
+    width: min(100%, 330px);
+    border-radius: 24px;
+  }
+
+  .sales-hero__visual::after {
+    border-radius: calc(24px - 6px);
+  }
+
+  .sales-hero__visual img {
+    border-radius: calc(24px - 8px);
+  }
+
+  .sales-benefits,
+  .sales-process__steps {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-benefit-card {
+    min-height: auto;
+  }
+
+  .sales-section__header h2,
+  .sales-cta-card h2 {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .personalizados-mayorista-card__link::before,
+  .sales-hero__visual::before {
+    animation: none;
+  }
+}

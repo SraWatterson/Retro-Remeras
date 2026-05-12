@@ -1,5 +1,15 @@
 import { ProductColorImage } from '@/lib/colors';
 
+export type SizeGuideTable = {
+  columns: string[];
+  rows: string[][];
+};
+
+export type ProductSizeGuide = {
+  regular?: SizeGuideTable;
+  oversize?: SizeGuideTable;
+};
+
 export type Product = {
   id: string;
   legacyId?: number | null;
@@ -9,6 +19,7 @@ export type Product = {
   precio: number;
   imagen?: string | null;
   imagenesPorColor?: Record<string, ProductColorImage>;
+  sizeGuide?: ProductSizeGuide | null;
   descripcion: string;
   disponible: boolean;
   destacado: boolean;

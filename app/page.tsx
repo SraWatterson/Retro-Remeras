@@ -3,6 +3,7 @@ import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { HeroSection } from '@/components/home/HeroSection';
 import { LocationSection } from '@/components/home/LocationSection';
 import { StepsSection } from '@/components/home/StepsSection';
+import { PersonalizadosMayoristaSection } from '@/components/home/PersonalizadosMayoristaSection';
 import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -21,6 +22,7 @@ export default async function Page() {
       <main className="home-page">
         <HeroSection content={siteContent} />
         <CategoriesSection />
+        <PersonalizadosMayoristaSection />
         <StepsSection />
         <FeaturedProducts initialProducts={featuredProducts} />
         <LocationSection />

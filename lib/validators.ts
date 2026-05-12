@@ -40,6 +40,21 @@ const colorImageValueSchema = z.union([
 
 const imageByColorSchema = z.record(z.string().trim().min(1), colorImageValueSchema).default({});
 
+const sizeGuideCellSchema = z.string().trim().max(60, 'Máximo 60 caracteres');
+
+const sizeGuideTableSchema = z.object({
+  columns: z.array(z.string().trim().min(1, 'Nombre de columna requerido').max(30, 'Máximo 30 caracteres')).min(1).max(8),
+  rows: z.array(z.array(sizeGuideCellSchema).max(8)).max(24).default([]),
+});
+
+const sizeGuideSchema = z
+  .object({
+    regular: sizeGuideTableSchema.optional(),
+    oversize: sizeGuideTableSchema.optional(),
+  })
+  .optional();
+
+
 export const colorInputSchema = z.object({
   name: z.string().trim().min(2, 'Nombre requerido').max(40, 'Máximo 40 caracteres'),
   hex: z.string().trim().min(1).transform((value) => normalizeHexColor(value)).refine(Boolean, 'Color hexadecimal inválido'),
@@ -58,6 +73,7 @@ export const productInputSchema = z.object({
   precio: z.number().int().nonnegative(),
   imagen: relativeOrAbsoluteImagePath.optional().nullable(),
   imagenesPorColor: imageByColorSchema.optional(),
+  sizeGuide: sizeGuideSchema,
   descripcion: z.string().trim().min(3),
   disponible: z.boolean().optional(),
   destacado: z.boolean().optional(),

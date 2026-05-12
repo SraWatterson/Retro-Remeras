@@ -1,11 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import {
   CartItem,
   Product,
+  ProductSizeGuide,
+  SizeGuideTable,
   cartAddItem,
   cartClear,
   cartGetItemsCount,
@@ -26,22 +29,45 @@ const FITS: Array<{ key: FitKey; label: string; note: string }> = [
   { key: 'oversize', label: 'Oversize', note: 'Más amplio y relajado' },
 ];
 
-const SIZE_GUIDES = {
+const DEFAULT_SIZE_GUIDES: Required<ProductSizeGuide> = {
   regular: {
-    label: 'Regular',
-    src: '/assets/talles-producto/talle-regular.png',
-    alt: 'Tabla de talles para remera regular',
+    columns: ['Talle', 'Ancho', 'Largo'],
+    rows: [
+      ['XS', '46 cm', '66 cm'],
+      ['S', '48 cm', '68 cm'],
+      ['M', '51 cm', '70 cm'],
+      ['L', '54 cm', '72 cm'],
+      ['XL', '57 cm', '74 cm'],
+      ['XXL', '60 cm', '76 cm'],
+    ],
   },
   oversize: {
-    label: 'Oversize',
-    src: '/assets/talles-producto/talles-oversize.png',
-    alt: 'Tabla de talles para remera oversize',
+    columns: ['Talle', 'Ancho', 'Largo'],
+    rows: [
+      ['M', '56 cm', '72 cm'],
+      ['L', '59 cm', '74 cm'],
+      ['XL', '62 cm', '76 cm'],
+      ['XXL', '65 cm', '78 cm'],
+    ],
   },
+};
+
+const SIZE_GUIDE_LABELS: Record<FitKey, string> = {
+  regular: 'Regular',
+  oversize: 'Oversize',
 };
 
 function getAvailableSizes(fit: FitKey) {
   return fit === 'oversize' ? ['M', 'L', 'XL', 'XXL'] : SIZES;
 }
+
+function getSizeGuideTable(sizeGuide: ProductSizeGuide | null | undefined, fit: FitKey): SizeGuideTable {
+  const customTable = sizeGuide?.[fit];
+  if (customTable?.columns?.length && customTable.rows?.length) return customTable;
+
+  return DEFAULT_SIZE_GUIDES[fit];
+}
+
 
 function cartItemMarkup(item: CartItem) {
   return `${item.productName} · ${item.fitLabel} · ${item.size} · ${item.color} · x${item.quantity}`;
@@ -57,6 +83,8 @@ export function ProductView({ product }: Props) {
   const [selectedColor, setSelectedColor] = useState(firstColor?.colorSlug || '');
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedFit, setSelectedFit] = useState<FitKey>('regular');
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(true);
+  const prefersReducedMotion = useReducedMotion();
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
@@ -80,6 +108,11 @@ export function ProductView({ product }: Props) {
   const selectedImage = useMemo(() => {
     return normalizeImageUrl(selectedColorOption?.path || product?.imagen);
   }, [product, selectedColorOption]);
+
+  const selectedSizeGuideTable = useMemo(
+    () => getSizeGuideTable(product.sizeGuide, selectedFit),
+    [product.sizeGuide, selectedFit]
+  );
 
   const hasCartItems = items.length > 0;
   const orderLink = createWhatsAppLink(createCartMessage(items));
@@ -215,21 +248,63 @@ export function ProductView({ product }: Props) {
               </div>
 
               <div className="config-block size-chart-block">
-                <div className="size-chart-card">
-                  <div className="size-chart-card__head">
+                <div className={`size-guide-dropdown ${isSizeGuideOpen ? 'is-open' : ''}`}>
+                  <button
+                    className="size-guide-trigger"
+                    type="button"
+                    aria-expanded={isSizeGuideOpen}
+                    aria-controls="product-size-guide-table"
+                    onClick={() => setIsSizeGuideOpen((isOpen) => !isOpen)}
+                  >
                     <span>Tabla de talles</span>
-                    <strong>{SIZE_GUIDES[selectedFit]?.label ?? 'Regular'}</strong>
-                  </div>
-                  <div className="size-chart-card__media">
-                    <Image
-                      src={SIZE_GUIDES[selectedFit]?.src ?? SIZE_GUIDES.regular.src}
-                      alt={SIZE_GUIDES[selectedFit]?.alt ?? SIZE_GUIDES.regular.alt}
-                      width={1000}
-                      height={620}
-                      quality={92}
-                      sizes="(max-width: 767px) 90vw, (max-width: 1199px) 44vw, 420px"
-                    />
-                  </div>
+                    <strong>{SIZE_GUIDE_LABELS[selectedFit]}</strong>
+                    <motion.span
+                      className="size-guide-chevron"
+                      aria-hidden="true"
+                      animate={{ rotate: isSizeGuideOpen ? 180 : 0 }}
+                      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' }}
+                    >
+                      <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </motion.span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isSizeGuideOpen ? (
+                      <motion.div
+                        id="product-size-guide-table"
+                        className="size-guide-motion"
+                        initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                        animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+                        exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.22, ease: 'easeOut' }}
+                      >
+                        <div className="size-guide-table-wrap">
+                          <table className="size-guide-table">
+                            <thead>
+                              <tr>
+                                {selectedSizeGuideTable.columns.map((column) => (
+                                  <th key={`${selectedFit}-${column}`}>{column}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {selectedSizeGuideTable.rows.map((row, rowIndex) => (
+                                <tr key={`${selectedFit}-${rowIndex}`}>
+                                  {selectedSizeGuideTable.columns.map((column, columnIndex) => (
+                                    <td key={`${selectedFit}-${rowIndex}-${column}`}>
+                                      {row[columnIndex] || '-'}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>

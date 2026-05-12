@@ -1486,3 +1486,708 @@
   border-color: rgba(200, 47, 47, 0.62);
   background: rgba(200, 47, 47, 0.14);
 }
+
+
+/* Etapa 5 — admin visual sobrio: superficies carbón/asfalto, menor glow y mejor lectura. */
+.admin-main {
+  background:
+    radial-gradient(circle at 88% -8%, rgba(200, 58, 31, 0.030), transparent 32%),
+    radial-gradient(circle at 10% 10%, rgba(216, 148, 37, 0.035), transparent 34%),
+    linear-gradient(180deg, #070604 0%, #0b0806 54%, #100c09 100%);
+}
+
+.admin-main .panel,
+.admin-form-panel,
+.admin-list-panel,
+.admin-category-manager,
+.admin-audit-panel,
+.admin-advanced-fields,
+.admin-new-category-box,
+.admin-color-row,
+.admin-visual-image-card {
+  border-color: rgba(216, 148, 37, 0.10);
+  background:
+    linear-gradient(180deg, rgba(255, 240, 203, 0.022), rgba(0, 0, 0, 0.045)),
+    rgba(16, 13, 11, 0.86);
+  box-shadow: 0 14px 34px rgba(3, 3, 2, 0.32), inset 0 1px 0 rgba(255, 240, 203, 0.024);
+}
+
+.admin-main .input,
+.admin-main select,
+.admin-main textarea,
+.admin-list-panel .admin-table-toolbar .input,
+.admin-audit-toolbar .input {
+  border-color: rgba(216, 148, 37, 0.14);
+  background-color: rgba(9, 8, 7, 0.86);
+  color: var(--cream, #f5ead4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.admin-main .input:hover,
+.admin-main select:hover,
+.admin-main textarea:hover,
+.admin-list-panel .admin-table-toolbar .input:hover,
+.admin-audit-toolbar .input:hover {
+  border-color: rgba(216, 148, 37, 0.28);
+  background-color: rgba(12, 10, 8, 0.94);
+}
+
+.admin-table th {
+  color: rgba(255, 240, 203, 0.66);
+  font-size: 0.76rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.admin-table td {
+  color: rgba(255, 240, 203, 0.82);
+}
+
+.admin-table tbody tr {
+  transition: background 180ms ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 240, 203, 0.026);
+}
+
+.admin-section-tab.is-active,
+.admin-page-number.is-active {
+  border-color: rgba(216, 148, 37, 0.56);
+  background: linear-gradient(135deg, rgba(216, 148, 37, 0.92), rgba(239, 184, 78, 0.86));
+  box-shadow: 0 8px 18px rgba(216, 148, 37, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.admin-danger-btn,
+.admin-status--inactive {
+  border-color: rgba(255, 123, 112, 0.28);
+  background: rgba(255, 123, 112, 0.070);
+}
+
+/* =========================================================
+   ETAPA 8 — Admin visual cleanup
+   Ajustes sobrios y quirúrgicos. No toca lógica, auth, CRUD ni DB.
+   ========================================================= */
+
+.admin-main {
+  background:
+    radial-gradient(circle at 88% -8%, rgba(200, 58, 31, 0.026), transparent 32%),
+    radial-gradient(circle at 10% 10%, rgba(216, 148, 37, 0.032), transparent 34%),
+    linear-gradient(180deg, #070604 0%, #0b0806 54%, #100c09 100%);
+}
+
+.admin-shell,
+.admin-dashboard,
+.admin-section-content {
+  min-width: 0;
+}
+
+.admin-main .panel,
+.admin-form-panel,
+.admin-list-panel,
+.admin-category-manager,
+.admin-audit-panel,
+.admin-content-section,
+.admin-advanced-fields,
+.admin-new-category-box,
+.admin-new-color-box,
+.admin-color-row,
+.admin-visual-image-card,
+.admin-custom-colors-box {
+  border-color: rgba(216, 148, 37, 0.11);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(216, 148, 37, 0.035), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.020), rgba(0, 0, 0, 0.045)),
+    rgba(16, 13, 11, 0.88);
+  box-shadow:
+    0 14px 34px rgba(3, 3, 2, 0.30),
+    inset 0 1px 0 rgba(255, 240, 203, 0.024);
+}
+
+.admin-dashboard-head {
+  align-items: center;
+}
+
+.admin-section-tabs {
+  background:
+    linear-gradient(180deg, rgba(255, 240, 203, 0.020), rgba(0, 0, 0, 0.052)),
+    rgba(11, 9, 7, 0.86);
+  border-color: rgba(216, 148, 37, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.020);
+}
+
+.admin-section-tab {
+  color: rgba(255, 240, 203, 0.72);
+}
+
+.admin-section-tab:hover,
+.admin-section-tab:focus-visible {
+  border-color: rgba(216, 148, 37, 0.25);
+  background: rgba(216, 148, 37, 0.060);
+  color: var(--cream, #f5ead4);
+}
+
+.admin-section-tab.is-active,
+.admin-page-number.is-active {
+  border-color: rgba(216, 148, 37, 0.54);
+  background: linear-gradient(135deg, rgba(216, 148, 37, 0.92), rgba(239, 184, 78, 0.86));
+  color: #17110b;
+  box-shadow:
+    0 8px 18px rgba(216, 148, 37, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+/* Formularios y filtros */
+.admin-main .input,
+.admin-main select,
+.admin-main textarea,
+.admin-list-panel .admin-table-toolbar .input,
+.admin-audit-toolbar .input {
+  border-color: rgba(216, 148, 37, 0.14);
+  background-color: rgba(9, 8, 7, 0.88);
+  color: var(--cream, #f5ead4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.admin-main .input:hover,
+.admin-main select:hover,
+.admin-main textarea:hover,
+.admin-list-panel .admin-table-toolbar .input:hover,
+.admin-audit-toolbar .input:hover {
+  border-color: rgba(216, 148, 37, 0.28);
+  background-color: rgba(12, 10, 8, 0.94);
+}
+
+.admin-main .input:focus-visible,
+.admin-main select:focus-visible,
+.admin-main textarea:focus-visible,
+.admin-section-tab:focus-visible,
+.admin-page-number:focus-visible,
+.admin-row-actions .btn:focus-visible,
+.admin-toolbar-actions .btn:focus-visible {
+  outline: 2px solid rgba(216, 148, 37, 0.55);
+  outline-offset: 3px;
+}
+
+.admin-table-toolbar {
+  align-items: end;
+}
+
+.admin-search-label span,
+.admin-limit-label span,
+.admin-content-section h3,
+.admin-form-heading h2,
+.admin-list-header h2 {
+  color: var(--cream, #f5ead4);
+}
+
+/* Tablas */
+.admin-table-wrap {
+  overflow-x: auto;
+  border-color: rgba(216, 148, 37, 0.12);
+  background: rgba(6, 5, 4, 0.32);
+}
+
+.admin-table {
+  min-width: 860px;
+}
+
+.admin-table th {
+  color: rgba(255, 240, 203, 0.66);
+  font-size: 0.76rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.admin-table td {
+  color: rgba(255, 240, 203, 0.82);
+}
+
+.admin-table tbody tr {
+  transition: background 180ms ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 240, 203, 0.026);
+}
+
+.admin-row-actions {
+  justify-content: flex-end;
+}
+
+.admin-row-actions .btn {
+  min-height: 38px;
+}
+
+/* Contenido visual */
+.admin-visual-content {
+  gap: 1rem;
+  padding: clamp(1rem, 1.8vw, 1.35rem);
+  border: 1px solid rgba(216, 148, 37, 0.12);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(216, 148, 37, 0.030), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.018), rgba(0, 0, 0, 0.050)),
+    rgba(10, 8, 7, 0.90);
+  box-shadow:
+    0 18px 42px rgba(3, 3, 2, 0.34),
+    inset 0 1px 0 rgba(255, 240, 203, 0.024);
+}
+
+.admin-content-section {
+  padding: clamp(0.95rem, 1.6vw, 1.15rem);
+  border: 1px solid rgba(216, 148, 37, 0.11);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 240, 203, 0.014), rgba(0, 0, 0, 0.035)),
+    rgba(7, 6, 5, 0.40);
+}
+
+.admin-content-section-head {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(216, 148, 37, 0.10);
+}
+
+.admin-toggle-row {
+  background: rgba(216, 148, 37, 0.055);
+  border-color: rgba(216, 148, 37, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.020);
+}
+
+.admin-visual-images-grid {
+  gap: clamp(0.85rem, 1.4vw, 1.05rem);
+}
+
+.admin-visual-image-card {
+  padding: clamp(0.85rem, 1.5vw, 1rem);
+}
+
+.admin-visual-image-preview {
+  min-height: 175px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(216, 148, 37, 0.055), transparent 42%),
+    rgba(0, 0, 0, 0.24);
+}
+
+.admin-visual-image-preview img {
+  display: block;
+}
+
+/* Estados */
+.admin-danger-btn,
+.admin-status--inactive {
+  border-color: rgba(255, 123, 112, 0.28);
+  background: rgba(255, 123, 112, 0.070);
+}
+
+.admin-toast {
+  border-color: rgba(216, 148, 37, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 240, 203, 0.026), rgba(0, 0, 0, 0.055)),
+    rgba(10, 8, 6, 0.96);
+}
+
+/* Responsive admin */
+@media (max-width: 900px) {
+  .admin-table-toolbar,
+  .admin-audit-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-toolbar-actions,
+  .admin-audit-actions {
+    justify-content: stretch;
+  }
+
+  .admin-toolbar-actions .btn,
+  .admin-audit-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-dashboard-head {
+    align-items: stretch;
+  }
+
+  .admin-section-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-section-tab {
+    min-height: 42px;
+    width: 100%;
+  }
+
+  .admin-content-section {
+    padding: 0.9rem;
+    border-radius: 18px;
+  }
+
+  .admin-visual-image-preview {
+    min-height: 150px;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-section-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== FIN ETAPA 8 Admin cleanup ========== */
+
+
+
+/* =========================================================
+   ETAPA DB 1.1A — Tabla de talles flexible admin
+   Editor por producto con columnas/filas configurables.
+   ========================================================= */
+
+.admin-size-guide-editor {
+  display: grid;
+  gap: 0.85rem;
+  padding: clamp(0.95rem, 1.7vw, 1.15rem);
+  border: 1px solid rgba(216, 148, 37, 0.14);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(216, 148, 37, 0.035), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.014), rgba(0, 0, 0, 0.045)),
+    rgba(8, 7, 6, 0.70);
+}
+
+.admin-size-guide-editor summary {
+  cursor: pointer;
+  color: var(--cream, #f5ead4);
+  font-weight: 850;
+  letter-spacing: 0.02em;
+}
+
+.admin-size-guide-editor summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.admin-size-guide-intro {
+  padding-bottom: 0.2rem;
+}
+
+.admin-size-guide-groups {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-size-guide-group {
+  display: grid;
+  gap: 0.82rem;
+  padding: clamp(0.85rem, 1.4vw, 1rem);
+  border: 1px solid rgba(216, 148, 37, 0.10);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 240, 203, 0.010), rgba(0, 0, 0, 0.035)),
+    rgba(5, 5, 4, 0.38);
+}
+
+.admin-size-guide-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.admin-size-guide-head strong {
+  display: block;
+  color: var(--cream, #f5ead4);
+  font-size: 1rem;
+}
+
+.admin-size-guide-head p {
+  margin: 0.18rem 0 0;
+  color: rgba(241, 221, 178, 0.58);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.admin-size-guide-columns,
+.admin-size-guide-rows {
+  display: grid;
+  gap: 0.52rem;
+}
+
+.admin-size-guide-subhead {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+}
+
+.admin-size-guide-subhead .btn {
+  min-height: 34px;
+  padding-inline: 0.72rem;
+  font-size: 0.78rem;
+}
+
+.admin-size-guide-label {
+  color: rgba(255, 240, 203, 0.62);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.admin-size-guide-column-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.46rem;
+}
+
+.admin-size-guide-column-editor {
+  min-width: min(100%, 168px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px;
+  gap: 0.28rem;
+  padding: 0.26rem;
+  border: 1px solid rgba(216, 148, 37, 0.105);
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.admin-size-guide-column-editor .input {
+  min-height: 34px;
+  padding-inline: 0.62rem;
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.admin-size-guide-remove-column,
+.admin-size-guide-remove-row {
+  border: 1px solid rgba(255, 123, 112, 0.22);
+  background: rgba(255, 123, 112, 0.055);
+  color: #ffd2cc;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.admin-size-guide-remove-column {
+  width: 28px;
+  min-width: 28px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.admin-size-guide-remove-row {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.admin-size-guide-remove-column:hover:not(:disabled),
+.admin-size-guide-remove-row:hover:not(:disabled) {
+  border-color: rgba(255, 123, 112, 0.42);
+  background: rgba(255, 123, 112, 0.105);
+  color: #ffe5e1;
+  transform: translateY(-1px);
+}
+
+.admin-size-guide-remove-column:disabled,
+.admin-size-guide-remove-row:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+  transform: none;
+}
+
+.admin-size-guide-table {
+  display: grid;
+  gap: 0.38rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(216, 148, 37, 0.36) rgba(255, 240, 203, 0.045);
+}
+
+.admin-size-guide-table::-webkit-scrollbar {
+  height: 7px;
+}
+
+.admin-size-guide-table::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 240, 203, 0.045);
+}
+
+.admin-size-guide-table::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(216, 148, 37, 0.42);
+}
+
+.admin-size-guide-row {
+  display: grid;
+  grid-auto-columns: minmax(120px, 1fr);
+  grid-auto-flow: column;
+  gap: 0.38rem;
+  min-width: 640px;
+  align-items: center;
+}
+
+.admin-size-guide-row .input {
+  min-height: 38px;
+}
+
+.admin-size-guide-add-row {
+  width: fit-content;
+  min-height: 36px;
+  padding-inline: 0.85rem;
+  margin-top: 0.18rem;
+  font-size: 0.82rem;
+}
+
+.admin-size-guide-empty {
+  padding: 0.85rem;
+  border: 1px dashed rgba(216, 148, 37, 0.16);
+  border-radius: 14px;
+  color: rgba(255, 240, 203, 0.66);
+  background: rgba(255, 240, 203, 0.025);
+}
+
+@media (max-width: 767px) {
+  .admin-size-guide-editor {
+    padding: 0.8rem;
+  }
+
+  .admin-size-guide-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-size-guide-subhead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-size-guide-subhead .btn,
+  .admin-size-guide-add-row {
+    width: 100%;
+  }
+
+  .admin-size-guide-column-list {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-size-guide-column-editor {
+    width: 100%;
+  }
+
+  .admin-size-guide-row {
+    min-width: 560px;
+  }
+}
+
+/* ========== FIN ETAPA DB 1.1A Tabla de talles flexible admin ========== */
+
+/* =========================
+   ADMIN LOGIN POLISH
+   Pantalla de acceso alineada al sistema visual del admin.
+   ========================= */
+
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.25rem, 4vw, 3rem) var(--container-pad, 16px);
+}
+
+.login-page__shell {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 1rem;
+}
+
+.login-page__intro {
+  text-align: center;
+}
+
+.login-page__intro h1 {
+  margin: 0.25rem 0 0.45rem;
+  color: var(--cream, #f5ead4);
+  font-size: clamp(1.8rem, 5vw, 2.55rem);
+  line-height: 1.05;
+}
+
+.login-page__intro p {
+  max-width: 46ch;
+  margin: 0 auto;
+  color: rgba(241, 221, 178, 0.68);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.login-page .admin-login-panel {
+  width: 100%;
+  padding: clamp(1.15rem, 3vw, 1.55rem);
+  border: 1px solid rgba(216, 148, 37, 0.13);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(216, 148, 37, 0.045), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.018), rgba(0, 0, 0, 0.055)),
+    rgba(11, 9, 7, 0.94);
+  box-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 240, 203, 0.028);
+}
+
+.login-page .admin-login-panel h2 {
+  margin: 0 0 0.95rem;
+  color: var(--cream, #f5ead4);
+  font-size: 1.12rem;
+}
+
+.login-page .admin-login-panel .filters {
+  display: grid;
+  gap: 0.92rem;
+}
+
+.login-page .admin-login-panel .btn {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+.login-page__status {
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 240, 203, 0.70);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    align-items: start;
+    padding-top: clamp(1.5rem, 8vw, 2.25rem);
+  }
+
+  .login-page__intro {
+    text-align: left;
+  }
+
+  .login-page__intro p {
+    margin-inline: 0;
+  }
+
+  .login-page .admin-login-panel {
+    border-radius: 20px;
+  }
+}
+
+

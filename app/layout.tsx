@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { FloatingBackButton } from '@/components/layout/FloatingBackButton';
 import './css/style.css';
+import './css/personalizados-mayorista.css';
 
 export const metadata: Metadata = {
   title: 'Retro Remeras',

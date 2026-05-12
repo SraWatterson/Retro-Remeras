@@ -1,6 +1,6 @@
 import { normalizeCategoryName } from '@/lib/category-utils';
 import { colorHexFromSlug, colorLabelFromSlug, normalizeColorSlug, ProductColorImage } from '@/lib/colors';
-import { Product } from '@/lib/shop';
+import { Product, ProductSizeGuide, SizeGuideTable } from '@/lib/shop';
 
 type ProductLike = {
   id: string;
@@ -11,6 +11,7 @@ type ProductLike = {
   precio: number;
   imagen: string | null;
   imagenesPorColor: unknown;
+  sizeGuide: unknown;
   descripcion: string;
   disponible: boolean;
   destacado: boolean;
@@ -59,6 +60,70 @@ export function normalizeImageMap(value: unknown): Record<string, ProductColorIm
   return normalized;
 }
 
+function normalizeFlexibleSizeGuideTable(value: unknown): SizeGuideTable | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+
+  if (Array.isArray(value)) {
+    const legacyRows = value
+      .map((row) => {
+        if (!row || typeof row !== 'object' || Array.isArray(row)) return null;
+        const data = row as Record<string, unknown>;
+        const size = String(data.size || '').trim();
+        if (!size) return null;
+
+        return [
+          size,
+          String(data.width || '').trim(),
+          String(data.length || '').trim(),
+          String(data.sleeve || '').trim(),
+        ];
+      })
+      .filter((row): row is string[] => Boolean(row));
+
+    if (!legacyRows.length) return undefined;
+
+    const hasSleeve = legacyRows.some((row) => row[3]);
+    return {
+      columns: hasSleeve ? ['Talle', 'Ancho', 'Largo', 'Manga'] : ['Talle', 'Ancho', 'Largo'],
+      rows: legacyRows.map((row) => (hasSleeve ? row : row.slice(0, 3))),
+    };
+  }
+
+  const raw = value as Record<string, unknown>;
+  const columns = Array.isArray(raw.columns)
+    ? raw.columns.map((column) => String(column || '').trim()).filter(Boolean).slice(0, 8)
+    : [];
+
+  if (!columns.length) return undefined;
+
+  const rows = Array.isArray(raw.rows)
+    ? raw.rows
+        .filter((row): row is unknown[] => Array.isArray(row))
+        .map((row) => {
+          const normalized = row.slice(0, columns.length).map((cell) => String(cell || '').trim());
+          while (normalized.length < columns.length) normalized.push('');
+          return normalized;
+        })
+        .filter((row) => row.some(Boolean))
+        .slice(0, 24)
+    : [];
+
+  return { columns, rows };
+}
+
+export function normalizeSizeGuide(value: unknown): ProductSizeGuide {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return {};
+  }
+
+  const raw = value as Record<string, unknown>;
+
+  return {
+    regular: normalizeFlexibleSizeGuideTable(raw.regular),
+    oversize: normalizeFlexibleSizeGuideTable(raw.oversize),
+  };
+}
+
 export function normalizeProductOutput(product: ProductLike): Product {
   return {
     id: product.id,
@@ -69,6 +134,7 @@ export function normalizeProductOutput(product: ProductLike): Product {
     precio: product.precio,
     imagen: product.imagen,
     imagenesPorColor: normalizeImageMap(product.imagenesPorColor),
+    sizeGuide: normalizeSizeGuide(product.sizeGuide),
     descripcion: product.descripcion,
     disponible: product.disponible,
     destacado: product.destacado,

@@ -13,16 +13,16 @@
   justify-content: center;
   gap: 0.35rem;
 
-  border: 1px solid rgba(244, 197, 66, 0.16);
+  border: 1px solid rgba(244, 197, 66, 0.10);
   border-radius: 999px;
 
   background:
-    linear-gradient(135deg, rgba(12, 12, 10, 0.72), rgba(7, 7, 6, 0.62)),
-    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.040), transparent 54%);
+    linear-gradient(135deg, rgba(12, 11, 10, 0.58), rgba(7, 7, 6, 0.52)),
+    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.026), transparent 54%);
 
-  color: rgba(255, 243, 218, 0.78);
+  color: rgba(255, 243, 218, 0.64);
   box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.34),
+    0 8px 20px rgba(0, 0, 0, 0.28),
     0 0 0 1px rgba(255, 239, 207, 0.030),
     inset 0 1px 0 rgba(255, 255, 255, 0.055);
 
@@ -35,10 +35,10 @@
 }
 
 .floatingBackButton:hover {
-  border-color: rgba(244, 197, 66, 0.44);
+  border-color: rgba(244, 197, 66, 0.24);
   background:
-    linear-gradient(135deg, rgba(22, 20, 17, 0.88), rgba(10, 9, 8, 0.76)),
-    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.12), transparent 54%);
+    linear-gradient(135deg, rgba(18, 16, 14, 0.78), rgba(9, 8, 7, 0.68)),
+    radial-gradient(circle at 35% 20%, rgba(244, 197, 66, 0.065), transparent 54%);
 }
 
 .floatingBackButton:focus-visible {
@@ -88,4 +88,23 @@
   .floatingBackButton {
     transition: none;
   }
+}
+/* Cierre visual: botón volver menos protagonista e integrado al fondo hero. */
+.floatingBackButton {
+  border-color: rgba(216, 148, 37, 0.12);
+  background:
+    linear-gradient(135deg, rgba(14, 13, 11, 0.64), rgba(7, 6, 5, 0.58)),
+    radial-gradient(circle at 35% 20%, rgba(246, 185, 53, 0.035), transparent 56%);
+  color: rgba(241, 221, 178, 0.62);
+  box-shadow:
+    0 8px 22px rgba(3, 2, 1, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.040);
+}
+
+.floatingBackButton:hover {
+  border-color: rgba(216, 148, 37, 0.24);
+  background:
+    linear-gradient(135deg, rgba(18, 16, 13, 0.78), rgba(8, 7, 6, 0.70)),
+    radial-gradient(circle at 35% 20%, rgba(246, 185, 53, 0.060), transparent 56%);
+  color: rgba(255, 240, 203, 0.78);
 }

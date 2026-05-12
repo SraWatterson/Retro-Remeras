@@ -4,17 +4,17 @@
    ========================================================= */
 
 .catalog-main {
-  --catalog-panel: rgba(20, 15, 12, 0.54);
-  --catalog-panel-strong: rgba(14, 11, 9, 0.76);
-  --catalog-panel-soft: rgba(255, 240, 203, 0.024);
-  --catalog-card: rgba(15, 11, 9, 0.94);
+  --catalog-panel: rgba(20, 17, 14, 0.38);
+  --catalog-panel-strong: rgba(16, 13, 11, 0.58);
+  --catalog-panel-soft: rgba(255, 240, 203, 0.020);
+  --catalog-card: rgba(17, 13, 10, 0.94);
   --catalog-card-deep: rgba(8, 7, 6, 0.985);
-  --catalog-border: rgba(216, 148, 37, 0.10);
-  --catalog-border-soft: rgba(255, 240, 203, 0.058);
-  --catalog-border-active: rgba(244, 197, 66, 0.24);
-  --catalog-gold: var(--brand-gold, #d89425);
-  --catalog-gold-soft: var(--brand-gold-soft, #f4c542);
-  --catalog-cream: var(--brand-cream, #f1ddb2);
+  --catalog-border: rgba(216, 148, 37, 0.085);
+  --catalog-border-soft: rgba(255, 240, 203, 0.050);
+  --catalog-border-active: rgba(244, 197, 66, 0.20);
+  --catalog-gold: var(--brand-gold, var(--catalog-gold, #d89425));
+  --catalog-gold-soft: var(--brand-gold-soft, var(--catalog-gold-soft, #f4c542));
+  --catalog-cream: var(--brand-cream, var(--catalog-cream, #f1ddb2));
   --catalog-cream-soft: var(--brand-cream-soft, #fff0cb);
   --catalog-muted: rgba(255, 240, 203, 0.72);
   --catalog-muted-soft: rgba(255, 240, 203, 0.54);
@@ -26,9 +26,9 @@
   padding: clamp(0.95rem, 1.65vw, 1.55rem) 0 clamp(3rem, 6vw, 5rem);
   color: var(--catalog-cream);
   background:
-    radial-gradient(ellipse at 16% 10%, rgba(246, 185, 53, 0.12), transparent 36%),
-    radial-gradient(ellipse at 86% 20%, rgba(200, 58, 31, 0.10), transparent 40%),
-    linear-gradient(180deg, #090604 0%, #100905 100%);
+    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
+    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
+    linear-gradient(180deg, var(--asphalt-925, #090604) 0%, #0b0704 60%, var(--asphalt-800, #100905) 100%);
 }
 
 .catalog-main::before {
@@ -56,7 +56,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, transparent 30%, transparent 74%, rgba(0, 0, 0, 0.18) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.015) 0%, transparent 34%, transparent 76%, rgba(0, 0, 0, 0.14) 100%);
 }
 
 .catalog-hero,
@@ -75,7 +75,7 @@
 }
 
 .catalog-hero .section-kicker {
-  box-shadow: 0 0 0 1px rgba(244, 197, 66, 0.06), 0 6px 18px rgba(3, 3, 2, 0.20);
+  box-shadow: 0 0 0 1px rgba(244, 197, 66, 0.045), 0 5px 14px rgba(3, 3, 2, 0.16);
 }
 
 .catalog-hero .section-title {
@@ -104,19 +104,19 @@
 .catalog-grid .empty-state {
   border: 1px solid var(--catalog-border);
   background:
-    radial-gradient(circle at 12% 0%, rgba(244, 197, 66, 0.018), transparent 34%),
-    linear-gradient(180deg, rgba(255, 240, 203, 0.028), rgba(0, 0, 0, 0.04)),
+    radial-gradient(circle at 12% 0%, rgba(244, 197, 66, 0.012), transparent 34%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.020), rgba(0, 0, 0, 0.030)),
     var(--catalog-panel);
   box-shadow:
-    0 12px 30px rgba(3, 3, 2, 0.30),
-    inset 0 1px 0 rgba(255, 240, 203, 0.028);
+    0 8px 22px rgba(3, 3, 2, 0.22),
+    inset 0 1px 0 rgba(255, 240, 203, 0.022);
   backdrop-filter: blur(10px);
 }
 
 .catalog-controls {
   display: grid;
-  gap: clamp(0.52rem, 0.92vw, 0.68rem);
-  padding: clamp(0.56rem, 0.86vw, 0.72rem);
+  gap: clamp(0.45rem, 0.78vw, 0.58rem);
+  padding: clamp(0.48rem, 0.72vw, 0.62rem);
   border-radius: 20px;
 }
 
@@ -139,19 +139,19 @@
 }
 
 .catalog-controls .form-label {
-  color: rgba(255, 240, 203, 0.72);
-  font-size: 0.72rem;
+  color: rgba(255, 240, 203, 0.58);
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.058em;
+  letter-spacing: 0.075em;
 }
 
 .catalog-select {
-  min-height: 38px;
+  min-height: 35px;
   cursor: pointer;
   border-color: rgba(216, 148, 37, 0.13);
   background:
     linear-gradient(180deg, rgba(255, 240, 203, 0.036), rgba(0, 0, 0, 0.066)),
-    rgba(17, 13, 11, 0.70);
+    rgba(17, 14, 12, 0.62);
   color: var(--catalog-cream);
   box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.032);
 }
@@ -169,8 +169,8 @@
 }
 
 .catalog-select option {
-  color: #15130f;
-  background: #f1ddb2;
+  color: var(--asphalt-750, #15110d);
+  background: var(--catalog-cream, #f1ddb2);
 }
 
 .filter-pills {
@@ -184,10 +184,10 @@
   align-items: center;
   justify-content: center;
   min-height: 34px;
-  border: 1px solid rgba(216, 148, 37, 0.11);
+  border: 1px solid rgba(216, 148, 37, 0.085);
   background:
     linear-gradient(180deg, rgba(255, 240, 203, 0.032), rgba(0, 0, 0, 0.056)),
-    rgba(18, 14, 11, 0.58);
+    rgba(17, 14, 12, 0.54);
   color: rgba(255, 240, 203, 0.74);
   border-radius: 999px;
   padding: 0.48rem 0.72rem;
@@ -212,17 +212,17 @@
   background:
     linear-gradient(180deg, rgba(244, 197, 66, 0.04), rgba(0, 0, 0, 0.05)),
     rgba(21, 16, 13, 0.74);
-  box-shadow: 0 8px 18px rgba(3, 3, 2, 0.22);
+  box-shadow: 0 6px 14px rgba(3, 3, 2, 0.16);
 }
 
 .filter-pill.is-active {
   border-color: rgba(239, 184, 78, 0.32);
-  background: linear-gradient(135deg, #f4c542 0%, #d89425 68%, #b56f1a 100%);
+  background: linear-gradient(135deg, var(--catalog-gold-soft, #f4c542) 0%, var(--catalog-gold, #d89425) 68%, #b56f1a 100%);
   color: #12100b;
   box-shadow:
-    0 4px 10px rgba(216, 148, 37, 0.10),
-    0 2px 7px rgba(3, 3, 2, 0.16),
-    inset 0 1px 0 rgba(255, 240, 203, 0.18);
+    0 3px 8px rgba(216, 148, 37, 0.075),
+    0 2px 6px rgba(3, 3, 2, 0.14),
+    inset 0 1px 0 rgba(255, 240, 203, 0.15);
 }
 
 .catalog-results-bar {
@@ -249,7 +249,7 @@
 }
 
 .catalog-meta span {
-  color: rgba(244, 197, 66, 0.82);
+  color: rgba(244, 197, 66, 0.72);
   font-weight: 800;
 }
 
@@ -265,15 +265,15 @@
 
 .catalog-grid .product-card {
   overflow: hidden;
-  border: 1px solid rgba(216, 148, 37, 0.11);
+  border: 1px solid rgba(216, 148, 37, 0.105);
   border-radius: 22px;
   background:
-    linear-gradient(180deg, rgba(255, 240, 203, 0.015), rgba(0, 0, 0, 0.062)),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.018), rgba(0, 0, 0, 0.052)),
     var(--catalog-card);
   box-shadow:
-    0 18px 42px rgba(3, 3, 2, 0.54),
-    0 0 0 1px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 rgba(255, 240, 203, 0.022);
+    0 18px 42px rgba(3, 3, 2, 0.52),
+    0 0 0 1px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 240, 203, 0.026);
 }
 
 .catalog-grid .product-card:hover {
@@ -292,14 +292,15 @@
 }
 
 .catalog-grid .product-content {
-  border-top: 1px solid rgba(255, 240, 203, 0.03);
+  border-top: 1px solid rgba(216, 148, 37, 0.075);
   background:
-    linear-gradient(180deg, rgba(26, 20, 16, 0.97) 0%, rgba(11, 9, 8, 0.985) 46%, rgba(8, 7, 6, 0.992) 100%);
+    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.026), transparent 36%),
+    linear-gradient(180deg, rgba(28, 23, 19, 0.96) 0%, rgba(17, 13, 11, 0.985) 48%, rgba(9, 8, 7, 0.992) 100%);
 }
 
 .catalog-grid .product-category {
-  color: rgba(244, 197, 66, 0.68);
-  opacity: 0.86;
+  color: rgba(216, 148, 37, 0.58);
+  opacity: 0.78;
 }
 
 .catalog-grid .product-title {
@@ -329,8 +330,8 @@
 
 .catalog-grid .cat-visual__badge {
   border-color: rgba(216, 148, 37, 0.30);
-  background: linear-gradient(135deg, rgba(216, 148, 37, 0.86), rgba(239, 184, 78, 0.88));
-  color: #120d08;
+  background: rgba(216, 148, 37, 0.13);
+  color: rgba(255, 240, 203, 0.78);
 }
 
 .catalog-grid .product-actions {
@@ -344,7 +345,7 @@
 
 .catalog-grid .product-actions .btn-primary {
   box-shadow:
-    0 8px 18px rgba(216, 148, 37, 0.20),
+    0 7px 16px rgba(216, 148, 37, 0.17),
     0 2px 8px rgba(3, 3, 2, 0.24);
 }
 
@@ -356,10 +357,10 @@
 }
 
 .catalog-grid .btn-whatsapp-soft {
-  color: rgba(255, 240, 203, 0.80);
+  color: rgba(255, 240, 203, 0.70);
   background:
-    linear-gradient(180deg, rgba(255, 240, 203, 0.03), rgba(0, 0, 0, 0.085)),
-    rgba(20, 15, 12, 0.64);
+    linear-gradient(180deg, rgba(255, 240, 203, 0.020), rgba(0, 0, 0, 0.070)),
+    rgba(17, 14, 12, 0.48);
   border-color: rgba(216, 148, 37, 0.12);
   box-shadow: none;
 }
@@ -478,3 +479,47 @@
 .catalog-results-bar:has(> strong:last-child) {
   justify-content: flex-start;
 }
+
+/* =========================================================
+   ETAPA 7 — Catálogo cleanup final
+   Ajustes quirúrgicos: foco, links y estabilidad visual.
+   No cambia lógica ni estructura del catálogo.
+   ========================================================= */
+
+.catalog-grid .product-card-link,
+.catalog-grid .product-title-link {
+  text-decoration: none;
+}
+
+.catalog-grid .product-card:focus-within {
+  border-color: rgba(216, 148, 37, 0.28);
+  box-shadow:
+    0 22px 54px rgba(3, 3, 2, 0.58),
+    0 0 0 3px rgba(216, 148, 37, 0.10);
+}
+
+.filter-pill:focus-visible,
+.catalog-select:focus-visible,
+.catalog-grid .product-card-link:focus-visible,
+.catalog-grid .product-title-link:focus-visible {
+  outline: 2px solid rgba(216, 148, 37, 0.56);
+  outline-offset: 3px;
+}
+
+.catalog-grid .tag {
+  white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+  .catalog-grid .product-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .catalog-grid .product-actions .btn-primary,
+  .catalog-grid .btn-whatsapp-soft {
+    width: 100%;
+  }
+}
+
+/* ========== FIN ETAPA 7 Catálogo cleanup ========== */
+

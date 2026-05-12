@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { normalizeColorSlug, uniqueColorOptions, ProductColorOption } from '@/lib/colors';
-import { Product } from '@/lib/shop';
-import { AdminLoginForm } from './AdminLoginForm';
+import { Product, ProductSizeGuide, SizeGuideTable } from '@/lib/shop';
 import { CategoryManager } from './CategoryManager';
 import { AuditLogPanel } from './AuditLogPanel';
 import { AdminSessionBar } from './AdminSessionBar';
@@ -25,6 +25,79 @@ type AdminSection = 'products' | 'categories' | 'visual-content' | 'audit' | 'pr
 
 const EMPTY_COLOR_DRAFT: ColorDraft = { name: '', hex: '#59F7FF' };
 
+const DEFAULT_SIZE_GUIDE_FORM: ProductSizeGuide = {
+  regular: {
+    columns: ['Talle', 'Ancho', 'Largo'],
+    rows: [
+      ['XS', '46 cm', '66 cm'],
+      ['S', '48 cm', '68 cm'],
+      ['M', '51 cm', '70 cm'],
+      ['L', '54 cm', '72 cm'],
+      ['XL', '57 cm', '74 cm'],
+      ['XXL', '60 cm', '76 cm'],
+    ],
+  },
+  oversize: {
+    columns: ['Talle', 'Ancho', 'Largo'],
+    rows: [
+      ['M', '56 cm', '72 cm'],
+      ['L', '59 cm', '74 cm'],
+      ['XL', '62 cm', '76 cm'],
+      ['XXL', '65 cm', '78 cm'],
+    ],
+  },
+};
+
+function cloneSizeGuideTable(table?: SizeGuideTable): SizeGuideTable {
+  const columns = table?.columns?.length ? table.columns.map((column) => column || '') : ['Talle', 'Ancho', 'Largo'];
+  const rows = table?.rows?.length
+    ? table.rows.map((row) => {
+        const normalized = row.slice(0, columns.length).map((cell) => cell || '');
+        while (normalized.length < columns.length) normalized.push('');
+        return normalized;
+      })
+    : [];
+
+  return { columns, rows };
+}
+
+function cloneSizeGuide(guide?: ProductSizeGuide | null): ProductSizeGuide {
+  return {
+    regular: cloneSizeGuideTable(guide?.regular || DEFAULT_SIZE_GUIDE_FORM.regular),
+    oversize: cloneSizeGuideTable(guide?.oversize || DEFAULT_SIZE_GUIDE_FORM.oversize),
+  };
+}
+
+function sanitizeSizeGuideTable(table?: SizeGuideTable): SizeGuideTable | undefined {
+  if (!table) return undefined;
+
+  const columns = (table.columns || [])
+    .map((column) => String(column || '').trim())
+    .filter(Boolean)
+    .slice(0, 8);
+
+  if (!columns.length) return undefined;
+
+  const rows = (table.rows || [])
+    .map((row) => {
+      const normalized = row.slice(0, columns.length).map((cell) => String(cell || '').trim());
+      while (normalized.length < columns.length) normalized.push('');
+      return normalized;
+    })
+    .filter((row) => row.some(Boolean))
+    .slice(0, 24);
+
+  return { columns, rows };
+}
+
+function sanitizeSizeGuide(guide: ProductSizeGuide): ProductSizeGuide {
+  return {
+    regular: sanitizeSizeGuideTable(guide.regular),
+    oversize: sanitizeSizeGuideTable(guide.oversize),
+  };
+}
+
+
 const EMPTY_FORM: ProductFormState = {
   legacyId: '',
   slug: '',
@@ -32,6 +105,7 @@ const EMPTY_FORM: ProductFormState = {
   categoria: '',
   precio: '',
   imagen: '',
+  sizeGuide: cloneSizeGuide(DEFAULT_SIZE_GUIDE_FORM),
   descripcion: '',
   disponible: true,
   destacado: false,
@@ -204,6 +278,16 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
     errors.colorImages = 'Cada fila de color debe tener color e imagen.';
   }
 
+  const sizeGuide = sanitizeSizeGuide(values.sizeGuide);
+  const hasInvalidTable = (['regular', 'oversize'] as const).some((fit) => {
+    const table = sizeGuide[fit];
+    return Boolean(table && table.columns.some((column) => !column.trim()));
+  });
+
+  if (hasInvalidTable) {
+    errors.sizeGuide = 'Cada columna visible debe tener un nombre.';
+  }
+
   return errors;
 }
 
@@ -215,6 +299,7 @@ function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
     precio: Number(values.precio),
     imagen: values.imagen.trim(),
     imagenesPorColor: colorRowsToRecord(colorRows),
+    sizeGuide: sanitizeSizeGuide(values.sizeGuide),
     descripcion: values.descripcion.trim(),
     disponible: values.disponible,
     destacado: values.destacado,
@@ -246,6 +331,7 @@ function fromProduct(product: Product) {
       categoria: product.categoria,
       precio: String(product.precio),
       imagen: product.imagen || '',
+      sizeGuide: cloneSizeGuide(product.sizeGuide),
       descripcion: product.descripcion,
       disponible: Boolean(product.disponible),
       destacado: Boolean(product.destacado),
@@ -256,11 +342,9 @@ function fromProduct(product: Product) {
 }
 
 export function AdminPanel() {
+  const router = useRouter();
   const [loadingSession, setLoadingSession] = useState(true);
   const [user, setUser] = useState<SessionUser | null>(null);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -326,19 +410,13 @@ export function AdminPanel() {
     setActiveSection('products');
   }, [resetForm]);
 
-  const performLogout = useCallback(async (message?: string) => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+  const performLogout = useCallback(async () => {
+    await fetch('/api/auth/logout', { method: 'POST' }).catch(() => null);
     setUser(null);
     setProducts([]);
     resetForm();
-
-    if (message) {
-      setLoginError(message);
-      showToast('info', message);
-    } else {
-      showToast('success', 'Sesión cerrada correctamente.');
-    }
-  }, [resetForm, showToast]);
+    router.replace('/login');
+  }, [resetForm, router]);
 
   const refreshSessionTimer = useCallback(() => {
     if (!user) return;
@@ -348,13 +426,19 @@ export function AdminPanel() {
     }
 
     timeoutRef.current = setTimeout(() => {
-      void performLogout('Sesión cerrada por inactividad. Volvé a iniciar sesión.');
+      void performLogout();
     }, SESSION_TIMEOUT_MS);
   }, [performLogout, user]);
 
   useEffect(() => {
     void loadSession();
   }, []);
+
+  useEffect(() => {
+    if (!loadingSession && !user) {
+      router.replace('/login');
+    }
+  }, [loadingSession, router, user]);
 
   useEffect(() => {
     if (canManage) {
@@ -418,7 +502,7 @@ export function AdminPanel() {
     try {
       const response = await fetch('/api/auth/refresh', { method: 'POST', cache: 'no-store' });
       if (!response.ok) {
-        await performLogout('Tu sesión expiró. Volvé a iniciar sesión.');
+        await performLogout();
         return;
       }
 
@@ -427,7 +511,7 @@ export function AdminPanel() {
         setUser(data.user);
       }
     } catch {
-      await performLogout('No se pudo renovar la sesión. Volvé a iniciar sesión.');
+      await performLogout();
     }
   }
 
@@ -531,36 +615,6 @@ export function AdminPanel() {
     }
   }
 
-  async function handleLogin(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoginError('');
-
-    if (!email.trim() || !password.trim()) {
-      const message = 'Ingresá email y contraseña.';
-      setLoginError(message);
-      showToast('error', message);
-      return;
-    }
-
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const message = data?.error || 'No se pudo iniciar sesión.';
-      setLoginError(message);
-      showToast('error', message);
-      return;
-    }
-
-    setPassword('');
-    setUser(data.user);
-    showToast('success', 'Sesión iniciada correctamente.');
-  }
 
   function editProduct(product: Product) {
     const mapped = fromProduct(product);
@@ -1018,17 +1072,8 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
           <span className="section-kicker">Administración</span>
         </div>
 
-        {loadingSession ? (
-          <div className="panel admin-session-skeleton" aria-label="Cargando sesión" />
-        ) : !user ? (
-          <AdminLoginForm
-            email={email}
-            password={password}
-            error={loginError}
-            onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onSubmit={handleLogin}
-          />
+        {loadingSession || !user ? (
+          <div className="panel admin-session-skeleton" aria-label={loadingSession ? 'Cargando sesión' : 'Redirigiendo al login'} />
         ) : !canManage ? (
           <section className="panel">
             <p>Tu rol actual no puede gestionar productos.</p>

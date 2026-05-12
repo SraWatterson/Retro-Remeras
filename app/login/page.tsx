@@ -1,5 +1,6 @@
 'use client';
 
+import '../css/admin.css';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm';
@@ -39,16 +40,25 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="login-page" style={{ padding: '20px' }}>
-      <AdminLoginForm
-        email={email}
-        password={password}
-        error={error}
-        onEmailChange={setEmail}
-        onPasswordChange={setPassword}
-        onSubmit={handleSubmit}
-      />
-      {loading && <p style={{ textAlign: 'center', marginTop: '10px' }}>Autenticando...</p>}
+    <main className="admin-main login-page">
+      <div className="login-page__shell">
+        <div className="login-page__intro">
+          <span className="admin-panel-eyebrow">Panel privado</span>
+          <h1>Ingresar a Retro Remeras</h1>
+          <p>Acceso exclusivo para administrar productos, categorías y contenido visual del sitio.</p>
+        </div>
+
+        <AdminLoginForm
+          email={email}
+          password={password}
+          error={error}
+          onEmailChange={setEmail}
+          onPasswordChange={setPassword}
+          onSubmit={handleSubmit}
+        />
+
+        {loading ? <p className="login-page__status">Autenticando...</p> : null}
+      </div>
     </main>
   );
 }
