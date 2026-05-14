@@ -1285,26 +1285,6 @@ body.is-scrolled .brand img {
   }
 }
 
-@media (min-width: 768px) and (max-width: 899.98px) {
-  .navbar.rr-nav {
-    min-height: 64px;
-  }
-
-  .navbar.rr-nav .brand img {
-    width: 44px;
-    height: 44px;
-  }
-
-  .rr-menu-toggle {
-    width: 42px;
-    height: 42px;
-  }
-
-  .rr-mobile-menu {
-    top: calc(100% + 0.42rem);
-  }
-}
-
 @media (max-width: 767.98px) {
   .category-card {
     min-height: 176px;
@@ -2406,7 +2386,7 @@ body.is-scrolled .brand img {
     border-radius: 0;
     background: transparent;
     border: 0;
-    font-size: clamp(0.92rem, 0.86rem + 0.14vw, 1.04rem);
+    font-size: clamp(1rem, 0.92rem + 0.16vw, 1.12rem);
     white-space: nowrap;
     position: relative;
   }
@@ -2773,6 +2753,7 @@ body.is-scrolled .brand img {
 .promo-bar__track {
   display: flex;
   align-items: center;
+  gap: 18px;
   width: max-content;
   height: 100%;
   white-space: nowrap;
@@ -2784,14 +2765,6 @@ body.is-scrolled .brand img {
 
   animation: promoBarMove 26s linear infinite;
   will-change: transform;
-}
-
-.promo-bar__group {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  flex: 0 0 auto;
-  padding-right: 18px;
 }
 
 .promo-bar__item {
@@ -3055,17 +3028,9 @@ body.is-scrolled .brand img {
   }
 
   .promo-bar__track {
+    gap: 14px;
     font-size: 0.58rem;
     animation-duration: 30s;
-  }
-
-  .promo-bar__group {
-    gap: 14px;
-    padding-right: 14px;
-  }
-
-  .promo-bar__item {
-    gap: 14px;
   }
 }
 
@@ -6877,6 +6842,28 @@ body.nav-open {
     border-radius: 16px;
   }
 }
+
+@media (min-width: 768px) and (max-width: 899.98px) {
+  .navbar.rr-nav {
+    min-height: 64px;
+  }
+
+  .navbar.rr-nav .brand img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .rr-menu-toggle {
+    width: 42px;
+    height: 42px;
+  }
+
+  .rr-mobile-menu {
+    top: calc(100% + 0.42rem);
+  }
+}
+
+
 
 /* =========================================================
    RR NAVBAR SYNC FIX
