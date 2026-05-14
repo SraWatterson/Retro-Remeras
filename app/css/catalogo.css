@@ -498,6 +498,95 @@
     0 0 0 3px rgba(216, 148, 37, 0.10);
 }
 
+/* =========================================================
+   ETAPA UX · Catálogo pulido visual
+   Hover elevado en cards, filter pills accesibles,
+   y reduced-motion limpio.
+   ========================================================= */
+
+/* Product card: elevación en hover para feedback claro */
+.catalog-grid .product-card {
+  transition:
+    transform 0.32s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+    box-shadow 0.32s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
+    border-color 0.26s ease;
+}
+
+.catalog-grid .product-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Filter pill activa: glow dorado sutil */
+.filter-pill.is-active {
+  box-shadow:
+    0 4px 12px rgba(216, 148, 37, 0.18),
+    0 0 22px rgba(244, 197, 66, 0.12),
+    inset 0 1px 0 rgba(255, 240, 203, 0.18);
+}
+
+/* Mobile: filter pills en scroll horizontal cuando son muchos */
+@media (max-width: 767.98px) {
+  .filter-pills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.25rem;
+    gap: 0.44rem;
+  }
+
+  .filter-pills::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  .filter-pills::-webkit-scrollbar-track {
+    background: rgba(255, 240, 203, 0.03);
+    border-radius: 999px;
+  }
+
+  .filter-pills::-webkit-scrollbar-thumb {
+    background: rgba(216, 148, 37, 0.22);
+    border-radius: 999px;
+  }
+
+  .filter-pill {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    width: auto;
+    min-height: 38px;
+    padding: 0.58rem 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+/* Catalog hero kicker: box-shadow coherente con landing */
+.catalog-hero .section-kicker {
+  box-shadow:
+    0 0 24px rgba(244, 197, 66, 0.16),
+    inset 0 1px 0 rgba(255, 214, 106, 0.08);
+}
+
+/* Results bar: separador visual sutil */
+.catalog-results-bar {
+  padding-top: 0.22rem;
+  border-top: 1px solid rgba(216, 148, 37, 0.055);
+}
+
+/* prefers-reduced-motion: desactiva hover de cards */
+@media (prefers-reduced-motion: reduce) {
+  .catalog-grid .product-card,
+  .filter-pill {
+    transition-duration: 0.01ms;
+  }
+
+  .catalog-grid .product-card:hover {
+    transform: none;
+  }
+}
+
+/* ========== FIN ETAPA UX · Catálogo pulido visual ========== */
+
 .filter-pill:focus-visible,
 .catalog-select:focus-visible,
 .catalog-grid .product-card-link:focus-visible,

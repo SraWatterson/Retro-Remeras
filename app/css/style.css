@@ -7392,3 +7392,106 @@ body.nav-open {
 /* ========== FIN MINI-ETAPA Microanimaciones navbar con Framer Motion ========== */
 
 
+/* =========================================================
+   ETAPA UX · Pulido visual global
+   Micro-mejoras de impacto alto: botones, hero, pasos,
+   poster badge, tipografía y reduced-motion global.
+   ========================================================= */
+
+/* — Btn-explore: escala sutil en hover para más feedback táctil — */
+.category-card .btn-explore:hover,
+.category-card .btn-ghost:hover {
+  transform: translate(-50%, -4px) scale(1.04);
+}
+
+/* — Hero highlights: acento izquierdo dorado para mayor riqueza visual — */
+.hero-highlights li {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(216, 148, 37, 0.20);
+}
+
+.hero-highlights li:hover {
+  border-left-color: rgba(216, 148, 37, 0.52);
+  background: rgba(244, 197, 66, 0.04);
+}
+
+/* — Step number: más grande en tablet y desktop para mayor impacto — */
+@media (min-width: 640px) {
+  .step-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.06rem;
+    border-radius: 14px;
+  }
+}
+
+/* — Poster badge: glow dorado más pronunciado — */
+.poster-frame > .poster-badge {
+  background: rgba(8, 6, 4, 0.92);
+  border-color: rgba(216, 148, 37, 0.46);
+  box-shadow:
+    0 8px 22px rgba(3, 2, 1, 0.52),
+    0 0 34px rgba(216, 148, 37, 0.22),
+    inset 0 1px 0 rgba(241, 221, 178, 0.12);
+}
+
+/* — Section kicker: padding ligeramente más generoso — */
+.section-kicker,
+.eyebrow,
+.featured-showcase__kicker {
+  padding: 0.36rem 0.84rem;
+}
+
+/* — Product card en landing: hover con elevación — */
+.product-card {
+  transition:
+    transform 0.32s var(--ease-out-expo),
+    box-shadow 0.32s var(--ease-out-expo),
+    border-color 0.28s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+}
+
+/* — Info-card: padding superior generoso para el número de paso — */
+.home-page #como-funciona .info-card {
+  padding-top: clamp(1.15rem, 2vw, 1.45rem);
+}
+
+/* — Footer social links: whatsapp color on hover — */
+.footer-social .social-link.whatsapp:hover,
+.footer-social .social-link.whatsapp:focus-visible {
+  background: #25d366;
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.30);
+}
+
+/* — Global prefers-reduced-motion: desactiva animaciones no esenciales — */
+@media (prefers-reduced-motion: reduce) {
+  .poster-frame::before {
+    animation: none;
+  }
+
+  .section-kicker::after,
+  .eyebrow::after,
+  .featured-showcase__kicker::after {
+    animation: none;
+  }
+
+  .category-card,
+  .category-card::before,
+  .category-card > img,
+  .category-card > span img,
+  .category-card .btn-explore,
+  .category-card .btn-ghost,
+  .info-card,
+  .benefit-card,
+  .product-card,
+  .step-number,
+  .hero-highlights li,
+  .footer-social .social-link {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ========== FIN ETAPA UX · Pulido visual global ========== */
