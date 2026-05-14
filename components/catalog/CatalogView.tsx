@@ -65,10 +65,9 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
       <section className="catalog-section" aria-label="Catálogo de productos">
         <div className="container catalog-shell">
-          <div className="catalog-controls catalog-controls--simple panel">
-            <div className="form-group catalog-category-field">
-              <span className="form-label">Categorías</span>
-              <div className="filter-pills" role="list" aria-label="Filtrar por categoría">
+          <div className="catalog-controls panel">
+            <div className="catalog-category-field" role="group" aria-label="Filtrar por categoría">
+              <div className="filter-pills">
                 {categoryList.map((category) => (
                   <button
                     key={category}
@@ -82,26 +81,26 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
               </div>
             </div>
 
-            <div className="form-group catalog-order-field">
-              <label className="form-label" htmlFor="catalog-price-order">Ordenar por</label>
-              <select
-                className="input catalog-select"
-                id="catalog-price-order"
-                value={priceOrder}
-                onChange={(event) => setPriceOrder(event.target.value)}
-              >
-                <option value="default">Orden original</option>
-                <option value="price-asc">Menor precio</option>
-                <option value="price-desc">Mayor precio</option>
-              </select>
-            </div>
-          </div>
+            <div className="catalog-controls__bar">
+              <span className="catalog-results-count" aria-live="polite">
+                {loading ? 'Cargando…' : `${filtered.length} diseño${filtered.length === 1 ? '' : 's'}`}
+                {activeCategory !== 'Todos' ? <span className="catalog-active-filter"> · {activeCategory}</span> : null}
+              </span>
 
-          <div className="catalog-results-bar panel" aria-live="polite">
-            <strong>{loading ? 'Cargando...' : `${filtered.length} diseño${filtered.length === 1 ? '' : 's'} encontrado${filtered.length === 1 ? '' : 's'}`}</strong>
-            {activeCategory !== 'Todos' ? (
-              <p className="catalog-meta">Filtro activo: <span>{activeCategory}</span></p>
-            ) : null}
+              <div className="catalog-order-field">
+                <label className="form-label" htmlFor="catalog-price-order">Ordenar</label>
+                <select
+                  className="input catalog-select"
+                  id="catalog-price-order"
+                  value={priceOrder}
+                  onChange={(event) => setPriceOrder(event.target.value)}
+                >
+                  <option value="default">Original</option>
+                  <option value="price-asc">Menor precio</option>
+                  <option value="price-desc">Mayor precio</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <div className="catalog-grid" data-catalog-grid>

@@ -642,6 +642,7 @@
   }
 
   .sales-hero__visual {
+    justify-self: center;
     width: min(100%, 330px);
     border-radius: 24px;
   }
