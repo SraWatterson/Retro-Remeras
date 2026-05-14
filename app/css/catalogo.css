@@ -610,5 +610,47 @@
   }
 }
 
+/* =========================================================
+   ETAPA UX · Catálogo — controles compactos
+   Label "Categorías" oculto en mobile (auto-evidente por los pills).
+   Sort field inline con pills en tablet+.
+   ========================================================= */
+
+/* Label "Categorías" innecesario en mobile: auto-evidente por los pills */
+@media (max-width: 767.98px) {
+  .catalog-category-field .form-label {
+    display: none;
+  }
+
+  /* Compactar la sección de orden */
+  .catalog-order-field {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .catalog-order-field .form-label {
+    flex: 0 0 auto;
+    font-size: 0.64rem;
+    color: rgba(255, 240, 203, 0.50);
+    white-space: nowrap;
+  }
+
+  .catalog-select {
+    flex: 1 1 auto;
+    min-height: 34px;
+  }
+}
+
+/* Controles: reducir padding en mobile para más compacto */
+@media (max-width: 767.98px) {
+  .catalog-controls {
+    padding: clamp(0.42rem, 0.68vw, 0.56rem);
+    gap: clamp(0.35rem, 0.62vw, 0.46rem);
+  }
+}
+
+/* ========== FIN ETAPA UX · Catálogo controles compactos ========== */
+
 /* ========== FIN ETAPA 7 Catálogo cleanup ========== */
 

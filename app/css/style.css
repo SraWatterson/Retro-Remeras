@@ -7495,3 +7495,17 @@ body.nav-open {
 }
 
 /* ========== FIN ETAPA UX · Pulido visual global ========== */
+
+/* =========================================================
+   FIX — Navbar cart hover: evita scroll horizontal en mobile
+   scale(1.02) en el extremo derecho del viewport genera overflow.
+   ========================================================= */
+@media (max-width: 1023.98px) {
+  .rr-nav-cart:hover,
+  .rr-nav-cart:focus-visible,
+  .nav-cart-icon-btn:hover,
+  .nav-cart-icon-btn:focus-visible {
+    transform: translateY(-1px);
+  }
+}
+/* ========== FIN FIX Navbar cart hover ========== */
