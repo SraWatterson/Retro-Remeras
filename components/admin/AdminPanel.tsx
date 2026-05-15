@@ -5,9 +5,11 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { normalizeColorSlug, uniqueColorOptions, ProductColorOption } from '@/lib/colors';
 import { Product, ProductSizeGuide, SizeGuideTable } from '@/lib/shop';
 import { CategoryManager } from './CategoryManager';
+import { LandingCategoryManager, type LandingCategoryItem } from './LandingCategoryManager';
 import { AuditLogPanel } from './AuditLogPanel';
 import { AdminSessionBar } from './AdminSessionBar';
 import { ProductEditorForm } from './ProductEditorForm';
+import { SalesPageEditor } from './SalesPageEditor';
 import { SiteContentEditor } from './SiteContentEditor';
 import { ProductSortOption, ProductStatusFilter, ProductTable } from './ProductTable';
 import { ColorDraft, ColorImageRow, ProductFormErrors, ProductFormState, SessionUser, SiteContentErrors, SiteContentFormState } from './types';
@@ -21,7 +23,7 @@ type AdminToast = {
   message: string;
 };
 
-type AdminSection = 'products' | 'categories' | 'visual-content' | 'audit' | 'product-form';
+type AdminSection = 'products' | 'categories' | 'landing-categories' | 'visual-content' | 'personalizados' | 'mayorista' | 'audit' | 'product-form';
 
 const EMPTY_COLOR_DRAFT: ColorDraft = { name: '', hex: '#59F7FF' };
 
@@ -367,6 +369,8 @@ export function AdminPanel() {
   const [siteContentErrors, setSiteContentErrors] = useState<SiteContentErrors>({});
   const [siteContentLoading, setSiteContentLoading] = useState(false);
   const [siteContentSaving, setSiteContentSaving] = useState(false);
+  const [landingCategories, setLandingCategories] = useState<LandingCategoryItem[]>([]);
+  const [landingCatsLoading, setLandingCatsLoading] = useState(false);
 
   const [form, setForm] = useState<ProductFormState>(EMPTY_FORM);
   const [colorRows, setColorRows] = useState<ColorImageRow[]>([newColorRow()]);
@@ -446,6 +450,7 @@ export function AdminPanel() {
       void loadCategories();
       void loadColors();
       void loadSiteContent();
+      void loadLandingCategories();
     }
   }, [canManage, productPage, productQuery, productCategory, productStatus, productSort, productLimit]);
 
@@ -538,6 +543,19 @@ export function AdminPanel() {
   }
 
 
+
+  async function loadLandingCategories() {
+    setLandingCatsLoading(true);
+    try {
+      const res = await fetch('/api/landing-categories');
+      if (res.ok) {
+        const data = await res.json() as LandingCategoryItem[];
+        setLandingCategories(data);
+      }
+    } finally {
+      setLandingCatsLoading(false);
+    }
+  }
 
   async function loadSiteContent() {
     setSiteContentLoading(true);
@@ -1121,11 +1139,35 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                 </button>
                 <button
                   type="button"
+                  className={`admin-section-tab ${activeSection === 'landing-categories' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('landing-categories')}
+                  aria-pressed={activeSection === 'landing-categories'}
+                >
+                  Cards landing
+                </button>
+                <button
+                  type="button"
                   className={`admin-section-tab ${activeSection === 'visual-content' ? 'is-active' : ''}`}
                   onClick={() => setActiveSection('visual-content')}
                   aria-pressed={activeSection === 'visual-content'}
                 >
                   Contenido visual
+                </button>
+                <button
+                  type="button"
+                  className={`admin-section-tab ${activeSection === 'personalizados' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('personalizados')}
+                  aria-pressed={activeSection === 'personalizados'}
+                >
+                  Personalizados
+                </button>
+                <button
+                  type="button"
+                  className={`admin-section-tab ${activeSection === 'mayorista' ? 'is-active' : ''}`}
+                  onClick={() => setActiveSection('mayorista')}
+                  aria-pressed={activeSection === 'mayorista'}
+                >
+                  Mayorista
                 </button>
                 <button
                   type="button"
@@ -1156,7 +1198,6 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                   form={form}
                   colorRows={colorRows}
                   errors={formErrors}
-                  categories={categories}
                   colors={uniqueColorOptions(colors)}
                   colorDraft={colorDraft}
                   colorSaving={colorSaving}
@@ -1206,6 +1247,14 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                 />
               ) : null}
 
+              {activeSection === 'personalizados' ? (
+                <SalesPageEditor page="personalizados" />
+              ) : null}
+
+              {activeSection === 'mayorista' ? (
+                <SalesPageEditor page="mayorista" />
+              ) : null}
+
               {activeSection === 'categories' ? (
                 <CategoryManager
                   categories={categories}
@@ -1214,6 +1263,14 @@ Esta acción borra el producto de la base de datos y no se puede deshacer.`
                   onRename={(from, to) => renameCategory(from, to)}
                   onDelete={(category) => deleteCategory(category)}
                 />
+              ) : null}
+
+              {activeSection === 'landing-categories' ? (
+                landingCatsLoading ? (
+                  <p style={{ color: 'rgba(241,221,178,0.5)', padding: '2rem 0' }}>Cargando…</p>
+                ) : (
+                  <LandingCategoryManager initialCategories={landingCategories} />
+                )
               ) : null}
 
               {activeSection === 'products' ? (

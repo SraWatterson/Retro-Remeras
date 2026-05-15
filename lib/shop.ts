@@ -158,7 +158,8 @@ export function createCartMessage(items: CartItem[]) {
 }
 
 export function createWhatsAppLink(message: string) {
-  return `https://wa.me/5491156592963?text=${encodeURIComponent(message || '')}`;
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5491123620076';
+  return `https://wa.me/${number}?text=${encodeURIComponent(message || '')}`;
 }
 
 export function subscribeToCartUpdates(callback: (items: CartItem[]) => void) {

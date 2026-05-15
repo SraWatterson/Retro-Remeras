@@ -27,6 +27,9 @@ enum AuditAction {
   COLOR_DEACTIVATED
   COLOR_DELETED
   SITE_CONTENT_UPDATED
+  LANDING_CATEGORY_CREATED
+  LANDING_CATEGORY_UPDATED
+  LANDING_CATEGORY_DELETED
 }
 
 model User {
@@ -109,6 +112,8 @@ model SiteContent {
   heroSideImageOneAlt     String   @default("Diseño anime destacado")
   heroSideImageTwo        String   @default("/assets/img/ejemplo-gaming.jpg")
   heroSideImageTwoAlt     String   @default("Diseño videojuegos destacado")
+  personalizadosData      Json?
+  mayoristaData           Json?
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
 }
@@ -126,6 +131,20 @@ model RefreshToken {
   @@index([userId])
   @@index([expiresAt])
   @@index([revokedAt])
+}
+
+model LandingCategory {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @default("")
+  image       String   @default("")
+  order       Int      @default(0)
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([activo, order])
 }
 
 model AuditLog {

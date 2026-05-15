@@ -4,8 +4,8 @@
 
 /* ── Página ── */
 .cart-page {
-  min-height: calc(100svh - var(--header-height, 72px));
-  padding: clamp(0.72rem, 1.15vw, 1rem) 0 clamp(4.25rem, 7vw, 6rem);
+  min-height: 100%;
+  padding: clamp(1.5rem, 2.5vw, 2.5rem) 0 clamp(3.5rem, 6vw, 5.5rem);
   background:
     radial-gradient(circle at 16% 18%, rgba(246, 185, 53, 0.13), transparent 32%),
     radial-gradient(circle at 84% 20%, rgba(200, 58, 31, 0.075), transparent 35%),
@@ -544,8 +544,8 @@
 
 @media (max-width: 899.98px) {
   .cart-page {
-    min-height: auto;
-    padding-top: 1rem;
+    padding-top: clamp(1.5rem, 4vh, 3rem);
+    padding-bottom: clamp(1.5rem, 4vh, 3rem);
   }
 
   .cart-summary {
@@ -559,7 +559,7 @@
 
 @media (max-width: 767.98px) {
   .cart-page {
-    padding: 1rem 0 2.75rem;
+    padding: clamp(1.25rem, 3vh, 2rem) 0 clamp(1.25rem, 3vh, 2rem);
   }
 
   .cart-main,
@@ -638,4 +638,58 @@
   .cart-summary-clear {
     transition: none;
   }
+}
+
+/* ── ETAPA UX · Pulido estado vacío + resumen ── */
+
+/* Ícono: más grande, glow dorado, color SVG */
+.cart-empty-state__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(246, 185, 53, 0.09);
+  border: 1px solid rgba(216, 148, 37, 0.30);
+  box-shadow:
+    0 12px 32px rgba(3, 2, 1, 0.34),
+    0 0 28px rgba(216, 148, 37, 0.10),
+    inset 0 1px 0 rgba(255, 240, 203, 0.08);
+  color: rgba(216, 148, 37, 0.80);
+}
+
+.cart-layout--empty .cart-empty-state__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
+}
+
+/* Borde punteado del estado vacío — más definido */
+.cart-empty-state {
+  border-color: rgba(216, 148, 37, 0.32);
+}
+
+/* Separador visual bajo "Resumen" */
+.cart-summary h2 {
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(216, 148, 37, 0.12);
+  margin-bottom: 1rem;
+}
+
+/* Total estimado — protagonismo dorado */
+.summary-list li:last-child strong {
+  font-size: 1.22rem;
+  color: #ffe0a0;
+  letter-spacing: 0.01em;
+}
+
+/* Separador antes del CTA en estado vacío */
+.cart-summary-empty {
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(216, 148, 37, 0.10);
+}
+
+/* "Explorar diseños" — más visible */
+.cart-summary-empty .btn-secondary {
+  min-height: 50px;
+  border-color: rgba(216, 148, 37, 0.28);
+  color: rgba(241, 221, 178, 0.90);
 }

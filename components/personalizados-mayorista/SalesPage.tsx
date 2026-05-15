@@ -108,7 +108,6 @@ export function SalesPage({
             variants={fadeUp}
             transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="section-kicker">Beneficios</span>
             <h2>{benefitsTitle}</h2>
           </motion.div>
 
@@ -144,7 +143,6 @@ export function SalesPage({
             variants={fadeUp}
             transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="section-kicker">Proceso</span>
             <h2>{processTitle}</h2>
           </motion.div>
 
@@ -177,10 +175,8 @@ export function SalesPage({
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div>
-              <span className="section-kicker">{noteTitle}</span>
-              <h2>{noteText}</h2>
-            </div>
+            <span className="section-kicker">{noteTitle}</span>
+            <h2>{noteText}</h2>
             <Link className="btn btn-primary" href={whatsappHref} target="_blank" rel="noopener noreferrer">
               {primaryCta}
             </Link>

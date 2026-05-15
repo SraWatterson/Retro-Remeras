@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="container footer-grid">
         <div>
           <a className="brand" href="/" aria-label="Retro Remeras">
-            <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={190} height={54} sizes="190px" />
+            <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={64} height={64} sizes="64px" />
           </a>
           <p>
             Remeras con estilo, nostalgia y personalidad. Diseños temáticos, atención cercana y pedidos simples por WhatsApp.
@@ -27,7 +27,7 @@ export function SiteFooter() {
               <FaInstagram size={20} aria-hidden="true" />
             </a>
             <a
-              href="https://wa.me/5491156592963"
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5491123620076'}`}
               target="_blank"
               className="social-link whatsapp"
               rel="noreferrer"

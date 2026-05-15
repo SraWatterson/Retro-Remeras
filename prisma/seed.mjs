@@ -99,6 +99,23 @@ async function main() {
     create: { id: 'home' },
   });
 
+  const landingCategories = [
+    { title: 'Fútbol',      slug: 'futbol',      description: 'Clásicos, ídolos, momentos épicos y mística de cancha.',                   image: '/assets/category-cards/coleccion-futbol-retro.webp', order: 0 },
+    { title: 'Anime',       slug: 'anime',       description: 'Diseños con energía, ciudad, nostalgia y mucha personalidad.',              image: '/assets/category-cards/anime-retro.jpg',             order: 1 },
+    { title: 'Cine',        slug: 'cine',        description: 'Posters, VHS, culto y referencias que sí se entienden.',                   image: '/assets/category-cards/cine-retro.jpg',              order: 2 },
+    { title: 'Videojuegos', slug: 'videojuegos', description: 'Arcade, pixel, boss fights y una buena cuota de nostalgia.',               image: '/assets/category-cards/retro-gaming.webp',           order: 3 },
+    { title: 'Variados',    slug: 'variados',    description: 'Rock, cultura urbana, conceptos visuales y diseños sueltos.',              image: '/assets/category-cards/random-retro.jpg',            order: 4 },
+    { title: 'Vintage',     slug: 'vintage',     description: 'Cartelería, color cálido, tipografías con historia y buen gusto.',         image: '/assets/category-cards/vintage-retro.png',           order: 5 },
+  ];
+
+  for (const cat of landingCategories) {
+    await prisma.landingCategory.upsert({
+      where: { slug: cat.slug },
+      update: { title: cat.title, description: cat.description, image: cat.image, order: cat.order },
+      create: { ...cat, activo: true },
+    });
+  }
+
   console.info(`Seed completado. Admin: ${adminEmail}`);
 }
 

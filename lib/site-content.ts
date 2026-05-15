@@ -11,7 +11,7 @@ export async function getSiteContent(): Promise<SiteContentData> {
       create: { id: 'home' },
     });
 
-    return mergeSiteContent(content);
+    return mergeSiteContent(content as unknown as Record<string, unknown>);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     console.error(`[SITE_CONTENT] No se pudo cargar contenido visual: ${message}`);

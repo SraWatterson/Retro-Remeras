@@ -143,7 +143,7 @@ body {
   margin: 0;
   min-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
   font-family: "Oswald", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1385,6 +1385,8 @@ body.is-scrolled .brand img {
 .footer .brand img {
   width: 64px;
   height: 64px;
+  max-width: 64px;
+  max-height: 64px;
 }
 
 .footer-grid > div:last-child,
@@ -7509,3 +7511,56 @@ body.nav-open {
   }
 }
 /* ========== FIN FIX Navbar cart hover ========== */
+
+/* ── ETAPA UX · Navbar visual polish ── */
+
+/* 1. Promo bar: mejor legibilidad */
+.promo-bar {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.promo-bar__item {
+  color: rgba(255, 240, 203, 0.96);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.32);
+}
+
+/* 2. Separador entre promo bar y topbar */
+.promo-bar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+.topbar {
+  border-top: 1px solid rgba(200, 58, 31, 0.20);
+}
+
+/* 3. Badge del carrito: más visible */
+.rr-nav-cart__badge {
+  min-width: 21px;
+  height: 21px;
+  font-size: 0.72rem;
+  box-shadow:
+    0 2px 8px rgba(3, 2, 1, 0.46),
+    0 0 0 1.5px rgba(216, 148, 37, 0.28);
+}
+
+/* ── FIN ETAPA UX · Navbar visual polish ── */
+
+
+/* =========================================================
+   Transicion de pagina — fade-in global en main
+   ========================================================= */
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: page-enter 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main { animation: none; }
+}

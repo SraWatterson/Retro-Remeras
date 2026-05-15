@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { FaShoppingCart } from 'react-icons/fa';
 import {
   CartItem,
   cartChangeQuantity,
@@ -56,7 +57,7 @@ export function CartView() {
             <div className="cart-list cart-page-list">
               {!hasItems ? (
                 <div className="cart-empty-state cart-empty-state--rich">
-                  <span className="cart-empty-state__icon" aria-hidden="true">🛒</span>
+                  <span className="cart-empty-state__icon" aria-hidden="true"><FaShoppingCart size={26} /></span>
                   <h2>Tu carrito está vacío</h2>
                   <p>Elegí una remera del catálogo y volvé acá para cerrar el pedido por WhatsApp.</p>
                   <Link className="btn btn-primary cart-empty-state__btn" href="/catalogo">

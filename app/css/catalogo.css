@@ -100,12 +100,16 @@
   gap: clamp(0.52rem, 1vw, 0.74rem);
 }
 
-/* ── Panel de controles premium ── */
+/* ── Controls: single-row bar ── */
 .catalog-controls {
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 0;
-  padding: 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
+  min-height: 48px;
   border: 1px solid rgba(216, 148, 37, 0.16);
   border-radius: 20px;
   background:
@@ -118,165 +122,203 @@
     0 2px 8px rgba(3, 3, 2, 0.18),
     inset 0 1px 0 rgba(255, 240, 203, 0.036);
   backdrop-filter: blur(12px);
-  overflow: hidden;
 }
 
-/* Fila 1: pills de categoría */
-.catalog-category-field {
-  padding: clamp(0.62rem, 1vw, 0.82rem) clamp(0.62rem, 1vw, 0.82rem) clamp(0.55rem, 0.9vw, 0.72rem);
-  border-bottom: 1px solid rgba(216, 148, 37, 0.09);
-}
-
-.filter-pills {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 0.38rem;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 2px;
-}
-
-.filter-pills::-webkit-scrollbar {
-  height: 2px;
-}
-
-.filter-pills::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.filter-pills::-webkit-scrollbar-thumb {
-  background: rgba(216, 148, 37, 0.20);
-  border-radius: 999px;
-}
-
-.filter-pill {
+/* ── Category dropdown picker ── */
+.catalog-category-picker {
+  position: relative;
   flex: 0 0 auto;
-  scroll-snap-align: start;
-  display: inline-flex;
+  border-right: 1px solid rgba(216, 148, 37, 0.10);
+}
+
+.picker-toggle {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 36px;
-  padding: 0.42rem 0.9rem;
-  border: 1px solid rgba(216, 148, 37, 0.14);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 240, 203, 0.038), rgba(0, 0, 0, 0.044)),
-    rgba(20, 16, 13, 0.52);
-  color: rgba(255, 240, 203, 0.68);
-  font-size: 0.82rem;
-  font-weight: 800;
-  line-height: 1;
+  gap: 0.42rem;
+  height: 100%;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 19px 0 0 19px;
+  background: transparent;
+  color: rgba(255, 240, 203, 0.84);
+  font-size: 0.85rem;
+  font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
-  transition:
-    transform 0.20s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)),
-    background 0.18s ease,
-    border-color 0.18s ease,
-    color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: background 0.14s ease, color 0.14s ease;
 }
 
-.filter-pill:hover,
-.filter-pill:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(244, 197, 66, 0.28);
-  color: rgba(255, 240, 203, 0.92);
+.picker-toggle:hover,
+.picker-toggle.is-open {
+  background: rgba(255, 240, 203, 0.046);
+  color: rgba(255, 240, 203, 0.98);
+}
+
+.picker-toggle__icon {
+  flex-shrink: 0;
+  color: rgba(244, 197, 66, 0.55);
+}
+
+.picker-toggle__label {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.picker-toggle__chevron {
+  flex-shrink: 0;
+  color: rgba(244, 197, 66, 0.48);
+  transition: transform 0.18s ease;
+}
+
+.picker-toggle.is-open .picker-toggle__chevron {
+  transform: rotate(180deg);
+}
+
+/* Backdrop closes on click-outside */
+.picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+/* Dropdown panel */
+.picker-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 50;
+  min-width: 210px;
+  border: 1px solid rgba(216, 148, 37, 0.22);
+  border-radius: 16px;
   background:
-    linear-gradient(180deg, rgba(244, 197, 66, 0.055), rgba(0, 0, 0, 0.042)),
-    rgba(24, 18, 14, 0.72);
+    radial-gradient(ellipse at 10% 0%, rgba(244, 197, 66, 0.035), transparent 44%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.028), rgba(0, 0, 0, 0.055)),
+    rgba(18, 14, 11, 0.97);
   box-shadow:
-    0 4px 12px rgba(3, 3, 2, 0.22),
-    0 0 14px rgba(244, 197, 66, 0.06);
+    0 22px 52px rgba(3, 3, 2, 0.56),
+    0 6px 16px rgba(3, 3, 2, 0.30),
+    inset 0 1px 0 rgba(255, 240, 203, 0.038);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  padding: 0.36rem;
 }
 
-.filter-pill.is-active {
-  border-color: rgba(244, 197, 66, 0.44);
-  background: linear-gradient(135deg, #ffd86a 0%, var(--catalog-gold-soft, #f4c542) 40%, var(--catalog-gold, #d89425) 100%);
-  color: #100d08;
-  box-shadow:
-    0 4px 14px rgba(216, 148, 37, 0.28),
-    0 0 24px rgba(244, 197, 66, 0.14),
-    inset 0 1px 0 rgba(255, 240, 203, 0.22);
+.picker-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 0.56rem 0.72rem;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 240, 203, 0.72);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease;
 }
 
-.filter-pill.is-active:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 6px 18px rgba(216, 148, 37, 0.34),
-    0 0 28px rgba(244, 197, 66, 0.18),
-    inset 0 1px 0 rgba(255, 240, 203, 0.24);
+.picker-option:hover {
+  background: rgba(255, 240, 203, 0.055);
+  color: rgba(255, 240, 203, 0.96);
 }
 
-/* Fila 2: count + sort */
-.catalog-controls__bar {
+.picker-option.is-selected {
+  background: linear-gradient(135deg, rgba(255, 216, 106, 0.15), rgba(216, 148, 37, 0.10));
+  color: var(--catalog-gold-soft, #f4c542);
+  font-weight: 700;
+}
+
+.picker-option.is-selected .pill-count {
+  color: rgba(244, 197, 66, 0.65);
+}
+
+/* Count badge — used in toggle + panel options */
+.pill-count {
+  font-size: 0.66rem;
+  font-weight: 600;
+  opacity: 0.58;
+  line-height: 1;
+}
+
+/* Bar row: count + segmented sort */
+.catalog-bar-row {
+  flex: 1 1 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: clamp(0.45rem, 0.72vw, 0.58rem) clamp(0.62rem, 1vw, 0.82rem);
+  min-width: 0;
+  padding: 0 0.9rem;
+}
+
+@keyframes catalogCountIn {
+  from { opacity: 0.25; transform: translateY(-4px); }
+  to   { opacity: 1;    transform: translateY(0);    }
 }
 
 .catalog-results-count {
-  color: rgba(255, 240, 203, 0.52);
+  color: rgba(255, 240, 203, 0.60);
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   min-width: 0;
   flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: catalogCountIn 0.22s var(--ease-out-quart, cubic-bezier(0.25, 1, 0.5, 1)) both;
 }
 
 .catalog-active-filter {
-  color: rgba(244, 197, 66, 0.65);
+  color: rgba(244, 197, 66, 0.72);
   font-weight: 800;
 }
 
-.catalog-order-field {
+/* Segmented sort */
+.catalog-sort-group {
   display: flex;
-  align-items: center;
-  gap: 0.48rem;
   flex: 0 0 auto;
-}
-
-.catalog-controls .form-label {
-  color: rgba(255, 240, 203, 0.38);
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-
-.catalog-select {
-  min-height: 32px;
-  padding: 0.28rem 0.62rem;
-  cursor: pointer;
+  border: 1px solid rgba(216, 148, 37, 0.18);
   border-radius: 10px;
-  border-color: rgba(216, 148, 37, 0.16);
-  background:
-    linear-gradient(180deg, rgba(255, 240, 203, 0.030), rgba(0, 0, 0, 0.068)),
-    rgba(14, 11, 9, 0.72);
-  color: rgba(255, 240, 203, 0.72);
-  font-size: 0.78rem;
+  overflow: hidden;
+  background: rgba(14, 11, 9, 0.58);
+}
+
+.sort-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0.22rem 0.60rem;
+  border: none;
+  border-left: 1px solid rgba(216, 148, 37, 0.12);
+  background: transparent;
+  color: rgba(255, 240, 203, 0.52);
+  font-size: 0.72rem;
   font-weight: 700;
-  box-shadow: inset 0 1px 0 rgba(255, 240, 203, 0.028);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.14s ease, background 0.14s ease;
 }
 
-.catalog-select:hover {
-  border-color: rgba(244, 197, 66, 0.26);
-  background:
-    linear-gradient(180deg, rgba(255, 240, 203, 0.044), rgba(0, 0, 0, 0.055)),
-    rgba(18, 14, 11, 0.86);
-  color: rgba(255, 240, 203, 0.88);
+.sort-btn:first-child { border-left: none; }
+
+.sort-btn:hover {
+  color: rgba(255, 240, 203, 0.90);
+  background: rgba(255, 240, 203, 0.05);
 }
 
-.catalog-select:focus-visible {
-  border-color: rgba(239, 184, 78, 0.44);
-  box-shadow: 0 0 0 2px rgba(216, 148, 37, 0.12), inset 0 1px 0 rgba(241, 221, 178, 0.032);
-}
-
-.catalog-select option {
-  color: #15110d;
-  background: #f1ddb2;
+.sort-btn.is-active {
+  color: #100d08;
+  background: linear-gradient(135deg, #ffd86a, var(--catalog-gold, #d89425));
+  font-weight: 800;
 }
 
 /* Panel de empty state mantiene el estilo glass */
@@ -512,8 +554,9 @@
 }
 
 /* Accesibilidad: foco visible */
-.filter-pill:focus-visible,
-.catalog-select:focus-visible,
+.picker-toggle:focus-visible,
+.picker-option:focus-visible,
+.sort-btn:focus-visible,
 .catalog-grid .product-card-link:focus-visible,
 .catalog-grid .product-title-link:focus-visible {
   outline: 2px solid rgba(216, 148, 37, 0.56);
@@ -535,15 +578,70 @@
   }
 }
 
+/* ── Controls: mobile ── */
+@media (max-width: 599.98px) {
+  .catalog-controls {
+    border-radius: 16px;
+    min-height: 44px;
+  }
+
+  .picker-toggle {
+    padding: 0 0.72rem;
+    font-size: 0.80rem;
+    gap: 0.34rem;
+  }
+
+  .picker-toggle__label {
+    max-width: 80px;
+  }
+
+  .catalog-bar-row {
+    padding: 0 0.65rem;
+    gap: 0.45rem;
+  }
+
+  /* count hidden on small mobile — save space for sort */
+  .catalog-results-count {
+    display: none;
+  }
+
+  .sort-btn {
+    min-height: 36px;
+    padding: 0 0.48rem;
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 359.98px) {
+  .picker-toggle {
+    padding: 0 0.58rem;
+    gap: 0.28rem;
+  }
+
+  .picker-toggle__label {
+    max-width: 62px;
+  }
+}
+
 /* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .catalog-grid .product-card,
-  .filter-pill {
+  .picker-toggle,
+  .picker-option,
+  .sort-btn {
     transition-duration: 0.01ms;
   }
 
   .catalog-grid .product-card:hover {
     transform: none;
+  }
+
+  .picker-toggle__chevron {
+    transition: none;
+  }
+
+  .catalog-results-count {
+    animation: none;
   }
 }
 

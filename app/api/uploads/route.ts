@@ -33,11 +33,19 @@ function sanitizeFileName(name: string, mimeType: string) {
 }
 
 function getUploadContext(value: FormDataEntryValue | null) {
-  return value === 'home' ? 'home' : 'products';
+  if (value === 'home') return 'home';
+  if (value === 'categories') return 'categories';
+  if (value === 'pages') return 'pages';
+  return 'products';
 }
 
 function isSafeUploadPath(filePath: string) {
-  return (filePath.startsWith('/uploads/products/') || filePath.startsWith('/uploads/home/')) && !filePath.includes('..');
+  return (
+    filePath.startsWith('/uploads/products/') ||
+    filePath.startsWith('/uploads/home/') ||
+    filePath.startsWith('/uploads/categories/') ||
+    filePath.startsWith('/uploads/pages/')
+  ) && !filePath.includes('..');
 }
 
 function hasValidImageSignature(buffer: Buffer, mimeType: string) {

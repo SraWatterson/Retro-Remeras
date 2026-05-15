@@ -20,8 +20,7 @@ const relativeOrAbsoluteImagePath = z
   .min(1)
   .refine(
     (value) =>
-      value.startsWith('/uploads/products/') ||
-      value.startsWith('/uploads/home/') ||
+      value.startsWith('/uploads/') ||
       value.startsWith('/assets/') ||
       value.startsWith('https://') ||
       value.startsWith('http://'),
@@ -92,6 +91,42 @@ const publicHrefSchema = z
     'El link debe ser relativo, ancla o URL válida'
   );
 
+export const landingCategoryInputSchema = z.object({
+  title: z.string().trim().min(1, 'Título requerido').max(60, 'Máximo 60 caracteres'),
+  slug: z.string().trim().min(1).max(60).regex(/^[a-z0-9-]+$/, 'Solo letras minúsculas, números y guiones'),
+  description: z.string().trim().max(200, 'Máximo 200 caracteres').default(''),
+  image: z.string().trim().max(500).default(''),
+  order: z.number().int().min(0).default(0),
+  activo: z.boolean().default(true),
+});
+
+export const landingCategoryUpdateSchema = landingCategoryInputSchema.partial().omit({ slug: true }).extend({
+  slug: z.string().trim().min(1).max(60).regex(/^[a-z0-9-]+$/).optional(),
+});
+
+const salesItemSchema = z.object({
+  title: z.string().trim().min(1).max(80),
+  text: z.string().trim().min(1).max(300),
+});
+
+export const salesPageContentSchema = z.object({
+  eyebrow: z.string().trim().min(1).max(60),
+  title: z.string().trim().min(1).max(80),
+  highlight: z.string().trim().min(1).max(60),
+  description: z.string().trim().min(10).max(400),
+  primaryCta: z.string().trim().min(2).max(60),
+  secondaryCta: z.string().trim().min(2).max(60),
+  secondaryHref: publicHrefSchema,
+  image: relativeOrAbsoluteImagePath,
+  imageAlt: z.string().trim().min(2).max(100),
+  benefitsTitle: z.string().trim().min(2).max(100),
+  benefits: z.array(salesItemSchema).min(1).max(6),
+  processTitle: z.string().trim().min(2).max(100),
+  process: z.array(salesItemSchema).min(1).max(6),
+  noteTitle: z.string().trim().min(1).max(80),
+  noteText: z.string().trim().min(1).max(300),
+});
+
 export const siteContentInputSchema = z.object({
   promoEnabled: z.boolean(),
   promoText: z.string().trim().min(3, 'Texto requerido').max(140, 'Máximo 140 caracteres'),
@@ -112,4 +147,9 @@ export const siteContentInputSchema = z.object({
   heroSideImageOneAlt: z.string().trim().min(2).max(100),
   heroSideImageTwo: relativeOrAbsoluteImagePath,
   heroSideImageTwoAlt: z.string().trim().min(2).max(100),
+});
+
+export const salesPagePatchSchema = z.object({
+  personalizadosData: salesPageContentSchema.optional(),
+  mayoristaData: salesPageContentSchema.optional(),
 });

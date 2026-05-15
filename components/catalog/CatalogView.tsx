@@ -34,6 +34,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
   }, [categories, initialCategoryValue]);
   const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
   const [priceOrder, setPriceOrder] = useState('default');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const categoryText = normalizeText(activeCategory);
@@ -53,6 +54,16 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     return result;
   }, [activeCategory, priceOrder, products]);
 
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    products.forEach((p) => { counts[p.categoria] = (counts[p.categoria] ?? 0) + 1; });
+    return counts;
+  }, [products]);
+
+  const handlePillClick = (category: string) => {
+    setActiveCategory((prev) => prev === category && category !== 'Todos' ? 'Todos' : category);
+  };
+
   return (
     <main className="catalog-main">
       <section className="catalog-hero">
@@ -65,40 +76,73 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
       <section className="catalog-section" aria-label="Catálogo de productos">
         <div className="container catalog-shell">
-          <div className="catalog-controls panel">
-            <div className="catalog-category-field" role="group" aria-label="Filtrar por categoría">
-              <div className="filter-pills">
-                {categoryList.map((category) => (
-                  <button
-                    key={category}
-                    className={`filter-pill ${activeCategory === category ? 'is-active' : ''}`}
-                    type="button"
-                    onClick={() => setActiveCategory(category)}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+          <div className="catalog-controls">
+            <div className="catalog-category-picker">
+              <button
+                className={`picker-toggle${dropdownOpen ? ' is-open' : ''}`}
+                type="button"
+                onClick={() => setDropdownOpen((prev) => !prev)}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="listbox"
+              >
+                <svg className="picker-toggle__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <rect x="1" y="2" width="12" height="1.4" rx="0.7" fill="currentColor" />
+                  <rect x="3" y="6.3" width="8" height="1.4" rx="0.7" fill="currentColor" />
+                  <rect x="5" y="10.6" width="4" height="1.4" rx="0.7" fill="currentColor" />
+                </svg>
+                <span className="picker-toggle__label">{activeCategory}</span>
+                {activeCategory !== 'Todos' && (
+                  <span className="pill-count">{categoryCounts[activeCategory] ?? 0}</span>
+                )}
+                <svg className="picker-toggle__chevron" width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+                  <path d="M2 3.5l3.5 3.5 3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {dropdownOpen && (
+                <>
+                  <div className="picker-backdrop" onClick={() => setDropdownOpen(false)} aria-hidden="true" />
+                  <div className="picker-panel" role="listbox" aria-label="Seleccionar categoría">
+                    {categoryList.map((category) => {
+                      const count = category === 'Todos' ? products.length : (categoryCounts[category] ?? 0);
+                      return (
+                        <button
+                          key={category}
+                          className={`picker-option${activeCategory === category ? ' is-selected' : ''}`}
+                          role="option"
+                          aria-selected={activeCategory === category}
+                          type="button"
+                          onClick={() => {
+                            handlePillClick(category);
+                            setDropdownOpen(false);
+                          }}
+                        >
+                          <span>{category}</span>
+                          <span className="pill-count">{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
 
-            <div className="catalog-controls__bar">
-              <span className="catalog-results-count" aria-live="polite">
+            <div className="catalog-bar-row">
+              <span key={filtered.length} className="catalog-results-count" aria-live="polite">
                 {loading ? 'Cargando…' : `${filtered.length} diseño${filtered.length === 1 ? '' : 's'}`}
                 {activeCategory !== 'Todos' ? <span className="catalog-active-filter"> · {activeCategory}</span> : null}
               </span>
 
-              <div className="catalog-order-field">
-                <label className="form-label" htmlFor="catalog-price-order">Ordenar</label>
-                <select
-                  className="input catalog-select"
-                  id="catalog-price-order"
-                  value={priceOrder}
-                  onChange={(event) => setPriceOrder(event.target.value)}
-                >
-                  <option value="default">Original</option>
-                  <option value="price-asc">Menor precio</option>
-                  <option value="price-desc">Mayor precio</option>
-                </select>
+              <div className="catalog-sort-group" role="group" aria-label="Ordenar por precio">
+                <button className={`sort-btn${priceOrder === 'default' ? ' is-active' : ''}`} type="button" onClick={() => setPriceOrder('default')} aria-pressed={priceOrder === 'default'}>
+                  Original
+                </button>
+                <button className={`sort-btn${priceOrder === 'price-asc' ? ' is-active' : ''}`} type="button" onClick={() => setPriceOrder('price-asc')} aria-pressed={priceOrder === 'price-asc'}>
+                  ↑ Precio
+                </button>
+                <button className={`sort-btn${priceOrder === 'price-desc' ? ' is-active' : ''}`} type="button" onClick={() => setPriceOrder('price-desc')} aria-pressed={priceOrder === 'price-desc'}>
+                  ↓ Precio
+                </button>
               </div>
             </div>
           </div>

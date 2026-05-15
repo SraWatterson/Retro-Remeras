@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { ProductColorOption } from '@/lib/colors';
 import { ProductSizeGuide, SizeGuideTable } from '@/lib/shop';
 import { ColorDraft, ColorImageRow, ProductFormErrors, ProductFormState } from './types';
@@ -16,7 +16,6 @@ type Props = {
   colorSaving: boolean;
   colorError: string;
   errors: ProductFormErrors;
-  categories: string[];
   requestError: string;
   saving: boolean;
   uploading: boolean;
@@ -37,8 +36,6 @@ type Props = {
   onDeleteColor: (color: ProductColorOption) => void;
 };
 
-type CategoryMode = 'existing' | 'new';
-
 function normalizeAdminImageSrc(src?: string | null) {
   if (!src) return null;
 
@@ -51,46 +48,21 @@ function normalizeAdminImageSrc(src?: string | null) {
   return `/${value.replace(/^\/+/, '')}`;
 }
 
-function normalizeCategory(value: string) {
-  return value.trim().replace(/\s+/g, ' ');
-}
-
-function uniqueCategories(categories: string[]) {
-  const byKey = new Map<string, string>();
-
-  categories.forEach((category) => {
-    const normalized = normalizeCategory(category);
-    if (!normalized) return;
-
-    const key = normalized.toLowerCase();
-    if (!byKey.has(key)) byKey.set(key, normalized);
-  });
-
-  return Array.from(byKey.values()).sort((a, b) => a.localeCompare(b, 'es'));
-}
-
 type CategoryFieldProps = {
   value: string;
-  categories: string[];
   error?: string;
   onChange: (value: string) => void;
 };
 
-function CategoryField({ value, categories, error, onChange }: CategoryFieldProps) {
-  const normalizedCategories = useMemo(() => uniqueCategories(categories), [categories]);
-  const matchedCategory = normalizedCategories.find(
-    (category) => category.toLowerCase() === normalizeCategory(value).toLowerCase()
-  );
-  const [mode, setMode] = useState<CategoryMode>('existing');
+function CategoryField({ value, error, onChange }: CategoryFieldProps) {
+  const [options, setOptions] = useState<{ title: string; slug: string }[]>([]);
 
   useEffect(() => {
-    const normalizedValue = normalizeCategory(value);
-    if (!normalizedValue) return;
-
-    setMode(matchedCategory ? 'existing' : 'new');
-  }, [matchedCategory, value]);
-
-  const selectValue = mode === 'new' ? '__new' : matchedCategory || '';
+    fetch('/api/landing-categories')
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: { title: string; slug: string }[]) => setOptions(Array.isArray(data) ? data : []))
+      .catch(() => setOptions([]));
+  }, []);
 
   return (
     <div className="form-group admin-category-field">
@@ -98,43 +70,16 @@ function CategoryField({ value, categories, error, onChange }: CategoryFieldProp
       <select
         id="categoria-select"
         className="input"
-        value={selectValue}
-        onChange={(event) => {
-          const nextValue = event.target.value;
-
-          if (nextValue === '__new') {
-            setMode('new');
-            onChange('');
-            return;
-          }
-
-          setMode('existing');
-          onChange(nextValue);
-        }}
-        required={mode === 'existing'}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        required
       >
         <option value="">Seleccionar categoría</option>
-        {normalizedCategories.map((category) => (
-          <option value={category} key={category}>{category}</option>
+        {options.map((cat) => (
+          <option value={cat.title} key={cat.slug}>{cat.title}</option>
         ))}
-        <option value="__new">+ Crear nueva categoría</option>
       </select>
-
-      {mode === 'new' ? (
-        <div className="admin-new-category-box">
-          <label className="form-label" htmlFor="categoria-new">Nueva categoría</label>
-          <input
-            id="categoria-new"
-            className="input"
-            value={value}
-            placeholder="Ej: Cine retro"
-            onChange={(event) => onChange(event.target.value)}
-            required
-          />
-          <p className="admin-help">Se va a crear automáticamente cuando guardes el producto con esta categoría.</p>
-        </div>
-      ) : null}
-
+      <p className="admin-help">Las categorías se gestionan desde la sección "Cards landing" del panel.</p>
       {error ? <p className="admin-error">{error}</p> : null}
     </div>
   );
@@ -346,7 +291,6 @@ export function ProductEditorForm({
   colorSaving,
   colorError,
   errors,
-  categories,
   requestError,
   saving,
   uploading,
@@ -384,7 +328,6 @@ export function ProductEditorForm({
 
         <CategoryField
           value={form.categoria}
-          categories={categories}
           error={errors.categoria}
           onChange={(categoria) => onChange({ categoria })}
         />
