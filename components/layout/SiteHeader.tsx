@@ -2,9 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useId, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion, type Transition } from 'framer-motion';
+import { useEffect, useId, useRef, useState } from 'react';
 import { cartGetItemsCount, cartLoad, subscribeToCartUpdates } from '@/lib/shop';
+import { openCartSidebar, CART_ITEM_ADDED_EVENT } from '@/components/cart/CartSidebar';
 
 type Props = {
   active: 'inicio' | 'catalogo' | 'carrito' | 'personalizados' | 'mayorista';
@@ -14,15 +15,16 @@ type NavLink = {
   href: string;
   label: string;
   activeKey?: Props['active'];
+  featured?: boolean;
 };
 
 const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'Inicio', activeKey: 'inicio' },
-  { href: '/catalogo', label: 'Catálogo', activeKey: 'catalogo' },
+  { href: '/catalogo', label: 'Catálogo', activeKey: 'catalogo', featured: true },
   { href: '/personalizados', label: 'Personalizados', activeKey: 'personalizados' },
   { href: '/mayorista', label: 'Mayorista', activeKey: 'mayorista' },
   { href: '/#como-funciona', label: 'Cómo funciona' },
-  { href: '/#ubicacion', label: 'Ubicación' },
+  { href: '/#contacto', label: 'Contacto' },
 ];
 
 const MOBILE_MENU_VARIANTS = {
@@ -54,7 +56,7 @@ const MOBILE_ITEM_VARIANTS = {
   },
 };
 
-const CART_BADGE_TRANSITION = {
+const CART_BADGE_TRANSITION: Transition = {
   duration: 0.18,
   ease: [0.22, 1, 0.36, 1],
 };
@@ -62,8 +64,11 @@ const CART_BADGE_TRANSITION = {
 export function SiteHeader({ active }: Props) {
   const [open, setOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [cartPulsing, setCartPulsing] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const menuId = useId();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const pulseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setCartCount(cartGetItemsCount(cartLoad()));
@@ -72,6 +77,20 @@ export function SiteHeader({ active }: Props) {
     });
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      if (prefersReducedMotion) return;
+      setCartPulsing(true);
+      if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
+      pulseTimerRef.current = setTimeout(() => setCartPulsing(false), 500);
+    };
+    window.addEventListener(CART_ITEM_ADDED_EVENT, handler);
+    return () => {
+      window.removeEventListener(CART_ITEM_ADDED_EVENT, handler);
+      if (pulseTimerRef.current) clearTimeout(pulseTimerRef.current);
+    };
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,6 +118,32 @@ export function SiteHeader({ active }: Props) {
     };
   }, [open]);
 
+  // Focus trap: cuando el menú abre, mueve el foco al primer ítem y encierra Tab dentro del menú
+  useEffect(() => {
+    if (!open) return;
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    const focusable = Array.from(
+      menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    focusable[0]?.focus();
+
+    function trapTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab' || !focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    menu.addEventListener('keydown', trapTab);
+    return () => menu.removeEventListener('keydown', trapTab);
+  }, [open]);
+
   function closeMenu() {
     setOpen(false);
   }
@@ -114,17 +159,46 @@ export function SiteHeader({ active }: Props) {
           <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={56} height={56} sizes="56px" priority />
         </Link>
 
-        <motion.button
-          className={`rr-menu-toggle ${open ? 'is-open' : ''}`}
-          type="button"
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={open}
-          aria-controls={menuId}
-          onClick={() => setOpen((prev) => !prev)}
-          whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-        >
-          <span className="rr-menu-toggle__icon" aria-hidden="true" />
-        </motion.button>
+        {/* rr-nav-end: cart + hamburger agrupados — visible en mobile/tablet, oculto en desktop */}
+        <div className="rr-nav-end">
+          <button
+            type="button"
+            className={`rr-mobile-cart-btn${cartPulsing ? ' is-pulsing' : ''}`}
+            onClick={openCartSidebar}
+            aria-label={`Tu pedido${cartCount > 0 ? ` (${cartCount} ítems)` : ''}`}
+          >
+            <svg className="rr-nav-cart__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="22" height="22">
+              <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            <AnimatePresence>
+              {cartCount > 0 && (
+                <motion.span
+                  key={`mobile-nav-cart-${cartCount}`}
+                  className="rr-nav-cart__badge"
+                  initial={prefersReducedMotion ? false : { scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={prefersReducedMotion ? {} : { scale: 0.6, opacity: 0 }}
+                  transition={prefersReducedMotion ? { duration: 0 } : CART_BADGE_TRANSITION}
+                >
+                  {cartCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+
+          <motion.button
+            className={`rr-menu-toggle ${open ? 'is-open' : ''}`}
+            type="button"
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={open}
+            aria-controls={menuId}
+            onClick={() => setOpen((prev) => !prev)}
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+          >
+            <span className="rr-menu-toggle__icon" aria-hidden="true" />
+          </motion.button>
+        </div>
 
         <div className="rr-desktop-nav">
           <nav className="rr-desktop-links" aria-label="Navegación principal">
@@ -140,19 +214,32 @@ export function SiteHeader({ active }: Props) {
           </nav>
 
           <div className="rr-desktop-actions">
-            <Link className="rr-nav-cart" href="/carrito" aria-label="Ver carrito">
-              <Image src="/assets/icons/carrito-de-compras.png" alt="" className="rr-nav-cart__icon" width={28} height={28} />
-              <motion.span
-                key={`desktop-cart-${cartCount}`}
-                className="rr-nav-cart__badge"
-                data-global-cart-count
-                initial={prefersReducedMotion ? false : { scale: 0.72, opacity: 0.65 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={prefersReducedMotion ? { duration: 0 } : CART_BADGE_TRANSITION}
-              >
-                {cartCount}
-              </motion.span>
-            </Link>
+            <button
+              type="button"
+              className={`rr-nav-cart${cartPulsing ? ' is-pulsing' : ''}`}
+              onClick={openCartSidebar}
+              aria-label={`Tu pedido${cartCount > 0 ? ` (${cartCount} ítems)` : ''}`}
+            >
+              <svg className="rr-nav-cart__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" width="24" height="24">
+                <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              <AnimatePresence>
+                {cartCount > 0 && (
+                  <motion.span
+                    key={`desktop-cart-${cartCount}`}
+                    className="rr-nav-cart__badge"
+                    data-global-cart-count
+                    initial={prefersReducedMotion ? false : { scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={prefersReducedMotion ? {} : { scale: 0.6, opacity: 0 }}
+                    transition={prefersReducedMotion ? { duration: 0 } : CART_BADGE_TRANSITION}
+                  >
+                    {cartCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
 
             <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/catalogo">
               Ver catálogo
@@ -163,10 +250,12 @@ export function SiteHeader({ active }: Props) {
         <AnimatePresence>
           {open ? (
             <motion.div
+              ref={menuRef}
               id={menuId}
               className="rr-mobile-menu"
               role="dialog"
               aria-label="Menú principal"
+              aria-modal="true"
               variants={prefersReducedMotion ? undefined : MOBILE_MENU_VARIANTS}
               initial={prefersReducedMotion ? { opacity: 0 } : "closed"}
               animate={prefersReducedMotion ? { opacity: 1 } : "open"}
@@ -177,7 +266,7 @@ export function SiteHeader({ active }: Props) {
                 {NAV_LINKS.map((link) => (
                   <motion.div className="rr-mobile-link-motion" variants={prefersReducedMotion ? undefined : MOBILE_ITEM_VARIANTS} key={link.href}>
                     <Link
-                      className={`rr-mobile-link ${isActive(link) ? 'is-active' : ''}`}
+                      className={`rr-mobile-link${isActive(link) ? ' is-active' : ''}${link.featured ? ' is-featured' : ''}`}
                       href={link.href}
                       onClick={closeMenu}
                     >
@@ -186,30 +275,6 @@ export function SiteHeader({ active }: Props) {
                   </motion.div>
                 ))}
               </nav>
-
-              <div className="rr-mobile-menu__actions">
-                <motion.div className="rr-mobile-action-motion" variants={prefersReducedMotion ? undefined : MOBILE_ITEM_VARIANTS}>
-                  <Link className="rr-nav-cart" href="/carrito" aria-label="Ver carrito" onClick={closeMenu}>
-                    <Image src="/assets/icons/carrito-de-compras.png" alt="" className="rr-nav-cart__icon" width={24} height={24} />
-                    <motion.span
-                      key={`mobile-cart-${cartCount}`}
-                      className="rr-nav-cart__badge"
-                      data-global-cart-count
-                      initial={prefersReducedMotion ? false : { scale: 0.72, opacity: 0.65 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={prefersReducedMotion ? { duration: 0 } : CART_BADGE_TRANSITION}
-                    >
-                      {cartCount}
-                    </motion.span>
-                  </Link>
-                </motion.div>
-
-                <motion.div className="rr-mobile-action-motion" variants={prefersReducedMotion ? undefined : MOBILE_ITEM_VARIANTS}>
-                  <Link className="rr-mobile-primary" href="/catalogo" onClick={closeMenu}>
-                    Ver catálogo
-                  </Link>
-                </motion.div>
-              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>

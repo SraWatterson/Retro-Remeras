@@ -8,6 +8,11 @@ import { getSiteContent } from '@/lib/site-content';
 export const metadata: Metadata = {
   title: 'Personalizados | Retro Remeras',
   description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',
+  openGraph: {
+    title: 'Personalizados | Retro Remeras',
+    description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',
+    images: [{ url: '/assets/pets/Postales_1_4.png', width: 1100, height: 1320, alt: 'Remeras personalizadas Retro Remeras' }],
+  },
 };
 
 export const revalidate = 60;
@@ -32,6 +37,7 @@ export default async function PersonalizadosPage() {
         secondaryHref={c.secondaryHref}
         image={c.image}
         imageAlt={c.imageAlt}
+        benefitsKicker={c.benefitsKicker}
         benefitsTitle={c.benefitsTitle}
         benefits={c.benefits}
         processTitle={c.processTitle}

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaWhatsapp } from 'react-icons/fa';
 import {
   CartItem,
   cartChangeQuantity,
@@ -20,6 +20,7 @@ import {
 
 export function CartView() {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const hasItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
@@ -38,18 +39,21 @@ export function CartView() {
 
   function clearCart() {
     if (!hasItems) return;
-    const confirmed = window.confirm('¿Seguro que querés vaciar todo el pedido?');
-    if (!confirmed) return;
+    setShowClearConfirm(true);
+  }
+
+  function confirmClear() {
     updateCart(cartClear());
+    setShowClearConfirm(false);
   }
 
   return (
     <main className="cart-page">
       <section className="container cart-shell">
         <div className="section-header cart-page-header">
-          <span className="section-kicker">Tu pedido</span>
-          <h1 className="section-title">Carrito de compras</h1>
-          <p className="section-subtitle">Revisá tu pedido, ajustá cantidades y confirmalo por WhatsApp.</p>
+          <span className="section-kicker">Paso final</span>
+          <h1 className="section-title">Revisá tu pedido</h1>
+          <p className="section-subtitle">Ajustá cantidades y confirmalo por WhatsApp cuando estés listo.</p>
         </div>
 
         <div className={`cart-layout ${!hasItems ? 'cart-layout--empty' : ''}`}>
@@ -58,7 +62,7 @@ export function CartView() {
               {!hasItems ? (
                 <div className="cart-empty-state cart-empty-state--rich">
                   <span className="cart-empty-state__icon" aria-hidden="true"><FaShoppingCart size={26} /></span>
-                  <h2>Tu carrito está vacío</h2>
+                  <h2>Todavía no agregaste nada</h2>
                   <p>Elegí una remera del catálogo y volvé acá para cerrar el pedido por WhatsApp.</p>
                   <Link className="btn btn-primary cart-empty-state__btn" href="/catalogo">
                     Ver catálogo
@@ -117,14 +121,23 @@ export function CartView() {
               <>
                 <div className="cart-summary-actions">
                   <a className="btn btn-primary cart-summary-whatsapp" href={orderLink} target="_blank" rel="noopener noreferrer">
+                    <FaWhatsapp size={18} aria-hidden="true" />
                     Finalizar por WhatsApp
                   </a>
                   <Link className="btn btn-secondary cart-summary-secondary" href="/catalogo">
                     Seguir comprando
                   </Link>
-                  <button className="cart-summary-clear" type="button" onClick={clearCart}>
-                    Vaciar pedido
-                  </button>
+                  {showClearConfirm ? (
+                    <div className="rr-inline-confirm" role="group" aria-label="Confirmar vaciado">
+                      <span className="rr-inline-confirm__label">¿Vaciar todo el pedido?</span>
+                      <button className="rr-inline-confirm__btn rr-inline-confirm__btn--confirm" type="button" onClick={confirmClear}>Sí, vaciar</button>
+                      <button className="rr-inline-confirm__btn rr-inline-confirm__btn--cancel" type="button" onClick={() => setShowClearConfirm(false)}>Cancelar</button>
+                    </div>
+                  ) : (
+                    <button className="cart-summary-clear" type="button" onClick={clearCart}>
+                      Vaciar pedido
+                    </button>
+                  )}
                 </div>
 
                 <div className="notice">El pedido se envía por WhatsApp con todos los productos, talles, colores y cantidades.</div>

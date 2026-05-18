@@ -23,7 +23,7 @@ export function LocationSection() {
           <span className="section-kicker">Ubicación</span>
           <h2 id="location-title" className="section-title location-section__title">Dónde estamos</h2>
           <p className="section-subtitle location-section__subtitle">
-            Encontranos en Google Maps
+            Buenos Aires · Retiro en local y envíos a todo el país
           </p>
 
           <div className="location-section__actions">

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { motion, type PanInfo } from 'framer-motion';
+import { motion, useReducedMotion, type PanInfo } from 'framer-motion';
 import { Product, formatPrice, normalizeImageUrl } from '@/lib/shop';
 
 const AUTOPLAY_DELAY = 3600;
@@ -67,6 +67,7 @@ function ChevronRightIcon({ className }: IconProps) {
 
 export function FeaturedProducts({ initialProducts }: Props) {
   const products = useMemo(() => initialProducts || [], [initialProducts]);
+  const prefersReducedMotion = useReducedMotion();
 
   const featured = useMemo(() => {
     const activeProducts = products.filter((product) => product.activo !== false);
@@ -93,12 +94,12 @@ export function FeaturedProducts({ initialProducts }: Props) {
   const startAutoplay = useCallback(() => {
     clearAutoplay();
 
-    if (isPaused || featured.length <= 1) return;
+    if (isPaused || featured.length <= 1 || prefersReducedMotion) return;
 
     autoplayIntervalRef.current = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % featured.length);
     }, AUTOPLAY_DELAY);
-  }, [clearAutoplay, featured.length, isPaused]);
+  }, [clearAutoplay, featured.length, isPaused, prefersReducedMotion]);
 
   const changeSlide = useCallback(
     (newIndex: number) => {

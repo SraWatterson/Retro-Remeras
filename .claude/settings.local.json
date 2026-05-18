@@ -11,7 +11,17 @@
       "PowerShell($lines = Get-Content \"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\\\\app\\\\css\\\\style.css\"; $depth = 0; $found = @\\(\\); $i = 3289; foreach \\($line in $lines[3289..3540]\\) { $i++; $o = \\([regex]::Matches\\($line, '{'\\)\\).Count; $c = \\([regex]::Matches\\($line, '}'\\)\\).Count; $depth += $o - $c; if \\($depth -ge 1 -and \\($o -gt $c\\)\\) { $found += \"Line ${i}: d=${depth}: $\\($line.Trim\\(\\)\\)\"; break } }; $found)",
       "PowerShell(cd \"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\"; $headCss = git show \"HEAD:app/css/style.css\"; $startLine = \\($headCss | Select-String \"\\\\.navbar\\\\.rr-nav\" | Select -First 1\\).LineNumber - 2; \"rr-nav section starts at approx line: $startLine\"; $headCss | Select-Object -Skip \\($startLine - 5\\) -First 10)",
       "PowerShell($bytes = [System.IO.File]::ReadAllBytes\\(\"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\\\\app\\\\css\\\\style.css\"\\); if \\($bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF\\) { $noBom = $bytes[3..\\($bytes.Length - 1\\)]; [System.IO.File]::WriteAllBytes\\(\"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\\\\app\\\\css\\\\style.css\", $noBom\\); \"BOM removed successfully\" } else { \"No BOM found\" })",
-      "PowerShell($content = [System.IO.File]::ReadAllText\\(\"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\\\\app\\\\css\\\\style.css\"\\); $open = \\([regex]::Matches\\($content, '{'\\)\\).Count; $close = \\([regex]::Matches\\($content, '}'\\)\\).Count; $lines = \\($content -split \"`n\"\\).Count; \"Lines: $lines, Open: $open, Close: $close, Balanced: $\\(\\($open - $close\\) -eq 0\\)\")"
+      "PowerShell($content = [System.IO.File]::ReadAllText\\(\"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\\\\app\\\\css\\\\style.css\"\\); $open = \\([regex]::Matches\\($content, '{'\\)\\).Count; $close = \\([regex]::Matches\\($content, '}'\\)\\).Count; $lines = \\($content -split \"`n\"\\).Count; \"Lines: $lines, Open: $open, Close: $close, Balanced: $\\(\\($open - $close\\) -eq 0\\)\")",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"mobile touch accessibility keyboard focus\" --domain ux -n 10)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"dark vintage premium retail ecommerce\" --domain style -n 5)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"loading performance animation reduced motion\" --domain ux -n 8)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"typography hierarchy contrast readability\" --domain ux -n 6)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\David\\\\Desktop\\\\retro-remeras\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"accessibility contrast text color touch target\" --domain ux -n 10)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"e-commerce catalog product card CTA button conversion flow\" --domain ux -n 8)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"primary secondary CTA hierarchy button action\" --domain ux -n 8)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"ecommerce product landing checkout whatsapp\" --domain landing -n 5)"
     ]
   }
 }

@@ -76,7 +76,7 @@ export function HeroSection({ content }: Props) {
               </article>
 
               <article className="poster-main poster-frame">
-                <Image src={hero.heroSideImageTwo} alt={hero.heroSideImageTwoAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
+                <Image src={hero.heroSideImageTwo} alt={hero.heroSideImageTwoAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
               </article>
             </div>
           </div>

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { Product, createWhatsAppLink, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
+import { Product, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
 
 type Props = {
   initialCategory?: string;
@@ -155,44 +155,37 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                 <p>Probá con otra categoría o volvé a ver todos los diseños.</p>
               </div>
             ) : (
-              filtered.map((product) => {
-                const message = `Hola! Me interesa la remera ${product.nombre}. ¿Está disponible?`;
-
-                return (
-                  <article className="product-card product-card--linked" key={product.id}>
-                    <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
-                      <div className="product-media">
-                        <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={1000} height={1000} quality={90} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 360px" />
-                        {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
-                      </div>
-                    </Link>
-
-                    <div className="product-content">
-                      <div className="product-category">{product.categoria}</div>
-                      <h3 className="product-title">
-                        <Link className="product-title-link" href={`/producto?id=${product.id}`}>
-                          {product.nombre}
-                        </Link>
-                      </h3>
-                      <p className="product-description">{product.descripcion}</p>
-
-                      <div className="price-row">
-                        <span className="product-price">{formatPrice(product.precio)}</span>
-                        <span className="tag">{product.disponible ? 'Disponible' : 'Consultar'}</span>
-                      </div>
-
-                      <div className="product-actions product-actions--spaced">
-                        <Link className="btn btn-primary" href={`/producto?id=${product.id}`}>
-                          Ver producto
-                        </Link>
-                        <a className="btn btn-secondary btn-whatsapp-soft" href={createWhatsAppLink(message)} target="_blank" rel="noopener noreferrer">
-                          Consultar
-                        </a>
-                      </div>
+              filtered.map((product) => (
+                <article className="product-card product-card--linked" key={product.id}>
+                  <Link className="product-card-link" href={`/producto?id=${product.id}`} aria-label={`Ver ${product.nombre}`}>
+                    <div className="product-media">
+                      <Image src={normalizeImageUrl(product.imagen)} alt={product.nombre} width={1000} height={1000} quality={90} sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 360px" />
+                      {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}
                     </div>
-                  </article>
-                );
-              })
+                  </Link>
+
+                  <div className="product-content">
+                    <div className="product-category">{product.categoria}</div>
+                    <h3 className="product-title">
+                      <Link className="product-title-link" href={`/producto?id=${product.id}`}>
+                        {product.nombre}
+                      </Link>
+                    </h3>
+                    <p className="product-description">{product.descripcion}</p>
+
+                    <div className="price-row">
+                      <span className="product-price">{formatPrice(product.precio)}</span>
+                      {!product.disponible ? <span className="tag">A pedido</span> : null}
+                    </div>
+
+                    <div className="product-actions product-actions--spaced">
+                      <Link className="btn btn-primary" href={`/producto?id=${product.id}`}>
+                        Ver producto
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))
             )}
           </div>
         </div>

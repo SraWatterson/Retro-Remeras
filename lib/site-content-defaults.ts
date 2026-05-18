@@ -3,6 +3,14 @@ export type SalesItem = {
   text: string;
 };
 
+export type PricingTier = {
+  id: string;
+  label: string;
+  range: string;
+  price: string;
+  active: boolean;
+};
+
 export type SalesPageContent = {
   eyebrow: string;
   title: string;
@@ -13,8 +21,14 @@ export type SalesPageContent = {
   secondaryHref: string;
   image: string;
   imageAlt: string;
+  benefitsKicker?: string;
   benefitsTitle: string;
   benefits: SalesItem[];
+  pricingEnabled: boolean;
+  pricingTitle: string;
+  pricingSubtitle: string;
+  pricingNote: string;
+  pricingTiers: PricingTier[];
   processTitle: string;
   process: SalesItem[];
   noteTitle: string;
@@ -47,6 +61,14 @@ export type SiteContentData = {
   updatedAt?: Date | string;
 };
 
+const NO_PRICING: Pick<SalesPageContent, 'pricingEnabled' | 'pricingTitle' | 'pricingSubtitle' | 'pricingNote' | 'pricingTiers'> = {
+  pricingEnabled: false,
+  pricingTitle: '',
+  pricingSubtitle: '',
+  pricingNote: '',
+  pricingTiers: [],
+};
+
 export const DEFAULT_PERSONALIZADOS: SalesPageContent = {
   eyebrow: 'Personalizados',
   title: 'Tu remera,',
@@ -57,6 +79,7 @@ export const DEFAULT_PERSONALIZADOS: SalesPageContent = {
   secondaryHref: '/catalogo',
   image: '/assets/pets/Postales_1_4.png',
   imageAlt: 'Postal visual para remeras personalizadas',
+  benefitsKicker: 'Sin complicaciones',
   benefitsTitle: 'Personalización sin vueltas',
   benefits: [
     { title: 'Sin mínimo de compra', text: 'Pedí una sola remera si querés. Ideal para regalos, ocasiones especiales o darte un gusto.' },
@@ -64,6 +87,7 @@ export const DEFAULT_PERSONALIZADOS: SalesPageContent = {
     { title: 'DTF de alta definición', text: 'Sin límites de colores ni detalles: estampamos lo que imagines con gran definición.' },
     { title: 'Calidad premium', text: 'La misma dedicación en cada prenda, aunque sea una sola unidad.' },
   ],
+  ...NO_PRICING,
   processTitle: 'Cómo pedís tu personalizada',
   process: [
     { title: 'Mandanos tu idea', text: 'Nos enviás la imagen, frase o referencia por WhatsApp.' },
@@ -85,12 +109,23 @@ export const DEFAULT_MAYORISTA: SalesPageContent = {
   secondaryHref: '/catalogo',
   image: '/assets/pets/Postales_1_5.png',
   imageAlt: 'Postal visual para producción mayorista',
+  benefitsKicker: 'Para tu negocio',
   benefitsTitle: 'Pensado para pedidos por volumen',
   benefits: [
     { title: 'Precios por cantidad', text: 'Cotizamos según volumen, diseño y tiempos de producción para que tu proyecto sea rentable.' },
     { title: 'Ideal para proyectos', text: 'Empresas, institutos, uniformes, eventos, merch, equipos, revendedores y emprendimientos.' },
     { title: 'Diseños personalizados', text: 'Trabajamos logos, frases, identidad visual o referencias adaptadas a tu necesidad.' },
     { title: 'Asesoramiento directo', text: 'Te ayudamos a definir cantidades, talles, colores y plazos de entrega.' },
+  ],
+  pricingEnabled: true,
+  pricingTitle: 'Escalas de precio',
+  pricingSubtitle: 'El precio por unidad baja a medida que sube la cantidad. Consultanos por tu volumen.',
+  pricingNote: 'Los precios son orientativos y varían según diseño, colores y técnica de estampado. Pedí tu presupuesto por WhatsApp.',
+  pricingTiers: [
+    { id: 'tier-1', label: 'Arranque',    range: '12 – 24 unidades',  price: 'Consultar', active: true },
+    { id: 'tier-2', label: 'Crecimiento', range: '25 – 49 unidades',  price: 'Consultar', active: true },
+    { id: 'tier-3', label: 'Volumen',     range: '50 – 99 unidades',  price: 'Consultar', active: true },
+    { id: 'tier-4', label: 'Escala',      range: '100+ unidades',     price: 'Consultar', active: true },
   ],
   processTitle: 'Cómo armamos un pedido mayorista',
   process: [
@@ -116,7 +151,7 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
     'En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.',
   heroPrimaryButtonText: 'Ver catálogo',
   heroPrimaryButtonHref: '/catalogo',
-  heroSecondaryButtonText: 'Ver carrito',
+  heroSecondaryButtonText: 'Tu pedido',
   heroSecondaryButtonHref: '/carrito',
   heroMainImage: '/assets/img/ejemplo-vintage.jpg',
   heroMainImageAlt: 'Diseño vintage destacado',
@@ -142,8 +177,14 @@ function parseSalesPageContent(raw: unknown, defaults: SalesPageContent): SalesP
     secondaryHref: typeof d.secondaryHref === 'string' ? d.secondaryHref : defaults.secondaryHref,
     image: typeof d.image === 'string' ? d.image : defaults.image,
     imageAlt: typeof d.imageAlt === 'string' ? d.imageAlt : defaults.imageAlt,
+    benefitsKicker: typeof d.benefitsKicker === 'string' ? d.benefitsKicker : defaults.benefitsKicker,
     benefitsTitle: typeof d.benefitsTitle === 'string' ? d.benefitsTitle : defaults.benefitsTitle,
     benefits: Array.isArray(d.benefits) ? d.benefits as SalesItem[] : defaults.benefits,
+    pricingEnabled: typeof d.pricingEnabled === 'boolean' ? d.pricingEnabled : defaults.pricingEnabled,
+    pricingTitle: typeof d.pricingTitle === 'string' ? d.pricingTitle : defaults.pricingTitle,
+    pricingSubtitle: typeof d.pricingSubtitle === 'string' ? d.pricingSubtitle : defaults.pricingSubtitle,
+    pricingNote: typeof d.pricingNote === 'string' ? d.pricingNote : defaults.pricingNote,
+    pricingTiers: Array.isArray(d.pricingTiers) ? d.pricingTiers as PricingTier[] : defaults.pricingTiers,
     processTitle: typeof d.processTitle === 'string' ? d.processTitle : defaults.processTitle,
     process: Array.isArray(d.process) ? d.process as SalesItem[] : defaults.process,
     noteTitle: typeof d.noteTitle === 'string' ? d.noteTitle : defaults.noteTitle,

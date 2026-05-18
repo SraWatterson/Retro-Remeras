@@ -126,7 +126,7 @@ const EMPTY_SITE_CONTENT_FORM: SiteContentFormState = {
     'En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.',
   heroPrimaryButtonText: 'Ver catálogo',
   heroPrimaryButtonHref: '/catalogo',
-  heroSecondaryButtonText: 'Ver carrito',
+  heroSecondaryButtonText: 'Tu pedido',
   heroSecondaryButtonHref: '/carrito',
   heroMainImage: '/assets/img/ejemplo-vintage.jpg',
   heroMainImageAlt: 'Diseño vintage destacado',

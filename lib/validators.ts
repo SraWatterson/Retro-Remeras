@@ -109,6 +109,14 @@ const salesItemSchema = z.object({
   text: z.string().trim().min(1).max(300),
 });
 
+const pricingTierSchema = z.object({
+  id: z.string().trim().min(1).max(40),
+  label: z.string().trim().min(1).max(40),
+  range: z.string().trim().min(1).max(60),
+  price: z.string().trim().min(1).max(60),
+  active: z.boolean(),
+});
+
 export const salesPageContentSchema = z.object({
   eyebrow: z.string().trim().min(1).max(60),
   title: z.string().trim().min(1).max(80),
@@ -121,6 +129,11 @@ export const salesPageContentSchema = z.object({
   imageAlt: z.string().trim().min(2).max(100),
   benefitsTitle: z.string().trim().min(2).max(100),
   benefits: z.array(salesItemSchema).min(1).max(6),
+  pricingEnabled: z.boolean(),
+  pricingTitle: z.string().trim().max(100).default(''),
+  pricingSubtitle: z.string().trim().max(200).default(''),
+  pricingNote: z.string().trim().max(300).default(''),
+  pricingTiers: z.array(pricingTierSchema).max(8).default([]),
   processTitle: z.string().trim().min(2).max(100),
   process: z.array(salesItemSchema).min(1).max(6),
   noteTitle: z.string().trim().min(1).max(80),

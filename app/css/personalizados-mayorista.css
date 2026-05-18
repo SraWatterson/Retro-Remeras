@@ -1,9 +1,12 @@
 /* =========================================================
-   ETAPA 11B.3 — Personalizados / Mayorista
-   Fondo y cortes visuales replicados desde la landing.
+   Retro Remeras · Personalizados / Mayorista
    ========================================================= */
 
-/* Landing: sección única con dos caminos comerciales */
+
+/* ─────────────────────────────────────────────
+   1. LANDING — Sección de dos caminos comerciales
+   ───────────────────────────────────────────── */
+
 .section--personalizados-mayorista {
   position: relative;
   overflow: hidden;
@@ -68,7 +71,7 @@
   min-width: 0;
 }
 
-/* Mismo marco animado del hero (.poster-frame). */
+/* Marco animado — compartido con .sales-hero__visual */
 @keyframes personalizadosMayoristaPosterFrameSpin {
   from { transform: translate(-50%, -50%) rotate(0deg); }
   to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -261,7 +264,10 @@
   padding-inline: 1rem;
 }
 
-/* Páginas internas: replica sistema de fondos de .home-page */
+
+/* ─────────────────────────────────────────────
+   2. PÁGINAS INTERNAS — Fondo y base visual
+   ───────────────────────────────────────────── */
 
 .sales-page {
   --pm-bg-top: #070604;
@@ -312,14 +318,6 @@
   z-index: -1;
 }
 
-.sales-hero {
-  padding: clamp(2.6rem, 4.8vw, 4.6rem) 0 clamp(2.2rem, 3.8vw, 3.6rem);
-  background:
-    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
-    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
-    linear-gradient(180deg, #0a0705 0%, #0b0704 60%, #100905 100%);
-}
-
 .sales-hero::after,
 .sales-section::after {
   background:
@@ -333,6 +331,45 @@
   background-size: 220px 220px, 100% 100%, 100% 100%;
   background-blend-mode: overlay, normal, normal;
   opacity: 0.17;
+}
+
+/* Separador entre secciones */
+.sales-page .sales-section + .sales-section {
+  border-top: 1px solid rgba(216, 148, 37, 0.11);
+}
+
+/* Inset shadow en todas las sections */
+.sales-section {
+  padding: clamp(4.35rem, 7.2vw, 7rem) 0;
+  box-shadow: inset 0 1px 0 rgba(241, 221, 178, 0.022), inset 0 -1px 0 rgba(216, 148, 37, 0.032);
+}
+
+
+/* ─────────────────────────────────────────────
+   3. HERO
+   ───────────────────────────────────────────── */
+
+.sales-hero {
+  padding: clamp(2.6rem, 4.8vw, 4.6rem) 0 clamp(2.2rem, 3.8vw, 3.6rem);
+  background:
+    radial-gradient(ellipse at 16% 18%, rgba(216, 148, 37, 0.115), transparent 38%),
+    radial-gradient(ellipse at 84% 24%, rgba(154, 45, 27, 0.078), transparent 42%),
+    linear-gradient(180deg, #0a0705 0%, #0b0704 60%, #100905 100%);
+  box-shadow: inset 0 -1px 0 rgba(216, 148, 37, 0.08), 0 18px 52px rgba(3, 2, 1, 0.28);
+}
+
+.sales-hero::before {
+  background:
+    linear-gradient(180deg,
+      rgba(7, 6, 4, 0.58) 0%,
+      rgba(8, 6, 4, 0.34) 10%,
+      rgba(12, 8, 5, 0.12) 22%,
+      transparent 38%,
+      transparent 78%,
+      rgba(12, 8, 5, 0.12) 100%
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.030), transparent 48%);
+  opacity: 0.76;
 }
 
 .sales-hero__grid {
@@ -359,6 +396,7 @@
 
 .sales-hero__copy h1 span {
   color: var(--brand-gold-soft, #efb84e);
+  display: inline;
 }
 
 .sales-hero__copy p {
@@ -374,6 +412,18 @@
   flex-wrap: wrap;
   gap: 0.8rem;
   margin-top: 0.35rem;
+}
+
+.sales-hero__actions .btn-primary {
+  min-height: 52px;
+  font-size: 1rem;
+  box-shadow:
+    0 10px 28px rgba(216, 148, 37, 0.28),
+    0 3px 10px rgba(3, 2, 1, 0.32);
+}
+
+.sales-hero__actions .btn-secondary {
+  min-height: 48px;
 }
 
 .sales-hero__visual {
@@ -400,17 +450,12 @@
   object-position: center 42%;
 }
 
-.sales-section {
-  padding: clamp(4.35rem, 7.2vw, 7rem) 0;
-}
 
-@media (max-width: 767.98px) {
-  .sales-section {
-    padding: clamp(3.35rem, 12vw, 4.8rem) 0;
-  }
-}
+/* ─────────────────────────────────────────────
+   4. FONDOS DE SECCIÓN
+   ───────────────────────────────────────────── */
 
-/* Primera sección de contenido: equivalente visual a Categorías destacadas. */
+/* Primera sección de contenido */
 .sales-page > .sales-section:first-of-type {
   background:
     radial-gradient(ellipse at 24% 18%, rgba(246, 185, 53, 0.08), transparent 38%),
@@ -432,8 +477,17 @@
   opacity: 0.76;
 }
 
-/* Proceso: equivalente visual a Cómo funciona. */
+/* Pricing */
+.sales-section--pricing {
+  background:
+    linear-gradient(180deg, #120905 0%, #0f0703 50%, #120905 100%),
+    radial-gradient(ellipse at 72% 20%, rgba(216, 148, 37, 0.055), transparent 50%),
+    radial-gradient(ellipse at 22% 80%, rgba(154, 45, 27, 0.045), transparent 56%);
+}
+
+/* Process */
 .sales-section--process {
+  --process-ring: #120905;
   color: var(--text);
   background:
     linear-gradient(180deg, #120905 0%, #130a06 28%, #140a06 62%, #140a06 100%),
@@ -456,11 +510,41 @@
   opacity: 0.72;
 }
 
+/* CTA final */
+.sales-section--cta {
+  padding-bottom: clamp(4.5rem, 7vw, 7rem);
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(216, 148, 37, 0.055), transparent 62%),
+    radial-gradient(ellipse at 50% 0%, rgba(200, 58, 31, 0.035), transparent 44%),
+    linear-gradient(180deg, #120905 0%, #0d0705 100%);
+}
+
+.sales-section--cta::before {
+  background:
+    linear-gradient(180deg,
+      rgba(7, 6, 4, 0.56) 0%,
+      rgba(9, 7, 5, 0.30) 10%,
+      rgba(12, 8, 5, 0.12) 22%,
+      transparent 38%,
+      transparent 72%,
+      rgba(12, 8, 5, 0.18) 100%
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.026), transparent 52%);
+  opacity: 0.76;
+}
+
+
+/* ─────────────────────────────────────────────
+   5. SECTION HEADER — Usado solo en pricing
+   ───────────────────────────────────────────── */
+
 .sales-section__header {
   display: grid;
   gap: 0.45rem;
   max-width: 760px;
-  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
+  text-align: center;
+  margin-inline: auto;
+  margin-bottom: clamp(1.8rem, 3.2vw, 2.8rem);
 }
 
 .sales-section__header h2 {
@@ -471,86 +555,283 @@
   letter-spacing: -0.06em;
 }
 
-.sales-cta-card h2 {
-  color: var(--brand-cream-soft, #fff0cb);
+.sales-section__header .section-kicker {
+  border-color: rgba(216, 148, 37, 0.34);
+  box-shadow:
+    0 0 26px rgba(216, 148, 37, 0.18),
+    inset 0 1px 0 rgba(255, 214, 106, 0.10);
 }
 
-.sales-benefits {
+.sales-section__subtitle {
+  margin: 0;
+  color: rgba(241, 221, 178, 0.62);
+  font-size: clamp(0.95rem, 1.4vw, 1.06rem);
+  line-height: 1.55;
+  max-width: 58ch;
+}
+
+
+/* ─────────────────────────────────────────────
+   6. BENEFITS — Lista editorial en 2 columnas
+   ───────────────────────────────────────────── */
+
+.sales-benefits-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border: 1px solid rgba(216, 148, 37, 0.24);
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 16% 0%, rgba(216, 148, 37, 0.08), transparent 50%),
+    radial-gradient(ellipse at 84% 100%, rgba(200, 58, 31, 0.07), transparent 52%),
+    linear-gradient(180deg, rgba(26, 17, 9, 0.88) 0%, rgba(22, 13, 7, 0.82) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 240, 203, 0.045),
+    0 2px 18px rgba(3, 2, 1, 0.22);
+}
+
+/* Título integrado: ocupa ambas columnas */
+.sales-benefits-list__title {
+  grid-column: 1 / -1;
+  padding: clamp(1.4rem, 2.2vw, 1.9rem) clamp(1rem, 1.8vw, 1.6rem) clamp(1.1rem, 1.8vw, 1.5rem);
+  border-bottom: 1px solid rgba(216, 148, 37, 0.16);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.sales-benefits-list__title h2 {
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+  line-height: 0.97;
+  letter-spacing: -0.055em;
+  font-weight: 900;
+}
+
+.sales-benefit-item {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 1rem;
+  padding: clamp(1.4rem, 2.4vw, 2rem) clamp(1rem, 1.8vw, 1.6rem);
+  border-bottom: 1px solid rgba(216, 148, 37, 0.16);
+  transition: background 0.22s ease;
+}
+
+.sales-benefit-item:hover {
+  background: rgba(216, 148, 37, 0.028);
+}
+
+/* Sin borde inferior en los dos últimos items */
+.sales-benefit-item:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+/* Divisor vertical: el título es child 1, los items pares van a la columna izquierda */
+.sales-benefit-item:nth-child(even) {
+  border-right: 1px solid rgba(216, 148, 37, 0.16);
+}
+
+.sales-benefit-item__num {
+  grid-row: 1 / 3;
+  font-size: clamp(2rem, 2.8vw, 2.8rem);
+  font-weight: 900;
+  color: rgba(216, 148, 37, 0.48);
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  padding-top: 0.05rem;
+  user-select: none;
+}
+
+.sales-benefit-item h3 {
+  margin: 0 0 0.38rem;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(0.92rem, 1.3vw, 1.04rem);
+  font-weight: 800;
+  letter-spacing: -0.014em;
+  line-height: 1.2;
+  align-self: end;
+}
+
+.sales-benefit-item p {
+  margin: 0;
+  color: rgba(241, 221, 178, 0.6);
+  font-size: 0.87rem;
+  line-height: 1.62;
+}
+
+
+/* ─────────────────────────────────────────────
+   7. PRICING — Escalas de precio (mayorista)
+   ───────────────────────────────────────────── */
+
+.sales-pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.95rem;
+  gap: clamp(0.65rem, 1.4vw, 1rem);
+  margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
 }
 
-.sales-benefit-card,
-.sales-process-card {
-  border: 1px solid rgba(216, 148, 37, 0.12);
-  border-radius: 22px;
+.sales-pricing-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: clamp(1rem, 2vw, 1.5rem) clamp(0.9rem, 1.8vw, 1.3rem);
+  border: 1px solid rgba(216, 148, 37, 0.18);
+  border-radius: 20px;
   background:
-    radial-gradient(circle at 18% 0%, rgba(216, 148, 37, 0.034), transparent 42%),
-    linear-gradient(180deg, rgba(255, 240, 203, 0.016), rgba(0, 0, 0, 0.050)),
-    rgba(10, 8, 7, 0.82);
-  box-shadow:
-    0 16px 38px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 240, 203, 0.024);
+    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.06), transparent 60%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.030), rgba(0, 0, 0, 0.05)),
+    rgba(10, 8, 6, 0.65);
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.sales-benefit-card {
-  min-height: 210px;
-  padding: 1rem;
+.sales-pricing-card:hover {
+  border-color: rgba(216, 148, 37, 0.38);
+  transform: translateY(-2px);
 }
 
-.sales-benefit-card h3,
-.sales-process-card h3 {
-  margin: 0 0 0.55rem;
-  color: var(--brand-cream-soft, #fff0cb);
-  font-size: 1.08rem;
-  line-height: 1.18;
+.sales-pricing-card__label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(216, 148, 37, 0.85);
+  margin-bottom: 0.6rem;
 }
 
-.sales-benefit-card p,
-.sales-process-card p {
+.sales-pricing-card__range {
+  display: block;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 700;
+  color: rgba(241, 221, 178, 0.75);
+  line-height: 1.3;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(216, 148, 37, 0.12);
+}
+
+.sales-pricing-card__price {
+  display: block;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 900;
+  color: var(--cream, #f5ead4);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-top: auto;
+}
+
+.sales-pricing-note {
   margin: 0;
-  color: rgba(241, 221, 178, 0.69);
-  font-size: 0.92rem;
-  line-height: 1.58;
+  padding: clamp(0.75rem, 1.2vw, 0.9rem) clamp(0.9rem, 1.5vw, 1.1rem);
+  border: 1px solid rgba(241, 221, 178, 0.09);
+  border-radius: 12px;
+  background: rgba(255, 240, 203, 0.028);
+  color: rgba(241, 221, 178, 0.52);
+  font-size: 0.86rem;
+  line-height: 1.55;
 }
+
+
+/* ─────────────────────────────────────────────
+   8. PROCESS — Pasos horizontales conectados
+   ───────────────────────────────────────────── */
 
 .sales-process {
   display: grid;
-  gap: 1rem;
+  gap: 0;
 }
 
-.sales-process__steps {
+.sales-process__header {
+  margin-bottom: clamp(2rem, 3.6vw, 3rem);
+}
+
+.sales-process__header h2 {
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(1.7rem, 3vw, 2.7rem);
+  line-height: 0.97;
+  letter-spacing: -0.055em;
+  font-weight: 900;
+}
+
+.sales-process-track {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.95rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  position: relative;
 }
 
-.sales-process-card {
-  padding: 1rem;
+/* Línea de conexión horizontal */
+.sales-process-track::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 21px; /* mitad del círculo de 44px */
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 4%,
+    rgba(216, 148, 37, 0.22) 14%,
+    rgba(216, 148, 37, 0.22) 86%,
+    transparent 96%
+  );
+  pointer-events: none;
 }
 
-.sales-process-card span {
-  width: 38px;
-  height: 38px;
-  display: inline-grid;
-  place-items: center;
-  margin-bottom: 0.9rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand-gold-soft, #efb84e), var(--brand-gold, #d89425));
+.sales-process-step {
+  position: relative;
+  z-index: 1;
+}
+
+.sales-process-step__head {
+  margin-bottom: 1.25rem;
+}
+
+.sales-process-step__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(216, 148, 37, 0.92), rgba(239, 184, 78, 0.86));
   color: #120c07;
   font-size: 0.78rem;
   font-weight: 950;
-  box-shadow: 0 10px 24px rgba(216, 148, 37, 0.13);
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    0 8px 20px rgba(216, 148, 37, 0.28),
+    0 0 0 5px var(--process-ring, #120905);
 }
 
-.sales-section--cta {
-  padding-bottom: clamp(4.5rem, 7vw, 7rem);
-  background:
-    radial-gradient(ellipse at 50% 42%, rgba(216, 148, 37, 0.055), transparent 62%),
-    radial-gradient(ellipse at 50% 0%, rgba(200, 58, 31, 0.035), transparent 44%),
-    linear-gradient(180deg, #120905 0%, #0d0705 100%);
+.sales-process-step h3 {
+  margin: 0 0 0.42rem;
+  color: var(--brand-cream-soft, #fff0cb);
+  font-size: clamp(0.92rem, 1.3vw, 1.04rem);
+  font-weight: 800;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
 }
+
+.sales-process-step p {
+  margin: 0;
+  color: rgba(241, 221, 178, 0.6);
+  font-size: 0.87rem;
+  line-height: 1.62;
+}
+
+
+/* ─────────────────────────────────────────────
+   9. CTA FINAL
+   ───────────────────────────────────────────── */
 
 .sales-cta-card {
   display: grid;
@@ -564,6 +845,8 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+  position: relative;
+  overflow: visible;
 }
 
 .sales-cta-card::before {
@@ -581,10 +864,11 @@
   grid-column: 1;
   grid-row: 2;
   max-width: 680px;
+  margin: 0;
+  color: var(--brand-cream-soft, #fff0cb);
   font-size: clamp(1.9rem, 3.6vw, 3.2rem);
   line-height: 1.05;
   letter-spacing: -0.04em;
-  margin: 0;
   text-align: left;
 }
 
@@ -595,35 +879,12 @@
   white-space: nowrap;
 }
 
-@media (max-width: 767.98px) {
-  .sales-cta-card {
-    grid-template-columns: 1fr;
-    text-align: center;
-    justify-items: center;
-    row-gap: 1.4rem;
-  }
 
-  .sales-cta-card h2 {
-    grid-column: 1;
-    grid-row: auto;
-    text-align: center;
-  }
-
-  .sales-cta-card .btn {
-    grid-column: 1;
-    grid-row: auto;
-    width: 100%;
-    max-width: 360px;
-    white-space: normal;
-  }
-}
+/* ─────────────────────────────────────────────
+   10. RESPONSIVE
+   ───────────────────────────────────────────── */
 
 @media (max-width: 1180px) {
-  .sales-benefits,
-  .sales-process__steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .sales-hero__grid {
     grid-template-columns: minmax(0, 1fr) minmax(260px, 0.78fr);
   }
@@ -661,7 +922,118 @@
     justify-self: center;
     width: min(100%, 380px);
   }
+}
 
+@media (max-width: 767.98px) {
+  .sales-section {
+    padding: clamp(3.35rem, 12vw, 4.8rem) 0;
+  }
+
+  .sales-cta-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+    row-gap: 1.4rem;
+  }
+
+  .sales-cta-card h2 {
+    grid-column: 1;
+    grid-row: auto;
+    text-align: center;
+  }
+
+  .sales-cta-card .btn {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    max-width: 360px;
+    white-space: normal;
+  }
+}
+
+/* Process: mobile vertical */
+@media (max-width: 767px) {
+  .sales-process-track {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sales-process-track::before {
+    display: none;
+  }
+
+  .sales-process-step {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 1rem;
+    padding-bottom: clamp(1.5rem, 4vw, 2rem);
+    position: relative;
+  }
+
+  /* Línea vertical conectora */
+  .sales-process-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: 44px;
+    left: 21px;
+    width: 1px;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(216, 148, 37, 0.25),
+      rgba(216, 148, 37, 0.04)
+    );
+  }
+
+  .sales-process-step__head {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    margin-bottom: 0;
+    align-self: start;
+  }
+
+  .sales-process-step h3 {
+    grid-column: 2;
+    align-self: center;
+    margin-top: 0.15rem;
+  }
+
+  .sales-process-step p {
+    grid-column: 2;
+  }
+}
+
+/* Pricing: 2 cols en tablet, 1 col en mobile pequeño */
+@media (max-width: 900px) {
+  .sales-pricing-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .sales-pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Benefits: 1 col en mobile */
+@media (max-width: 600px) {
+  .sales-benefits-list {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-benefit-item:nth-child(even) {
+    border-right: none;
+  }
+
+  .sales-benefit-item:nth-last-child(-n+2) {
+    border-bottom: 1px solid rgba(216, 148, 37, 0.16);
+  }
+
+  .sales-benefit-item:last-child {
+    border-bottom: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -726,15 +1098,6 @@
     border-radius: calc(24px - 8px);
   }
 
-  .sales-benefits,
-  .sales-process__steps {
-    grid-template-columns: 1fr;
-  }
-
-  .sales-benefit-card {
-    min-height: auto;
-  }
-
   .sales-section__header h2 {
     font-size: clamp(2rem, 12vw, 3rem);
   }
@@ -744,177 +1107,20 @@
   }
 }
 
+
+/* ─────────────────────────────────────────────
+   11. ACCESIBILIDAD
+   ───────────────────────────────────────────── */
+
 @media (prefers-reduced-motion: reduce) {
   .personalizados-mayorista-card__link::before,
   .sales-hero__visual::before {
     animation: none;
   }
-}
 
-/* =========================================================
-   ETAPA UX · Personalizados / Mayorista — pulido visual
-   Benefit cards, process cards, CTA y hero copy.
-   ========================================================= */
-
-/* Hero: highlight (span) explícitamente dorado */
-.sales-hero__copy h1 span {
-  color: var(--brand-gold-soft, #efb84e);
-  display: inline;
-}
-
-/* Hero actions: botón primario más alto para jerarquía clara */
-.sales-hero__actions .btn-primary {
-  min-height: 52px;
-  font-size: 1rem;
-  box-shadow:
-    0 10px 28px rgba(216, 148, 37, 0.28),
-    0 3px 10px rgba(3, 2, 1, 0.32);
-}
-
-.sales-hero__actions .btn-secondary {
-  min-height: 48px;
-}
-
-/* Benefit cards: borde izquierdo dorado + título dorado + hover */
-.sales-benefit-card {
-  position: relative;
-  padding: clamp(1.1rem, 1.8vw, 1.4rem) clamp(1.1rem, 1.8vw, 1.4rem) clamp(1.1rem, 1.8vw, 1.4rem) calc(clamp(1.1rem, 1.8vw, 1.4rem) + 3px);
-  border-left: 3px solid rgba(216, 148, 37, 0.38);
-  transition:
-    transform 0.32s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow 0.32s ease,
-    border-color 0.26s ease;
-}
-
-.sales-benefit-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(216, 148, 37, 0.24);
-  border-left-color: rgba(216, 148, 37, 0.65);
-  box-shadow:
-    0 24px 56px rgba(0, 0, 0, 0.48),
-    0 0 28px rgba(216, 148, 37, 0.08),
-    inset 0 1px 0 rgba(255, 240, 203, 0.042);
-}
-
-.sales-benefit-card h3 {
-  color: var(--brand-cream-soft, #fff0cb);
-  font-size: 1.18rem;
-  font-weight: 800;
-  letter-spacing: -0.018em;
-  line-height: 1.1;
-}
-
-.sales-benefit-card p {
-  color: rgba(241, 221, 178, 0.72);
-}
-
-/* Process cards: número más grande + borde superior dorado + hover */
-.sales-process-card {
-  position: relative;
-  padding: clamp(1.1rem, 1.8vw, 1.35rem);
-  border-top: 2px solid rgba(216, 148, 37, 0.24);
-  transition:
-    transform 0.32s var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)),
-    box-shadow 0.32s ease,
-    border-color 0.26s ease;
-}
-
-.sales-process-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(216, 148, 37, 0.24);
-  border-top-color: rgba(216, 148, 37, 0.55);
-  box-shadow:
-    0 24px 56px rgba(0, 0, 0, 0.48),
-    inset 0 1px 0 rgba(255, 240, 203, 0.038);
-}
-
-.sales-process-card span {
-  width: 46px;
-  height: 46px;
-  margin-bottom: 1rem;
-  font-size: 0.84rem;
-  font-weight: 950;
-  border-radius: 14px;
-  box-shadow:
-    0 12px 28px rgba(216, 148, 37, 0.28),
-    0 0 20px rgba(216, 148, 37, 0.12);
-}
-
-.sales-process-card h3 {
-  color: var(--brand-cream-soft, #fff0cb);
-  letter-spacing: -0.008em;
-}
-
-/* CTA card: open layout, sin caja */
-.sales-cta-card {
-  position: relative;
-  overflow: visible;
-}
-
-/* Section header: section-kicker dorado más vivo en página de ventas */
-.sales-section__header .section-kicker {
-  border-color: rgba(216, 148, 37, 0.34);
-  box-shadow:
-    0 0 26px rgba(216, 148, 37, 0.18),
-    inset 0 1px 0 rgba(255, 214, 106, 0.10);
-}
-
-/* Separador entre secciones — más visible */
-.sales-page .sales-section + .sales-section {
-  border-top: 1px solid rgba(216, 148, 37, 0.11);
-}
-
-/* Inset shadow en todas las sections (igual que landing) */
-.sales-section {
-  box-shadow: inset 0 1px 0 rgba(241, 221, 178, 0.022), inset 0 -1px 0 rgba(216, 148, 37, 0.032);
-}
-
-/* Vignette superior/inferior para section--cta (las demás ya la tienen) */
-.sales-section--cta::before {
-  background:
-    linear-gradient(180deg,
-      rgba(7, 6, 4, 0.56) 0%,
-      rgba(9, 7, 5, 0.30) 10%,
-      rgba(12, 8, 5, 0.12) 22%,
-      transparent 38%,
-      transparent 72%,
-      rgba(12, 8, 5, 0.18) 100%
-    ),
-    radial-gradient(ellipse at 50% 0%, rgba(216, 148, 37, 0.026), transparent 52%);
-  opacity: 0.76;
-}
-
-/* Section header: centrado + más respiración (igual que sección-header de landing) */
-.sales-section__header {
-  text-align: center;
-  margin-inline: auto;
-  margin-bottom: clamp(1.8rem, 3.2vw, 2.8rem);
-}
-
-/* Hero: sombra descendente para que la transición hacia la primera sección sea suave */
-.sales-hero {
-  box-shadow: inset 0 -1px 0 rgba(216, 148, 37, 0.08), 0 18px 52px rgba(3, 2, 1, 0.28);
-}
-
-/* Mobile 480–639: benefits y steps en 2 columnas */
-@media (min-width: 480px) and (max-width: 639.98px) {
-  .sales-benefits,
-  .sales-process__steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .sales-benefit-item,
+  .sales-process-step,
+  .sales-pricing-card {
+    transition: none;
   }
 }
-
-/* prefers-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  .sales-benefit-card,
-  .sales-process-card {
-    transition-duration: 0.01ms;
-  }
-
-  .sales-benefit-card:hover,
-  .sales-process-card:hover {
-    transform: none;
-  }
-}
-
-/* ========== FIN ETAPA UX · Personalizados / Mayorista ========== */

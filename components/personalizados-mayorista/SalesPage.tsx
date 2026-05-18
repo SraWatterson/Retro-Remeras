@@ -3,16 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-type Benefit = {
-  title: string;
-  text: string;
-};
-
-type ProcessStep = {
-  title: string;
-  text: string;
-};
+import type { PricingTier, SalesItem } from '@/lib/site-content-defaults';
 
 type SalesPageProps = {
   eyebrow: string;
@@ -25,16 +16,22 @@ type SalesPageProps = {
   secondaryHref?: string;
   image: string;
   imageAlt: string;
+  benefitsKicker?: string;
   benefitsTitle: string;
-  benefits: Benefit[];
+  benefits: SalesItem[];
+  pricingEnabled?: boolean;
+  pricingTitle?: string;
+  pricingSubtitle?: string;
+  pricingNote?: string;
+  pricingTiers?: PricingTier[];
   processTitle: string;
-  process: ProcessStep[];
+  process: SalesItem[];
   noteTitle: string;
   noteText: string;
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 };
 
@@ -49,8 +46,14 @@ export function SalesPage({
   secondaryHref = '/catalogo',
   image,
   imageAlt,
+  benefitsKicker,
   benefitsTitle,
   benefits,
+  pricingEnabled = false,
+  pricingTitle = '',
+  pricingSubtitle = '',
+  pricingNote = '',
+  pricingTiers = [],
   processTitle,
   process,
   noteTitle,
@@ -101,42 +104,94 @@ export function SalesPage({
       <section className="sales-section">
         <div className="container">
           <motion.div
-            className="sales-section__header"
+            className="sales-benefits-list"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
-            variants={fadeUp}
-            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
           >
-            <h2>{benefitsTitle}</h2>
-          </motion.div>
+            <motion.div
+              className="sales-benefits-list__title"
+              variants={fadeUp}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {benefitsKicker ? <span className="section-kicker">{benefitsKicker}</span> : null}
+              <h2>{benefitsTitle}</h2>
+            </motion.div>
 
-          <motion.div
-            className="sales-benefits"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-          >
-            {benefits.map((benefit) => (
-              <motion.article
-                className="sales-benefit-card"
+            {benefits.map((benefit, index) => (
+              <motion.div
+                className="sales-benefit-item"
                 variants={fadeUp}
-                transition={{ duration: 0.54, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
                 key={benefit.title}
               >
+                <span className="sales-benefit-item__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
                 <h3>{benefit.title}</h3>
                 <p>{benefit.text}</p>
-              </motion.article>
+              </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
+      {pricingEnabled && pricingTiers.filter((t) => t.active).length > 0 ? (
+        <section className="sales-section sales-section--pricing">
+          <div className="container">
+            <motion.div
+              className="sales-section__header"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-80px' }}
+              variants={fadeUp}
+              transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {pricingTitle ? <h2>{pricingTitle}</h2> : null}
+              {pricingSubtitle ? <p className="sales-section__subtitle">{pricingSubtitle}</p> : null}
+            </motion.div>
+
+            <motion.div
+              className="sales-pricing-grid"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-80px' }}
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+            >
+              {pricingTiers.filter((t) => t.active).map((tier) => (
+                <motion.div
+                  key={tier.id}
+                  className="sales-pricing-card"
+                  variants={fadeUp}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="sales-pricing-card__label">{tier.label}</span>
+                  <span className="sales-pricing-card__range">{tier.range}</span>
+                  <span className="sales-pricing-card__price">{tier.price}</span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {pricingNote ? (
+              <motion.p
+                className="sales-pricing-note"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {pricingNote}
+              </motion.p>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       <section className="sales-section sales-section--process">
         <div className="container sales-process">
           <motion.div
-            className="sales-section__header"
+            className="sales-process__header"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-80px' }}
@@ -146,23 +201,30 @@ export function SalesPage({
             <h2>{processTitle}</h2>
           </motion.div>
 
-          <div className="sales-process__steps">
+          <motion.div
+            className="sales-process-track"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-80px' }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }}
+          >
             {process.map((step, index) => (
-              <motion.article
-                className="sales-process-card"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-80px' }}
+              <motion.div
+                className="sales-process-step"
                 variants={fadeUp}
-                transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1], delay: index * 0.04 }}
+                transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
                 key={step.title}
               >
-                <span>{String(index + 1).padStart(2, '0')}</span>
+                <div className="sales-process-step__head">
+                  <span className="sales-process-step__num" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
-              </motion.article>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

@@ -1203,7 +1203,8 @@
 .admin-section-content > .admin-form-panel,
 .admin-section-content > .admin-list-panel,
 .admin-section-content > .admin-category-manager,
-.admin-section-content > .admin-audit-panel {
+.admin-section-content > .admin-audit-panel,
+.admin-section-content > .admin-sales-editor {
   width: 100%;
 }
 
@@ -2358,5 +2359,163 @@
 
   .field-row {
     flex-direction: column;
+  }
+}
+
+/* =========================================================
+   Sales Page Editor (Personalizados / Mayorista)
+   ========================================================= */
+
+.admin-sales-editor {
+  display: grid;
+  gap: 1.4rem;
+  padding: clamp(1rem, 1.8vw, 1.35rem);
+  border: 1px solid rgba(216, 148, 37, 0.12);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(216, 148, 37, 0.030), transparent 42%),
+    linear-gradient(180deg, rgba(255, 240, 203, 0.018), rgba(0, 0, 0, 0.050)),
+    rgba(10, 8, 7, 0.90);
+  box-shadow:
+    0 18px 42px rgba(3, 3, 2, 0.34),
+    inset 0 1px 0 rgba(255, 240, 203, 0.024);
+}
+
+.admin-fieldset {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(0.9rem, 1.5vw, 1.1rem);
+  border: 1px solid rgba(216, 148, 37, 0.11);
+  border-radius: 18px;
+  background: rgba(255, 240, 203, 0.016);
+}
+
+.admin-fieldset legend {
+  padding: 0 0.5rem;
+  color: rgba(216, 148, 37, 0.9);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.admin-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.admin-image-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.admin-image-preview {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.admin-image-preview__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-items-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.admin-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.7rem;
+  border: 1px solid rgba(216, 148, 37, 0.10);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.admin-item-index {
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  margin-top: 0.55rem;
+  border-radius: 999px;
+  background: rgba(216, 148, 37, 0.15);
+  color: rgba(216, 148, 37, 0.9);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.admin-item-fields {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.admin-item-remove {
+  flex: 0 0 auto;
+  min-height: 34px;
+  min-width: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.admin-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.admin-pricing-toggle {
+  margin-bottom: 0.25rem;
+}
+
+.admin-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: rgba(241, 221, 178, 0.8);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-toggle-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #d89425;
+  cursor: pointer;
+}
+
+.admin-pricing-tier-fields {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .admin-pricing-tier-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sales-editor .admin-form-actions--top .btn {
+    width: 100%;
   }
 }

@@ -8,6 +8,11 @@ import { getSiteContent } from '@/lib/site-content';
 export const metadata: Metadata = {
   title: 'Mayorista | Retro Remeras',
   description: 'Producción mayorista de remeras para empresas, eventos, institutos, emprendimientos y revendedores.',
+  openGraph: {
+    title: 'Mayorista | Retro Remeras',
+    description: 'Producción mayorista de remeras para empresas, eventos, institutos, emprendimientos y revendedores.',
+    images: [{ url: '/assets/pets/Postales_1_5.png', width: 1100, height: 1320, alt: 'Producción mayorista Retro Remeras' }],
+  },
 };
 
 export const revalidate = 60;
@@ -32,8 +37,14 @@ export default async function MayoristaPage() {
         secondaryHref={c.secondaryHref}
         image={c.image}
         imageAlt={c.imageAlt}
+        benefitsKicker={c.benefitsKicker}
         benefitsTitle={c.benefitsTitle}
         benefits={c.benefits}
+        pricingEnabled={c.pricingEnabled}
+        pricingTitle={c.pricingTitle}
+        pricingSubtitle={c.pricingSubtitle}
+        pricingNote={c.pricingNote}
+        pricingTiers={c.pricingTiers}
         processTitle={c.processTitle}
         process={c.process}
         noteTitle={c.noteTitle}

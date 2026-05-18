@@ -115,7 +115,6 @@
 /* ── Tipografía ── */
 .cart-summary h2 {
   font-size: clamp(1.45rem, 2.2vw, 1.8rem);
-  color: var(--brand-cream-soft);
   margin-bottom: 1rem;
 }
 
@@ -550,6 +549,7 @@
 
   .cart-summary {
     position: static;
+    order: -1; /* summary before item list on mobile */
   }
 
   .cart-layout--empty .cart-empty-state--rich {
@@ -584,20 +584,49 @@
     border-radius: 14px;
   }
 
-  .cart-item-head,
-  .cart-item-actions {
+  .cart-item-head {
     align-items: flex-start;
-    flex-direction: column;
+    flex-direction: row; /* keep name + price inline */
+    gap: 0.6rem;
   }
 
-  .cart-item-subtotal {
-    text-align: left;
+  .cart-item-actions {
+    align-items: center;
+    flex-direction: row; /* keep qty + remove button inline */
+    gap: 0.6rem;
   }
 
-  .cart-remove-btn,
+  /* Meta as compact chips */
+  .cart-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .cart-item-meta li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.78rem;
+    background: rgba(216, 148, 37, 0.07);
+    border: 1px solid rgba(216, 148, 37, 0.12);
+    border-radius: 999px;
+    padding: 0.14rem 0.5rem;
+  }
+
+  .cart-item-meta li span {
+    display: none; /* hide labels on mobile — value is self-explanatory */
+  }
+
+  .cart-remove-btn {
+    width: auto;
+    padding: 0.4rem 0.85rem;
+    min-height: 34px;
+    font-size: 0.78rem;
+  }
+
   .qty-control {
-    width: 100%;
-    justify-content: center;
+    width: auto;
   }
 
   .cart-summary h2 {
@@ -621,13 +650,14 @@
 
 @media (max-width: 479.98px) {
   .cart-item-body {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 0.65rem;
   }
 
   .cart-item-thumb {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 0.78;
+    width: 68px;
+    height: 68px;
+    border-radius: 12px;
   }
 }
 

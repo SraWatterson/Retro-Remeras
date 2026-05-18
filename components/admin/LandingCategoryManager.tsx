@@ -52,28 +52,38 @@ export function LandingCategoryManager({ initialCategories }: Props) {
     fd.append('context', context);
     const res = await fetch('/api/uploads', { method: 'POST', body: fd });
     if (!res.ok) return null;
-    const data = await res.json() as { url: string };
-    return data.url;
+    const data = await res.json() as { path?: string; url?: string };
+    return data.path ?? data.url ?? null;
   }
 
   async function handleNewImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingFor('new');
-    const url = await uploadImage(file, 'categories');
-    if (url) setDraft((prev) => ({ ...prev, image: url }));
-    setUploadingFor(null);
-    e.target.value = '';
+    try {
+      const url = await uploadImage(file, 'categories');
+      if (url) setDraft((prev) => ({ ...prev, image: url }));
+    } catch {
+      setError('No se pudo subir la imagen. Intentá de nuevo.');
+    } finally {
+      setUploadingFor(null);
+      e.target.value = '';
+    }
   }
 
   async function handleEditImageChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !editingId) return;
     setUploadingFor(editingId);
-    const url = await uploadImage(file, 'categories');
-    if (url) setEditDraft((prev) => ({ ...prev, image: url }));
-    setUploadingFor(null);
-    e.target.value = '';
+    try {
+      const url = await uploadImage(file, 'categories');
+      if (url) setEditDraft((prev) => ({ ...prev, image: url }));
+    } catch {
+      setError('No se pudo subir la imagen. Intentá de nuevo.');
+    } finally {
+      setUploadingFor(null);
+      e.target.value = '';
+    }
   }
 
   async function handleCreate(e: FormEvent) {

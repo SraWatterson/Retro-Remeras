@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import type { SalesItem, SalesPageContent } from '@/lib/site-content-defaults';
+import type { PricingTier, SalesItem, SalesPageContent } from '@/lib/site-content-defaults';
 import { DEFAULT_MAYORISTA, DEFAULT_PERSONALIZADOS } from '@/lib/site-content-defaults';
 
 type Props = {
@@ -113,6 +113,31 @@ export function SalesPageEditor({ page }: Props) {
     }));
   }
 
+  function patchTier(index: number, patch: Partial<PricingTier>) {
+    setForm((prev) => {
+      const tiers = [...prev.pricingTiers];
+      tiers[index] = { ...tiers[index], ...patch };
+      return { ...prev, pricingTiers: tiers };
+    });
+  }
+
+  function addTier() {
+    setForm((prev) => ({
+      ...prev,
+      pricingTiers: [
+        ...prev.pricingTiers,
+        { id: `tier-${Date.now()}`, label: '', range: '', price: 'Consultar', active: true },
+      ],
+    }));
+  }
+
+  function removeTier(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      pricingTiers: prev.pricingTiers.filter((_, i) => i !== index),
+    }));
+  }
+
   const disabled = loading || saving || uploading;
 
   return (
@@ -192,9 +217,15 @@ export function SalesPageEditor({ page }: Props) {
           {/* Beneficios */}
           <fieldset className="admin-fieldset">
             <legend>Beneficios</legend>
-            <div className="form-group">
-              <label className="form-label">Título de la sección</label>
-              <input className="input" value={form.benefitsTitle} onChange={(e) => setForm((p) => ({ ...p, benefitsTitle: e.target.value }))} maxLength={100} required />
+            <div className="admin-field-grid">
+              <div className="form-group">
+                <label className="form-label">Kicker (opcional)</label>
+                <input className="input" value={form.benefitsKicker ?? ''} onChange={(e) => setForm((p) => ({ ...p, benefitsKicker: e.target.value || undefined }))} maxLength={60} placeholder="ej: Sin complicaciones" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Título de la sección</label>
+                <input className="input" value={form.benefitsTitle} onChange={(e) => setForm((p) => ({ ...p, benefitsTitle: e.target.value }))} maxLength={100} required />
+              </div>
             </div>
             <div className="admin-items-list">
               {form.benefits.map((item, idx) => (
@@ -212,6 +243,61 @@ export function SalesPageEditor({ page }: Props) {
               <button type="button" className="btn btn-secondary" style={{ fontSize: '0.82rem', marginTop: '0.5rem' }} onClick={() => addItem('benefits')}>+ Agregar beneficio</button>
             ) : null}
           </fieldset>
+
+          {/* Precios — solo mayorista */}
+          {page === 'mayorista' ? (
+            <fieldset className="admin-fieldset">
+              <legend>Escalas de precio</legend>
+              <div className="admin-pricing-toggle">
+                <label className="admin-toggle-label">
+                  <input
+                    type="checkbox"
+                    checked={form.pricingEnabled}
+                    onChange={(e) => setForm((p) => ({ ...p, pricingEnabled: e.target.checked }))}
+                  />
+                  Mostrar sección de precios en la página
+                </label>
+              </div>
+              {form.pricingEnabled ? (
+                <>
+                  <div className="admin-field-grid">
+                    <div className="form-group">
+                      <label className="form-label">Título de la sección</label>
+                      <input className="input" value={form.pricingTitle} onChange={(e) => setForm((p) => ({ ...p, pricingTitle: e.target.value }))} maxLength={100} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Subtítulo</label>
+                      <input className="input" value={form.pricingSubtitle} onChange={(e) => setForm((p) => ({ ...p, pricingSubtitle: e.target.value }))} maxLength={200} />
+                    </div>
+                  </div>
+                  <div className="admin-items-list" style={{ marginTop: '0.5rem' }}>
+                    {form.pricingTiers.map((tier, idx) => (
+                      <div key={tier.id} className="admin-item-row">
+                        <span className="admin-item-index">{idx + 1}</span>
+                        <div className="admin-pricing-tier-fields">
+                          <input className="input" value={tier.label} onChange={(e) => patchTier(idx, { label: e.target.value })} placeholder="Etiqueta (ej: Arranque)" maxLength={40} />
+                          <input className="input" value={tier.range} onChange={(e) => patchTier(idx, { range: e.target.value })} placeholder="Rango (ej: 12 – 24 unidades)" maxLength={60} />
+                          <input className="input" value={tier.price} onChange={(e) => patchTier(idx, { price: e.target.value })} placeholder="Precio (ej: $XXXX o Consultar)" maxLength={60} />
+                          <label className="admin-toggle-label" style={{ fontSize: '0.8rem' }}>
+                            <input type="checkbox" checked={tier.active} onChange={(e) => patchTier(idx, { active: e.target.checked })} />
+                            Visible
+                          </label>
+                        </div>
+                        <button type="button" className="btn btn-danger admin-item-remove" onClick={() => removeTier(idx)} disabled={form.pricingTiers.length <= 1} title="Eliminar">✕</button>
+                      </div>
+                    ))}
+                  </div>
+                  {form.pricingTiers.length < 8 ? (
+                    <button type="button" className="btn btn-secondary" style={{ fontSize: '0.82rem', marginTop: '0.5rem' }} onClick={addTier}>+ Agregar escala</button>
+                  ) : null}
+                  <div className="form-group" style={{ marginTop: '0.75rem' }}>
+                    <label className="form-label">Nota al pie</label>
+                    <textarea className="input" rows={2} value={form.pricingNote} onChange={(e) => setForm((p) => ({ ...p, pricingNote: e.target.value }))} maxLength={300} placeholder="Aclaración sobre los precios…" />
+                  </div>
+                </>
+              ) : null}
+            </fieldset>
+          ) : null}
 
           {/* Proceso */}
           <fieldset className="admin-fieldset">
