@@ -9,18 +9,18 @@ import { getPublicProducts } from '@/lib/product-queries';
 import { getSiteContent } from '@/lib/site-content';
 
 export const metadata: Metadata = {
-  title: 'Catálogo | Retro Remeras',
+  title: 'Productos | Retro Remeras',
   description: 'Diseños de anime, gaming, cine y más. Remeras con estampado DTF de alta definición — envíos a todo el país.',
   openGraph: {
-    title: 'Catálogo | Retro Remeras',
+    title: 'Productos | Retro Remeras',
     description: 'Diseños de anime, gaming, cine y más. Remeras con estampado DTF de alta definición — envíos a todo el país.',
-    images: [{ url: '/assets/img/remera-goku.jpg', width: 1100, height: 1320, alt: 'Catálogo Retro Remeras' }],
+    images: [{ url: '/assets/img/remera-goku.jpg', width: 1100, height: 1320, alt: 'Productos Retro Remeras' }],
   },
 };
 
 export const revalidate = 60;
 type PageProps = {
-  searchParams: Promise<{ categoria?: string }>; 
+  searchParams: Promise<{ categoria?: string }>;
 };
 
 export default async function Page({ searchParams }: PageProps) {

@@ -103,7 +103,7 @@ export function SiteContentEditor({
           </label>
           <label>
             Link opcional
-            <input className="input" placeholder="/catalogo o vacío" value={form.promoHref} disabled={disabled} onChange={(event) => onChange({ promoHref: event.target.value })} />
+            <input className="input" placeholder="/productos o vacío" value={form.promoHref} disabled={disabled} onChange={(event) => onChange({ promoHref: event.target.value })} />
             {errors.promoHref ? <span className="form-error">{errors.promoHref}</span> : null}
           </label>
         </div>
@@ -151,7 +151,7 @@ export function SiteContentEditor({
         <div className="admin-content-section-head">
           <div>
             <h3>Botones del Hero</h3>
-            <p className="admin-help">Usá links internos como /catalogo, /carrito o anclas como #como-comprar.</p>
+            <p className="admin-help">Usá links internos como /productos, /personalizados o anclas como #como-comprar.</p>
           </div>
         </div>
 

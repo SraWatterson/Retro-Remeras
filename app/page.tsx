@@ -38,7 +38,7 @@ export default async function Page() {
       <SiteHeader active="inicio" />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LD_LOCAL_BUSINESS) }} />
-      <main id="main-content" className="home-page">
+      <main className="home-page">
         <HeroSection content={siteContent} />
         <div className="hero-stats-wrap" aria-label="Puntos clave">
           <div className="hero-stats container">

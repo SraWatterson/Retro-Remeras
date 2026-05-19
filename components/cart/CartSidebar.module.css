@@ -9,9 +9,9 @@
   position: fixed;
   inset: 0;
   z-index: 9990;
-  background: rgba(0, 0, 0, 0.54);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: rgba(10, 4, 0, 0.78);
+  backdrop-filter: blur(1px) saturate(60%);
+  -webkit-backdrop-filter: blur(1px) saturate(60%);
   cursor: pointer;
 }
 
@@ -26,8 +26,8 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(circle at 20% 0%, rgba(246, 185, 53, 0.07), transparent 38%),
-    linear-gradient(180deg, #0f0c09 0%, #0a0806 100%);
+    radial-gradient(circle at 20% 0%, rgba(246, 185, 53, 0.09), transparent 38%),
+    linear-gradient(180deg, #2a1b10 0%, #1e1209 100%);
   border-left: 1px solid rgba(216, 148, 37, 0.18);
   box-shadow:
     -16px 0 56px rgba(0, 0, 0, 0.60),
@@ -39,8 +39,8 @@
 @media (max-width: 767.98px) {
   .overlay {
     /* redundante cuando el drawer es full-screen, pero mantiene el blur del fondo si hay contenido detrás */
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px) saturate(60%);
+    -webkit-backdrop-filter: blur(2px) saturate(60%);
   }
 
   .drawer {
@@ -123,33 +123,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
-  border: 1px solid rgba(216, 148, 37, 0.18);
-  background: rgba(9, 8, 7, 0.60);
-  color: rgba(241, 221, 178, 0.72);
+  border: none;
+  background: transparent;
+  color: rgba(241, 221, 178, 0.55);
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-}
-
-/* Touch target mayor en mobile (44px mínimo WCAG) */
-@media (max-width: 767.98px) {
-  .closeBtn {
-    width: 44px;
-    height: 44px;
-  }
+  transition: color 0.18s ease, background 0.18s ease;
 }
 
 .closeBtn:hover,
 .closeBtn:focus-visible {
-  background: rgba(246, 185, 53, 0.10);
-  border-color: rgba(216, 148, 37, 0.32);
-  color: rgba(255, 240, 200, 1);
+  background: rgba(255, 240, 203, 0.055);
+  color: rgba(241, 221, 178, 0.92);
 }
 
 .closeBtn:focus-visible {
-  outline: 2px solid rgba(216, 148, 37, 0.72);
+  outline: 2px solid rgba(216, 148, 37, 0.56);
   outline-offset: 2px;
 }
 
@@ -496,6 +487,79 @@
   color: #efb84e;
 }
 
+/* ── Clear all ── */
+.clearAllBtn {
+  background: transparent;
+  border: none;
+  color: rgba(220, 80, 70, 0.58);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.2rem;
+  text-align: center;
+  width: 100%;
+  transition: color 0.18s ease;
+}
+
+.clearAllBtn:hover,
+.clearAllBtn:focus-visible {
+  color: #e24b45;
+}
+
+.clearAllBtn:focus-visible {
+  outline: 2px solid rgba(200, 47, 47, 0.50);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.clearConfirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.clearConfirmLabel {
+  font-size: 0.75rem;
+  color: rgba(241, 221, 178, 0.65);
+  white-space: nowrap;
+}
+
+.clearConfirmYes,
+.clearConfirmNo {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.22rem 0.7rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.clearConfirmYes {
+  color: #e24b45;
+  background: rgba(184, 40, 40, 0.10);
+  border: 1px solid rgba(184, 40, 40, 0.22);
+}
+
+.clearConfirmYes:hover {
+  background: rgba(184, 40, 40, 0.20);
+  border-color: rgba(184, 40, 40, 0.38);
+}
+
+.clearConfirmNo {
+  color: rgba(241, 221, 178, 0.58);
+  background: transparent;
+  border: 1px solid rgba(255, 240, 203, 0.12);
+}
+
+.clearConfirmNo:hover {
+  color: rgba(241, 221, 178, 0.85);
+  border-color: rgba(255, 240, 203, 0.22);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .closeBtn,
   .item,
@@ -503,7 +567,10 @@
   .removeBtn,
   .whatsappBtn,
   .continueBtn,
-  .emptyStateCta {
+  .emptyStateCta,
+  .clearAllBtn,
+  .clearConfirmYes,
+  .clearConfirmNo {
     transition: none;
   }
 }

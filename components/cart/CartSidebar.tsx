@@ -3,11 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import {
   type CartItem,
   cartChangeQuantity,
+  cartClear,
   cartGetItemsCount,
   cartGetTotal,
   cartLoad,
@@ -32,7 +33,9 @@ export function openCartSidebar() {
 export function CartSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [items, setItems] = useState<CartItem[]>([]);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const drawerRef = useRef<HTMLElement>(null);
 
   const hasItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
@@ -63,6 +66,28 @@ export function CartSidebar() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+    const focusable = Array.from(
+      drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+    );
+    focusable[0]?.focus();
+    function trapTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab' || !focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+    drawer.addEventListener('keydown', trapTab);
+    return () => drawer.removeEventListener('keydown', trapTab);
+  }, [isOpen]);
+
   function updateCart(next: CartItem[]) {
     setItems(next);
     cartSave(next);
@@ -70,6 +95,14 @@ export function CartSidebar() {
 
   function close() {
     setIsOpen(false);
+    setShowClearConfirm(false);
+  }
+
+  function confirmClear() {
+    const next = cartClear();
+    setItems(next);
+    cartSave(next);
+    setShowClearConfirm(false);
   }
 
   const slideTransition = prefersReducedMotion
@@ -91,6 +124,7 @@ export function CartSidebar() {
           />
 
           <motion.aside
+            ref={drawerRef}
             className={styles.drawer}
             role="dialog"
             aria-label="Tu pedido"
@@ -133,14 +167,23 @@ export function CartSidebar() {
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                   </svg>
                   <p>Todavía no agregaste nada al pedido</p>
-                  <Link href="/catalogo" className={styles.emptyStateCta} onClick={close}>
-                    Ver catálogo
+                  <Link href="/productos" className={styles.emptyStateCta} onClick={close}>
+                    Ver productos
                   </Link>
                 </div>
               ) : (
                 <ul className={styles.itemList}>
+                  <AnimatePresence initial={false}>
                   {items.map((item) => (
-                    <li key={item.id} className={styles.item}>
+                    <motion.li
+                      key={item.id}
+                      className={styles.item}
+                      layout
+                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24, transition: { duration: 0.18 } }}
+                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                    >
                       <div className={styles.itemThumb}>
                         <Image
                           src={item.image}
@@ -187,8 +230,9 @@ export function CartSidebar() {
                           </button>
                         </div>
                       </div>
-                    </li>
+                    </motion.li>
                   ))}
+                  </AnimatePresence>
                 </ul>
               )}
             </div>
@@ -212,6 +256,21 @@ export function CartSidebar() {
                 <button type="button" className={styles.continueBtn} onClick={close}>
                   Seguir viendo diseños
                 </button>
+                {showClearConfirm ? (
+                  <div className={styles.clearConfirm} role="group" aria-label="Confirmar vaciado">
+                    <span className={styles.clearConfirmLabel}>¿Vaciar todo el pedido?</span>
+                    <button type="button" className={styles.clearConfirmYes} onClick={confirmClear}>
+                      Sí, vaciar
+                    </button>
+                    <button type="button" className={styles.clearConfirmNo} onClick={() => setShowClearConfirm(false)}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button type="button" className={styles.clearAllBtn} onClick={() => setShowClearConfirm(true)}>
+                    Vaciar pedido
+                  </button>
+                )}
               </div>
             )}
           </motion.aside>

@@ -78,11 +78,9 @@ export function ProductView({ product }: Props) {
   const [selectedColor, setSelectedColor] = useState(firstColor?.colorSlug || '');
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedFit, setSelectedFit] = useState<FitKey>('regular');
-  const [colorDropdownOpen, setColorDropdownOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const colorDropdownRef = useRef<HTMLDivElement>(null);
   const sizeGuideDialogRef = useRef<HTMLDialogElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [items, setItems] = useState<CartItem[]>([]);
@@ -101,17 +99,6 @@ export function ProductView({ product }: Props) {
     const stillAvailable = availableColors.some((c) => c.colorSlug === selectedColor);
     if (!stillAvailable) setSelectedColor(availableColors[0].colorSlug);
   }, [availableColors, selectedColor]);
-
-  useEffect(() => {
-    if (!colorDropdownOpen) return;
-    function onClickOutside(e: MouseEvent) {
-      if (colorDropdownRef.current && !colorDropdownRef.current.contains(e.target as Node)) {
-        setColorDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
-  }, [colorDropdownOpen]);
 
   const selectedColorOption = useMemo(
     () => availableColors.find((c) => c.colorSlug === selectedColor) || firstColor,
@@ -171,7 +158,7 @@ export function ProductView({ product }: Props) {
           <div className="pv-gallery__sticky">
 
             <nav className="pv-breadcrumb" aria-label="Migas de pan">
-              <Link href="/catalogo">Catálogo</Link>
+              <Link href="/productos">Productos</Link>
               <span aria-hidden="true">/</span>
               <span>{product.nombre}</span>
             </nav>
@@ -324,63 +311,27 @@ export function ProductView({ product }: Props) {
               </div>
             </div>
 
-            {/* Color — dropdown */}
+            {/* Color — inline swatches */}
             {availableColors.length > 0 && (
-              <div className="pv-inline-row">
-                <span className="pv-inline-label">Color</span>
-                <div className="pv-color-dropdown" ref={colorDropdownRef}>
-                  <button
-                    className={`pv-color-trigger ${colorDropdownOpen ? 'is-open' : ''}`}
-                    type="button"
-                    aria-haspopup="listbox"
-                    aria-expanded={colorDropdownOpen}
-                    onClick={() => setColorDropdownOpen((v) => !v)}
-                  >
-                    <span
-                      className="pv-swatch__dot"
-                      style={{ backgroundColor: selectedColorOption?.colorHex }}
-                    />
-                    <span className="pv-color-trigger__name">
-                      {selectedColorOption?.colorName || 'Color principal'}
-                    </span>
-                    <svg
-                      className={`pv-color-chevron ${colorDropdownOpen ? 'is-open' : ''}`}
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                      focusable="false"
+              <div className="pv-color-block">
+                <div className="pv-size-block__head">
+                  <span className="pv-inline-label">Color</span>
+                  <strong className="pv-inline-value">{selectedColorOption?.colorName || 'Color principal'}</strong>
+                </div>
+                <div className="pv-color-swatches" role="group" aria-label="Seleccionar color">
+                  {availableColors.map((color) => (
+                    <button
+                      key={color.colorSlug}
+                      type="button"
+                      className={`pv-color-swatch${selectedColor === color.colorSlug ? ' is-selected' : ''}`}
+                      onClick={() => setSelectedColor(color.colorSlug)}
+                      aria-pressed={selectedColor === color.colorSlug}
+                      aria-label={color.colorName}
                     >
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </button>
-
-                  {colorDropdownOpen && (
-                    <div className="pv-color-menu" role="listbox" aria-label="Seleccionar color">
-                      {availableColors.map((color) => (
-                        <button
-                          key={color.colorSlug}
-                          className={`pv-color-option ${selectedColor === color.colorSlug ? 'is-selected' : ''}`}
-                          role="option"
-                          aria-selected={selectedColor === color.colorSlug}
-                          type="button"
-                          onClick={() => {
-                            setSelectedColor(color.colorSlug);
-                            setColorDropdownOpen(false);
-                          }}
-                        >
-                          <span
-                            className="pv-swatch__dot"
-                            style={{ backgroundColor: color.colorHex }}
-                          />
-                          <span>{color.colorName}</span>
-                          {selectedColor === color.colorSlug && (
-                            <svg className="pv-color-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                              <path d="M20 6L9 17l-5-5" />
-                            </svg>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                      <span className="pv-swatch__dot" style={{ backgroundColor: color.colorHex }} />
+                      <span className="pv-color-swatch__name">{color.colorName}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -514,10 +465,10 @@ export function ProductView({ product }: Props) {
                 </>
               ) : (
                 <>
-                  <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
+                  <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
                     Agregar al pedido
                   </button>
-                  <Link className="pv-cta pv-cta--outline" href="/catalogo">
+                  <Link className="pv-link-btn" href="/productos">
                     Seguir viendo diseños
                   </Link>
                 </>

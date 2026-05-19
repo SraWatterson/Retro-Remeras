@@ -49,11 +49,8 @@ export function HeroSection({ content }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.24 }}
           >
-            <Link className="btn btn-primary" href={hero.heroPrimaryButtonHref || '/catalogo'}>
+            <Link className="btn btn-primary" href={hero.heroPrimaryButtonHref || '/productos'}>
               {hero.heroPrimaryButtonText}
-            </Link>
-            <Link className="btn btn-secondary" href={hero.heroSecondaryButtonHref || '/carrito'}>
-              {hero.heroSecondaryButtonText}
             </Link>
           </motion.div>
         </div>
@@ -72,7 +69,7 @@ export function HeroSection({ content }: Props) {
 
             <div className="poster-side" aria-label="Diseños destacados">
               <article className="poster-main poster-frame">
-                <Image src={hero.heroSideImageOne} alt={hero.heroSideImageOneAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" />
+                <Image src={hero.heroSideImageOne} alt={hero.heroSideImageOneAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
               </article>
 
               <article className="poster-main poster-frame">

@@ -182,7 +182,7 @@ export function FeaturedProducts({ initialProducts }: Props) {
         >
           <div className="featured-showcase__intro">
             <span className="featured-showcase__kicker">
-              Catálogo destacado
+              Productos destacados
             </span>
 
             <h2 className="featured-showcase__title">
@@ -287,7 +287,7 @@ function FeaturedCarouselCard({ product, index, activeIndex, totalCards }: Featu
       aria-hidden={!isVisible}
     >
       <Link
-        href={`/producto?id=${product.id}`}
+        href={`/diseno?id=${product.id}`}
         className="featured-carousel-card__link"
         tabIndex={isActive ? 0 : -1}
         aria-label={`Ver ${product.nombre}`}

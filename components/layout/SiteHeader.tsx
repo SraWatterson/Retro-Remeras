@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion, type Transition } from 'framer-motion';
-import { useEffect, useId, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { cartGetItemsCount, cartLoad, subscribeToCartUpdates } from '@/lib/shop';
 import { openCartSidebar, CART_ITEM_ADDED_EVENT } from '@/components/cart/CartSidebar';
 
 type Props = {
-  active: 'inicio' | 'catalogo' | 'carrito' | 'personalizados' | 'mayorista';
+  active: 'inicio' | 'catalogo' | 'personalizados' | 'mayorista';
 };
 
 type NavLink = {
@@ -16,43 +16,59 @@ type NavLink = {
   label: string;
   activeKey?: Props['active'];
   featured?: boolean;
+  primary?: boolean;
 };
 
 const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'Inicio', activeKey: 'inicio' },
-  { href: '/catalogo', label: 'Catálogo', activeKey: 'catalogo', featured: true },
-  { href: '/personalizados', label: 'Personalizados', activeKey: 'personalizados' },
-  { href: '/mayorista', label: 'Mayorista', activeKey: 'mayorista' },
-  { href: '/#como-funciona', label: 'Cómo funciona' },
+  { href: '/productos', label: 'Productos', activeKey: 'catalogo', featured: true, primary: true },
+  { href: '/personalizados', label: 'Personalizados', activeKey: 'personalizados', primary: true },
+  { href: '/mayorista', label: 'Mayorista', activeKey: 'mayorista', primary: true },
   { href: '/#contacto', label: 'Contacto' },
 ];
 
+const NAV_ICONS: Record<string, ReactNode> = {
+  '/productos': (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  ),
+  '/personalizados': (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+      <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+    </svg>
+  ),
+  '/mayorista': (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="22" height="22" aria-hidden="true">
+      <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" />
+    </svg>
+  ),
+};
+
 const MOBILE_MENU_VARIANTS = {
   closed: {
-    opacity: 0,
-    y: -8,
-    scale: 0.985,
-    transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
+    x: '-100%',
+    transition: { duration: 0.26, ease: [0.22, 1, 0.36, 1] as const },
   },
   open: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
+    x: 0,
     transition: {
-      duration: 0.18,
-      ease: [0.22, 1, 0.36, 1],
-      staggerChildren: 0.035,
-      delayChildren: 0.025,
+      duration: 0.30,
+      ease: [0.22, 1, 0.36, 1] as const,
+      staggerChildren: 0.045,
+      delayChildren: 0.10,
     },
   },
 };
 
 const MOBILE_ITEM_VARIANTS = {
-  closed: { opacity: 0, y: -4 },
+  closed: { opacity: 0, x: -10 },
   open: {
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
+    x: 0,
+    transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const },
   },
 };
 
@@ -155,11 +171,25 @@ export function SiteHeader({ active }: Props) {
   return (
     <header className="topbar">
       <div className="container navbar rr-nav">
+        {/* Left: hamburger (mobile/tablet only) */}
+        <motion.button
+          className={`rr-menu-toggle${open ? ' is-open' : ''}`}
+          type="button"
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={open}
+          aria-controls={menuId}
+          onClick={() => setOpen((prev) => !prev)}
+          whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+        >
+          <span className="rr-menu-toggle__icon" aria-hidden="true" />
+        </motion.button>
+
+        {/* Center: logo */}
         <Link className="brand" href="/" aria-label="Ir al inicio de Retro Remeras" onClick={closeMenu}>
           <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={56} height={56} sizes="56px" priority />
         </Link>
 
-        {/* rr-nav-end: cart + hamburger agrupados — visible en mobile/tablet, oculto en desktop */}
+        {/* Right: cart (mobile/tablet) */}
         <div className="rr-nav-end">
           <button
             type="button"
@@ -186,20 +216,9 @@ export function SiteHeader({ active }: Props) {
               )}
             </AnimatePresence>
           </button>
-
-          <motion.button
-            className={`rr-menu-toggle ${open ? 'is-open' : ''}`}
-            type="button"
-            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={open}
-            aria-controls={menuId}
-            onClick={() => setOpen((prev) => !prev)}
-            whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-          >
-            <span className="rr-menu-toggle__icon" aria-hidden="true" />
-          </motion.button>
         </div>
 
+        {/* Desktop navigation */}
         <div className="rr-desktop-nav">
           <nav className="rr-desktop-links" aria-label="Navegación principal">
             {NAV_LINKS.map((link) => (
@@ -241,44 +260,74 @@ export function SiteHeader({ active }: Props) {
               </AnimatePresence>
             </button>
 
-            <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/catalogo">
-              Ver catálogo
+            <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/productos">
+              Ver productos
             </Link>
           </div>
         </div>
-
-        <AnimatePresence>
-          {open ? (
-            <motion.div
-              ref={menuRef}
-              id={menuId}
-              className="rr-mobile-menu"
-              role="dialog"
-              aria-label="Menú principal"
-              aria-modal="true"
-              variants={prefersReducedMotion ? undefined : MOBILE_MENU_VARIANTS}
-              initial={prefersReducedMotion ? { opacity: 0 } : "closed"}
-              animate={prefersReducedMotion ? { opacity: 1 } : "open"}
-              exit={prefersReducedMotion ? { opacity: 0 } : "closed"}
-              transition={prefersReducedMotion ? { duration: 0 } : undefined}
-            >
-              <nav className="rr-mobile-menu__links" aria-label="Navegación mobile">
-                {NAV_LINKS.map((link) => (
-                  <motion.div className="rr-mobile-link-motion" variants={prefersReducedMotion ? undefined : MOBILE_ITEM_VARIANTS} key={link.href}>
-                    <Link
-                      className={`rr-mobile-link${isActive(link) ? ' is-active' : ''}${link.featured ? ' is-featured' : ''}`}
-                      href={link.href}
-                      onClick={closeMenu}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
       </div>
+
+      {/* Overlay — behind the panel, closes menu on click */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="rr-mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Nav drawer — slides in from the left */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            ref={menuRef}
+            id={menuId}
+            className="rr-mobile-menu"
+            role="dialog"
+            aria-label="Menú principal"
+            aria-modal="true"
+            variants={prefersReducedMotion ? undefined : MOBILE_MENU_VARIANTS}
+            initial={prefersReducedMotion ? { opacity: 0 } : 'closed'}
+            animate={prefersReducedMotion ? { opacity: 1 } : 'open'}
+            exit={prefersReducedMotion ? { opacity: 0 } : 'closed'}
+            transition={prefersReducedMotion ? { duration: 0 } : undefined}
+          >
+            {/* Panel header with close button */}
+            <div className="rr-mobile-menu__header">
+              <button
+                type="button"
+                className="rr-mobile-menu__close"
+                onClick={closeMenu}
+                aria-label="Cerrar menú"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" width="18" height="18" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <nav className="rr-mobile-menu__nav" aria-label="Navegación mobile">
+              {NAV_LINKS.map((link) => (
+                <motion.div key={link.href} variants={prefersReducedMotion ? undefined : MOBILE_ITEM_VARIANTS}>
+                  <Link
+                    className={`rr-mobile-nav-link${isActive(link) ? ' is-active' : ''}`}
+                    href={link.href}
+                    onClick={closeMenu}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

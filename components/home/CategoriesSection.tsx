@@ -34,7 +34,7 @@ export async function CategoriesSection() {
             <div key={category.id} className="category-card-shell">
               <Link
                 className="category-card"
-                href={`/catalogo?categoria=${category.slug}`}
+                href={`/productos?categoria=${category.slug}`}
                 aria-label={`Explorar categoría ${category.title}`}
                 style={{ '--category-image': `url('${category.image}')` } as CSSProperties}
               >

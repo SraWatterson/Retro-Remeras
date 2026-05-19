@@ -127,6 +127,7 @@ export const salesPageContentSchema = z.object({
   secondaryHref: publicHrefSchema,
   image: relativeOrAbsoluteImagePath,
   imageAlt: z.string().trim().min(2).max(100),
+  benefitsKicker: z.string().trim().max(60).optional(),
   benefitsTitle: z.string().trim().min(2).max(100),
   benefits: z.array(salesItemSchema).min(1).max(6),
   pricingEnabled: z.boolean(),

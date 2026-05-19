@@ -4,10 +4,9 @@ import { FaEnvelope, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 const FOOTER_LINKS = [
   { href: '/', label: 'Inicio' },
-  { href: '/catalogo', label: 'Catálogo' },
+  { href: '/productos', label: 'Productos' },
   { href: '/personalizados', label: 'Personalizados' },
   { href: '/mayorista', label: 'Mayorista' },
-  { href: '/carrito', label: 'Tu pedido' },
   { href: '/#contacto', label: 'Contacto' },
 ];
 
@@ -26,6 +25,15 @@ export function SiteFooter() {
             Remeras con estilo, nostalgia y personalidad. Diseños temáticos, atención cercana y pedidos simples por WhatsApp.
           </p>
           <small>© {new Date().getFullYear()} Retro Remeras. Todos los derechos reservados.</small>
+          <a
+            href="https://www.instagram.com/davidleonelhxc/"
+            target="_blank"
+            rel="noreferrer"
+            className="footer-credit"
+            aria-label="Instagram de David Leonel, desarrollador del sitio"
+          >
+            Sitio realizado por <span className="footer-credit__name">David Leonel</span>
+          </a>
         </div>
 
         <nav className="footer-nav" aria-label="Navegación del sitio">
@@ -68,6 +76,7 @@ export function SiteFooter() {
           </address>
         </div>
       </div>
+
     </footer>
   );
 }

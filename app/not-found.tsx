@@ -16,14 +16,14 @@ export default function NotFound() {
               <span className="section-kicker">Ups...</span>
               <h1 className="section-title">No encontramos esa página</h1>
               <p className="section-subtitle">
-                Tal vez el enlace está roto o el producto ya no existe. Tranquilo, podés volver al inicio o explorar el catálogo.
+                Tal vez el enlace está roto o el diseño ya no existe. Tranquilo, podés volver al inicio o explorar los productos.
               </p>
               <div className="hero-actions not-found-actions">
                 <Link className="btn btn-primary" href="/">
                   Ir al inicio
                 </Link>
-                <Link className="btn btn-secondary" href="/catalogo">
-                  Ver catálogo
+                <Link className="btn btn-secondary" href="/productos">
+                  Ver productos
                 </Link>
               </div>
             </div>

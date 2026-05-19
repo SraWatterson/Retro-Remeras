@@ -6,7 +6,7 @@ const steps = [
   {
     number: '1',
     title: 'Elegí un diseño',
-    description: 'Recorré las categorías o entrá al catálogo completo para encontrar tu remera.',
+    description: 'Recorré las categorías o explorá todos los productos para encontrar tu remera.',
   },
   {
     number: '2',

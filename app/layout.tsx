@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" data-scroll-behavior="smooth">
       <body>
         <a href="#main-content" className="skip-link">Ir al contenido</a>
+        <span id="main-content" tabIndex={-1} />
         {children}
         <FloatingBackButton />
         <CartSidebar />
