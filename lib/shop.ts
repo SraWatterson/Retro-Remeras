@@ -65,7 +65,7 @@ export function normalizeText(value: string) {
 
 export function normalizeImageUrl(value?: string | null) {
   if (!value) return '/assets/img/ejemplo-vintage.jpg';
-  if (value.startsWith('/')) return value;
+  if (value.startsWith('http://') || value.startsWith('https://')) return value;
   return `/${value.replace(/^\/+/, '')}`;
 }
 
