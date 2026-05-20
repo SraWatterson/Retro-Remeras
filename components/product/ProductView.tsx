@@ -4,22 +4,17 @@ import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
 import {
   CartItem,
   Product,
   ProductSizeGuide,
   SizeGuideTable,
   cartAddItem,
-  cartChangeQuantity,
-  cartClear,
   cartGetItemsCount,
   cartGetTotal,
   cartLoad,
   cartSave,
   subscribeToCartUpdates,
-  createCartMessage,
-  createWhatsAppLink,
   formatPrice,
   normalizeImageUrl,
 } from '@/lib/shop';
@@ -79,9 +74,6 @@ export function ProductView({ product }: Props) {
   const [selectedColor, setSelectedColor] = useState(firstColor?.colorSlug || '');
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedFit, setSelectedFit] = useState<FitKey>('regular');
-  const [showToast, setShowToast] = useState(false);
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sizeGuideDialogRef = useRef<HTMLDialogElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [items, setItems] = useState<CartItem[]>([]);
@@ -89,10 +81,6 @@ export function ProductView({ product }: Props) {
   useEffect(() => {
     setItems(cartLoad());
     return subscribeToCartUpdates(setItems);
-  }, []);
-
-  useEffect(() => {
-    return () => { if (toastTimerRef.current) clearTimeout(toastTimerRef.current); };
   }, []);
 
   useEffect(() => {
@@ -118,7 +106,6 @@ export function ProductView({ product }: Props) {
 
   const hasCartItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
-  const orderLink = createWhatsAppLink(createCartMessage(items));
 
   function addToCart() {
     const nextItem: CartItem = {
@@ -138,25 +125,7 @@ export function ProductView({ product }: Props) {
     setItems(updated);
     cartSave(updated);
     window.dispatchEvent(new CustomEvent(CART_ITEM_ADDED_EVENT));
-    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-      setShowToast(true);
-      toastTimerRef.current = setTimeout(() => setShowToast(false), 2500);
-    }
-  }
-
-  function confirmClear() {
-    setItems(cartClear());
-    setShowClearConfirm(false);
-  }
-
-  const currentItemId = `${product.id}-${selectedColorOption?.colorSlug || 'principal'}-${selectedSize}-${selectedFit}`;
-  const currentQty = items.find((i) => i.id === currentItemId)?.quantity ?? 0;
-
-  function updateCartQty(delta: number) {
-    const next = cartChangeQuantity(items, currentItemId, delta);
-    setItems(next);
-    cartSave(next);
+    openCartSidebar();
   }
 
   return (
@@ -248,38 +217,12 @@ export function ProductView({ product }: Props) {
                 <strong className="pv-price">{formatPrice(product.precio)}</strong>
                 <span className="pv-price-note">por unidad</span>
               </div>
-              <div className="pv-price-right">
-                {currentQty === 0 ? (
-                  <button className="pv-price-cta" type="button" onClick={addToCart}>
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                      <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                    </svg>
-                    Agregar al pedido
-                  </button>
-                ) : (
-                  <>
-                    <div className="pv-qty-inline" role="group" aria-label={`Cantidad en pedido: ${currentQty}`}>
-                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                      <span aria-live="polite">{currentQty}</span>
-                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
-                    </div>
-                    <a className="pv-mini-finalize" href={orderLink} target="_blank" rel="noopener noreferrer">
-                      <FaWhatsapp size={11} aria-hidden="true" />
-                      Finalizar pedido
-                    </a>
-                    {showClearConfirm ? (
-                      <div className="pv-mini-clear-confirm">
-                        <button type="button" onClick={confirmClear}>Vaciar</button>
-                        <button type="button" onClick={() => setShowClearConfirm(false)}>×</button>
-                      </div>
-                    ) : (
-                      <button type="button" className="pv-mini-clear" onClick={() => setShowClearConfirm(true)}>
-                        Vaciar pedido
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
+              <button className="pv-price-cta" type="button" onClick={addToCart}>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                  <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                </svg>
+                Agregar al pedido
+              </button>
             </div>
             {product.descripcion && product.descripcion.trim().toLowerCase() !== product.nombre.trim().toLowerCase() && (
               <p className="pv-description">{product.descripcion}</p>
@@ -464,38 +407,6 @@ export function ProductView({ product }: Props) {
           </div>
         </aside>
       </div>
-
-
-      {/* ── TOAST ── */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            className="rr-toast"
-            role="status"
-            aria-live="polite"
-            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <svg
-              className="rr-toast__icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              width="18"
-              height="18"
-              aria-hidden="true"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            ¡Agregado al pedido!
-          </motion.div>
-        )}
-      </AnimatePresence>
     </main>
   );
 }
