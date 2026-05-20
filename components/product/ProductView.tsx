@@ -263,14 +263,20 @@ export function ProductView({ product }: Props) {
                       <span aria-live="polite">{currentQty}</span>
                       <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
                     </div>
-                    <a
-                      className="pv-mini-finalize"
-                      href={orderLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Finalizar pedido →
+                    <a className="pv-mini-finalize" href={orderLink} target="_blank" rel="noopener noreferrer">
+                      <FaWhatsapp size={11} aria-hidden="true" />
+                      Finalizar pedido
                     </a>
+                    {showClearConfirm ? (
+                      <div className="pv-mini-clear-confirm">
+                        <button type="button" onClick={confirmClear}>Vaciar</button>
+                        <button type="button" onClick={() => setShowClearConfirm(false)}>×</button>
+                      </div>
+                    ) : (
+                      <button type="button" className="pv-mini-clear" onClick={() => setShowClearConfirm(true)}>
+                        Vaciar pedido
+                      </button>
+                    )}
                   </>
                 )}
               </div>
@@ -449,67 +455,6 @@ export function ProductView({ product }: Props) {
                 <strong>{formatPrice(cartGetTotal(items))}</strong>
               </div>
             )}
-
-            <div className="pv-actions">
-              {hasCartItems ? (
-                <>
-                  <a
-                    className="pv-cta pv-cta--whatsapp"
-                    href={orderLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaWhatsapp size={18} aria-hidden="true" />
-                    Finalizar por WhatsApp
-                  </a>
-                  {currentQty === 0 ? (
-                    <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
-                      Agregar al pedido
-                    </button>
-                  ) : (
-                    <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
-                      Agregar otro
-                    </button>
-                  )}
-                  {showClearConfirm ? (
-                    <div className="rr-inline-confirm" role="group" aria-label="Confirmar vaciado">
-                      <span className="rr-inline-confirm__label">¿Vaciar todo el pedido?</span>
-                      <button
-                        className="rr-inline-confirm__btn rr-inline-confirm__btn--confirm"
-                        type="button"
-                        onClick={confirmClear}
-                      >
-                        Sí, vaciar
-                      </button>
-                      <button
-                        className="rr-inline-confirm__btn rr-inline-confirm__btn--cancel"
-                        type="button"
-                        onClick={() => setShowClearConfirm(false)}
-                      >
-                        Cancelar
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      className="pv-clear-btn"
-                      type="button"
-                      onClick={() => setShowClearConfirm(true)}
-                    >
-                      Vaciar pedido
-                    </button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
-                    Agregar al pedido
-                  </button>
-                  <Link className="pv-link-btn" href="/productos">
-                    Seguir viendo diseños
-                  </Link>
-                </>
-              )}
-            </div>
 
             <ul className="pv-trust" aria-label="Garantías">
               <li>DTF profesional</li>
