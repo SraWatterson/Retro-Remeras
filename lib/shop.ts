@@ -134,6 +134,29 @@ export function cartRemoveItem(items: CartItem[], id: string) {
   return items.filter((entry) => entry.id !== id);
 }
 
+export function cartChangeSize(items: CartItem[], id: string, newSize: string): CartItem[] {
+  const item = items.find((entry) => entry.id === id);
+  if (!item) return items;
+
+  const suffix = `-${item.size}-${item.fit}`;
+  const prefix = `${item.productId}-`;
+  const colorSlug = item.id.slice(prefix.length, item.id.length - suffix.length);
+  const newId = `${item.productId}-${colorSlug}-${newSize}-${item.fit}`;
+
+  if (newId === id) return items;
+
+  const existing = items.find((entry) => entry.id === newId);
+  if (existing) {
+    return items
+      .map((entry) => entry.id === newId ? { ...entry, quantity: entry.quantity + item.quantity } : entry)
+      .filter((entry) => entry.id !== id);
+  }
+
+  return items.map((entry) =>
+    entry.id === id ? { ...entry, id: newId, size: newSize } : entry
+  );
+}
+
 export function createCartMessage(items: CartItem[]) {
   if (!items.length) return 'Hola! Quiero consultar por una remera.';
 

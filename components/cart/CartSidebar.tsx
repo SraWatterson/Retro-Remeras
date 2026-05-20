@@ -8,6 +8,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import {
   type CartItem,
   cartChangeQuantity,
+  cartChangeSize,
   cartClear,
   cartGetItemsCount,
   cartGetTotal,
@@ -19,6 +20,10 @@ import {
   formatPrice,
   subscribeToCartUpdates,
 } from '@/lib/shop';
+
+function getAvailableSizesForFit(fit: string) {
+  return fit === 'oversize' ? ['M', 'L', 'XL', 'XXL'] : ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+}
 import styles from './CartSidebar.module.css';
 
 export const CART_SIDEBAR_EVENT = 'open-cart-sidebar';
@@ -201,7 +206,20 @@ export function CartSidebar() {
                         <div className={styles.itemMeta}>
                           <span>{item.fitLabel}</span>
                           <span>{item.color}</span>
-                          <span>T. {item.size}</span>
+                        </div>
+                        <div className={styles.sizeRow} role="group" aria-label="Talle">
+                          {getAvailableSizesForFit(item.fit).map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              className={`${styles.sizeChip}${item.size === s ? ` ${styles.sizeChipActive}` : ''}`}
+                              onClick={() => { if (item.size !== s) updateCart(cartChangeSize(items, item.id, s)); }}
+                              aria-pressed={item.size === s}
+                              aria-label={`Talle ${s}`}
+                            >
+                              {s}
+                            </button>
+                          ))}
                         </div>
                         <div className={styles.itemActions}>
                           <div className={styles.qtyControl}>

@@ -312,6 +312,52 @@
   padding: 0.12rem 0.48rem;
 }
 
+.sizeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+  align-items: center;
+}
+
+.sizeChip {
+  font-size: 0.66rem;
+  font-weight: 700;
+  min-width: 26px;
+  height: 20px;
+  padding: 0 0.35rem;
+  border-radius: 5px;
+  border: 1px solid rgba(216, 148, 37, 0.14);
+  background: rgba(216, 148, 37, 0.04);
+  color: rgba(241, 221, 178, 0.48);
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.sizeChip:hover {
+  background: rgba(216, 148, 37, 0.11);
+  border-color: rgba(216, 148, 37, 0.26);
+  color: rgba(241, 221, 178, 0.82);
+}
+
+.sizeChipActive {
+  background: rgba(216, 148, 37, 0.16);
+  border-color: rgba(216, 148, 37, 0.48);
+  color: #efb84e;
+}
+
+.sizeChipActive:hover {
+  background: rgba(216, 148, 37, 0.22);
+}
+
+@media (max-width: 767.98px) {
+  .sizeChip {
+    min-width: 30px;
+    height: 24px;
+    font-size: 0.7rem;
+  }
+}
+
 .itemActions {
   display: flex;
   align-items: center;

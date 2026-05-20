@@ -11,6 +11,7 @@ import {
   ProductSizeGuide,
   SizeGuideTable,
   cartAddItem,
+  cartChangeQuantity,
   cartClear,
   cartGetItemsCount,
   cartGetTotal,
@@ -149,6 +150,15 @@ export function ProductView({ product }: Props) {
     setShowClearConfirm(false);
   }
 
+  const currentItemId = `${product.id}-${selectedColorOption?.colorSlug || 'principal'}-${selectedSize}-${selectedFit}`;
+  const currentQty = items.find((i) => i.id === currentItemId)?.quantity ?? 0;
+
+  function updateCartQty(delta: number) {
+    const next = cartChangeQuantity(items, currentItemId, delta);
+    setItems(next);
+    cartSave(next);
+  }
+
   return (
     <main className="product-page">
       <div className="product-shell">
@@ -238,12 +248,20 @@ export function ProductView({ product }: Props) {
                 <strong className="pv-price">{formatPrice(product.precio)}</strong>
                 <span className="pv-price-note">por unidad</span>
               </div>
-              <button className="pv-price-cta" type="button" onClick={addToCart}>
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                  <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                </svg>
-                {hasCartItems ? 'Agregar otro' : 'Agregar al pedido'}
-              </button>
+              {currentQty === 0 ? (
+                <button className="pv-price-cta" type="button" onClick={addToCart}>
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                    <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                  </svg>
+                  Agregar al pedido
+                </button>
+              ) : (
+                <div className="pv-qty-inline">
+                  <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
+                  <span>{currentQty}</span>
+                  <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                </div>
+              )}
             </div>
             {product.descripcion && product.descripcion.trim().toLowerCase() !== product.nombre.trim().toLowerCase() && (
               <p className="pv-description">{product.descripcion}</p>
@@ -432,9 +450,17 @@ export function ProductView({ product }: Props) {
                     <FaWhatsapp size={18} aria-hidden="true" />
                     Finalizar por WhatsApp
                   </a>
-                  <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
-                    Agregar al pedido
-                  </button>
+                  {currentQty === 0 ? (
+                    <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
+                      Agregar al pedido
+                    </button>
+                  ) : (
+                    <div className="pv-qty-inline pv-qty-inline--lg">
+                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
+                      <span>{currentQty}</span>
+                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                    </div>
+                  )}
                   {showClearConfirm ? (
                     <div className="rr-inline-confirm" role="group" aria-label="Confirmar vaciado">
                       <span className="rr-inline-confirm__label">¿Vaciar todo el pedido?</span>
@@ -465,9 +491,17 @@ export function ProductView({ product }: Props) {
                 </>
               ) : (
                 <>
-                  <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
-                    Agregar al pedido
-                  </button>
+                  {currentQty === 0 ? (
+                    <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
+                      Agregar al pedido
+                    </button>
+                  ) : (
+                    <div className="pv-qty-inline pv-qty-inline--lg">
+                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
+                      <span>{currentQty}</span>
+                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                    </div>
+                  )}
                   <Link className="pv-link-btn" href="/productos">
                     Seguir viendo diseños
                   </Link>

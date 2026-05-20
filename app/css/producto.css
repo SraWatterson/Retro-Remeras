@@ -318,6 +318,68 @@
   .pv-price-cta { display: none; }
 }
 
+/* Inline qty control — replaces add-to-cart button once item is in cart */
+.pv-qty-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 148, 37, 0.38);
+  background: rgba(216, 148, 37, 0.08);
+  overflow: hidden;
+}
+
+.pv-qty-inline button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 240, 203, 0.90);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.14s ease, color 0.14s ease;
+}
+
+.pv-qty-inline button:hover {
+  background: rgba(216, 148, 37, 0.16);
+  color: #efb84e;
+}
+
+.pv-qty-inline span {
+  min-width: 28px;
+  text-align: center;
+  color: #efb84e;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+/* Larger variant used in the order box */
+.pv-qty-inline--lg {
+  width: 100%;
+  justify-content: center;
+  border-radius: 14px;
+  min-height: 50px;
+  border-color: rgba(216, 148, 37, 0.40);
+}
+
+.pv-qty-inline--lg button {
+  flex: 1;
+  height: 50px;
+  font-size: 1.1rem;
+}
+
+.pv-qty-inline--lg span {
+  font-size: 1.05rem;
+  min-width: 40px;
+}
+
+@media (min-width: 768px) {
+  .pv-qty-inline { display: none; }
+  .pv-qty-inline--lg { display: inline-flex; }
+}
+
 .pv-description {
   margin: 0;
   color: rgba(241, 221, 178, 0.75);
