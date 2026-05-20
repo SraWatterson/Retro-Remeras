@@ -722,7 +722,7 @@
   color: var(--cream, #f5ead4);
   line-height: 1;
   letter-spacing: -0.02em;
-  margin-top: auto;
+  margin-top: 0.5rem;
 }
 
 .sales-pricing-note {

@@ -168,7 +168,6 @@ export function SalesPage({
                 >
                   <span className="sales-pricing-card__label">{tier.label}</span>
                   <span className="sales-pricing-card__range">{tier.range}</span>
-                  <span className="sales-pricing-card__price">{tier.price}</span>
                 </motion.div>
               ))}
             </motion.div>
