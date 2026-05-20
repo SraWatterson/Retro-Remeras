@@ -279,66 +279,66 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             </div>
 
             {/* Product grid */}
-            <div className="catalog-grid" data-catalog-grid>
-              {!filtered.length ? (
-                <div className="empty-state">
-                  <span className="section-kicker">Sin resultados</span>
-                  <h3>No encontramos diseños para ese filtro</h3>
-                  <p>Probá con otra categoría o limpiá los filtros activos.</p>
-                  <button type="button" className="btn btn-primary" onClick={clearFilters}>
-                    Ver todos
-                  </button>
-                </div>
-              ) : (
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {filtered.map((product, i) => (
-                    <motion.article
-                      className="product-card product-card--linked"
-                      key={product.id}
-                      layout
-                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
-                      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.32, ease: [0.22, 1, 0.36, 1], delay: Math.min(i * 0.03, 0.2) }}
-                    >
-                    <Link
-                      className="product-card-link"
-                      href={`/diseno?id=${product.id}`}
-                      aria-label={`Ver ${product.nombre}`}
-                    >
-                      <div className="product-media">
-                        <Image
-                          src={normalizeImageUrl(product.imagen)}
-                          alt={product.nombre}
-                          width={800}
-                          height={1000}
-                          quality={90}
-                          sizes="(max-width: 767px) 46vw, (max-width: 1199px) 28vw, 280px"
-                        />
-                        {product.destacado ? (
-                          <span className="cat-visual__badge">Destacado</span>
-                        ) : null}
-                      </div>
-                    </Link>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={`${activeCategory}|${[...activeColors].sort().join(',')}|${sortOrder}`}
+                className="catalog-grid"
+                data-catalog-grid
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.16, ease: 'easeInOut' }}
+              >
+                {!filtered.length ? (
+                  <div className="empty-state">
+                    <span className="section-kicker">Sin resultados</span>
+                    <h3>No encontramos diseños para ese filtro</h3>
+                    <p>Probá con otra categoría o limpiá los filtros activos.</p>
+                    <button type="button" className="btn btn-primary" onClick={clearFilters}>
+                      Ver todos
+                    </button>
+                  </div>
+                ) : (
+                  filtered.map((product) => (
+                    <article className="product-card product-card--linked" key={product.id}>
+                      <Link
+                        className="product-card-link"
+                        href={`/diseno?id=${product.id}`}
+                        aria-label={`Ver ${product.nombre}`}
+                      >
+                        <div className="product-media">
+                          <Image
+                            src={normalizeImageUrl(product.imagen)}
+                            alt={product.nombre}
+                            width={800}
+                            height={1000}
+                            quality={90}
+                            sizes="(max-width: 767px) 46vw, (max-width: 1199px) 28vw, 280px"
+                          />
+                          {product.destacado ? (
+                            <span className="cat-visual__badge">Destacado</span>
+                          ) : null}
+                        </div>
+                      </Link>
 
-                    <div className="product-content">
-                      <div className="product-category">{product.categoria}</div>
-                      <h3 className="product-title">
-                        <Link className="product-title-link" href={`/diseno?id=${product.id}`}>
-                          {product.nombre}
-                        </Link>
-                      </h3>
+                      <div className="product-content">
+                        <div className="product-category">{product.categoria}</div>
+                        <h3 className="product-title">
+                          <Link className="product-title-link" href={`/diseno?id=${product.id}`}>
+                            {product.nombre}
+                          </Link>
+                        </h3>
 
-                      <div className="price-row">
-                        <span className="product-price">{formatPrice(product.precio)}</span>
-                        {!product.disponible ? <span className="tag">A pedido</span> : null}
+                        <div className="price-row">
+                          <span className="product-price">{formatPrice(product.precio)}</span>
+                          {!product.disponible ? <span className="tag">A pedido</span> : null}
+                        </div>
                       </div>
-                    </div>
-                    </motion.article>
-                  ))}
-                </AnimatePresence>
-              )}
-            </div>
+                    </article>
+                  ))
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </section>
