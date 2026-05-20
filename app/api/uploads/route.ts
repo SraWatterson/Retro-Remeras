@@ -1,14 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { AuditAction, Role } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { createAuditLog } from '@/lib/audit-log';
 import { getCurrentSession, isRoleAllowed } from '@/lib/auth';
 import { checkRateLimit, jsonServerError, rateLimitResponse } from '@/lib/api-helpers';
+import { supabaseAdmin, STORAGE_BUCKETS, parseStorageUrl, type UploadContext } from '@/lib/supabase';
 
 const MANAGER_ROLES: Role[] = [Role.ADMIN, Role.EDITOR];
-const UPLOAD_ROOT = path.join(process.cwd(), 'public', 'uploads');
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const MIME_TO_EXTENSION: Record<string, string> = {
@@ -22,7 +21,7 @@ function sanitizeFileName(name: string, mimeType: string) {
   const base = parsed.name
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .replace(/[^a-z0-9-]/g, '-')
     .replace(/-+/g, '-')
     .replace(/(^-|-$)/g, '')
@@ -32,20 +31,11 @@ function sanitizeFileName(name: string, mimeType: string) {
   return `${base || 'image'}-${randomUUID().slice(0, 8)}${extension}`;
 }
 
-function getUploadContext(value: FormDataEntryValue | null) {
+function getUploadContext(value: FormDataEntryValue | null): UploadContext {
   if (value === 'home') return 'home';
   if (value === 'categories') return 'categories';
   if (value === 'pages') return 'pages';
   return 'products';
-}
-
-function isSafeUploadPath(filePath: string) {
-  return (
-    filePath.startsWith('/uploads/products/') ||
-    filePath.startsWith('/uploads/home/') ||
-    filePath.startsWith('/uploads/categories/') ||
-    filePath.startsWith('/uploads/pages/')
-  ) && !filePath.includes('..');
 }
 
 function hasValidImageSignature(buffer: Buffer, mimeType: string) {
@@ -104,31 +94,28 @@ export async function POST(request: Request) {
     }
 
     const context = getUploadContext(formData.get('context'));
-    const uploadDir = path.join(UPLOAD_ROOT, context);
-
-    await fs.mkdir(uploadDir, { recursive: true });
-
+    const bucket = STORAGE_BUCKETS[context];
     const fileName = sanitizeFileName(file.name || 'image', file.type);
-    const absolutePath = path.join(uploadDir, fileName);
 
-    await fs.writeFile(absolutePath, buffer);
+    const { error } = await supabaseAdmin.storage
+      .from(bucket)
+      .upload(fileName, buffer, { contentType: file.type, upsert: false });
 
-    const publicPath = `/uploads/${context}/${fileName}`;
+    if (error) {
+      return jsonServerError('UPLOADS_POST', 'No se pudo subir la imagen', error);
+    }
+
+    const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}`;
 
     await createAuditLog({
       action: AuditAction.IMAGE_UPLOADED,
       entity: 'Upload',
-      entityId: publicPath,
+      entityId: publicUrl,
       actorId: session.id,
-      metadata: {
-        fileName,
-        size: file.size,
-        mimeType: file.type,
-        context,
-      },
+      metadata: { fileName, size: file.size, mimeType: file.type, context },
     });
 
-    return NextResponse.json({ path: publicPath }, { status: 201 });
+    return NextResponse.json({ path: publicUrl }, { status: 201 });
   } catch (error) {
     return jsonServerError('UPLOADS_POST', 'No se pudo subir la imagen', error);
   }
@@ -149,22 +136,28 @@ export async function DELETE(request: Request) {
 
   try {
     const body = await request.json();
-    const imagePath = String(body?.path || '');
+    const imageUrl = String(body?.path || '');
 
-    if (!isSafeUploadPath(imagePath)) {
+    const parsed = parseStorageUrl(imageUrl);
+
+    if (!parsed) {
       return NextResponse.json({ error: 'Ruta inválida para borrar archivo' }, { status: 400 });
     }
 
-    const absolutePath = path.join(process.cwd(), 'public', imagePath.replace(/^\//, ''));
+    const { error } = await supabaseAdmin.storage
+      .from(parsed.bucket)
+      .remove([parsed.path]);
 
-    await fs.unlink(absolutePath).catch(() => null);
+    if (error) {
+      return jsonServerError('UPLOADS_DELETE', 'No se pudo eliminar la imagen', error);
+    }
 
     await createAuditLog({
       action: AuditAction.IMAGE_DELETED,
       entity: 'Upload',
-      entityId: imagePath,
+      entityId: imageUrl,
       actorId: session.id,
-      metadata: { path: imagePath },
+      metadata: { path: imageUrl },
     });
 
     return NextResponse.json({ ok: true });
