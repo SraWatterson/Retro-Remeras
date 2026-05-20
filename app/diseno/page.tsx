@@ -89,7 +89,7 @@ export default async function Page({ searchParams }: PageProps) {
       />
       <PromoBar content={siteContent} />
       <SiteHeader active="catalogo" />
-      <ProductView product={product} />
+      <ProductView key={product.id} product={product} />
       <SiteFooter />
     </>
   );
