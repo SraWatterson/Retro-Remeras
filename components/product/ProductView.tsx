@@ -9,7 +9,11 @@ import {
   Product,
   ProductSizeGuide,
   SizeGuideTable,
+  BULK_DISCOUNT_THRESHOLD,
+  BULK_DISCOUNT_RATE,
   cartAddItem,
+  cartGetDiscountAmount,
+  cartGetFinalTotal,
   cartGetItemsCount,
   cartGetTotal,
   cartLoad,
@@ -106,6 +110,10 @@ export function ProductView({ product }: Props) {
 
   const hasCartItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
+  const subtotal = cartGetTotal(items);
+  const discount = cartGetDiscountAmount(items);
+  const finalTotal = cartGetFinalTotal(items);
+  const itemsToDiscount = Math.max(0, BULK_DISCOUNT_THRESHOLD - itemCount);
 
   function addToCart() {
     const nextItem: CartItem = {
@@ -393,9 +401,40 @@ export function ProductView({ product }: Props) {
             )}
 
             {hasCartItems && (
-              <div className="pv-order-total">
-                <span>Total estimado</span>
-                <strong>{formatPrice(cartGetTotal(items))}</strong>
+              <div className="pv-order-totals">
+                {itemsToDiscount > 0 ? (
+                  <p className="pv-discount-nudge">
+                    Sumá <strong>{itemsToDiscount} remera{itemsToDiscount > 1 ? 's' : ''} más</strong> y obtenés {Math.round(BULK_DISCOUNT_RATE * 100)}% off
+                  </p>
+                ) : (
+                  <p className="pv-discount-applied">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M1.5 6l3 3 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Descuento de {Math.round(BULK_DISCOUNT_RATE * 100)}% aplicado
+                  </p>
+                )}
+                {discount > 0 ? (
+                  <>
+                    <div className="pv-order-total pv-order-total--sub">
+                      <span>Subtotal</span>
+                      <span>{formatPrice(subtotal)}</span>
+                    </div>
+                    <div className="pv-order-total pv-order-total--discount">
+                      <span>Descuento {Math.round(BULK_DISCOUNT_RATE * 100)}%</span>
+                      <span>−{formatPrice(discount)}</span>
+                    </div>
+                    <div className="pv-order-total pv-order-total--final">
+                      <span>Total estimado</span>
+                      <strong>{formatPrice(finalTotal)}</strong>
+                    </div>
+                  </>
+                ) : (
+                  <div className="pv-order-total">
+                    <span>Total estimado</span>
+                    <strong>{formatPrice(finalTotal)}</strong>
+                  </div>
+                )}
               </div>
             )}
 

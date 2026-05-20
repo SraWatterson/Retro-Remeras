@@ -7,10 +7,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import {
   type CartItem,
+  BULK_DISCOUNT_THRESHOLD,
+  BULK_DISCOUNT_RATE,
   cartAddItem,
   cartChangeQuantity,
   cartChangeSize,
   cartClear,
+  cartGetDiscountAmount,
+  cartGetFinalTotal,
   cartGetItemsCount,
   cartGetTotal,
   cartLoad,
@@ -48,7 +52,10 @@ export function CartSidebar() {
 
   const hasItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
-  const total = cartGetTotal(items);
+  const subtotal = cartGetTotal(items);
+  const discount = cartGetDiscountAmount(items);
+  const total = cartGetFinalTotal(items);
+  const itemsToDiscount = Math.max(0, BULK_DISCOUNT_THRESHOLD - itemCount);
   const orderLink = useMemo(() => createWhatsAppLink(createCartMessage(items)), [items]);
 
   useEffect(() => {
@@ -344,10 +351,39 @@ export function CartSidebar() {
             {/* ── Footer with total + CTA ── */}
             {hasItems && (
               <div className={styles.drawerFooter}>
-                <div className={styles.totalRow}>
-                  <span>Total estimado</span>
-                  <strong>{formatPrice(total)}</strong>
-                </div>
+                {itemsToDiscount > 0 ? (
+                  <div className={styles.discountNudge}>
+                    Sumá <strong>{itemsToDiscount} remera{itemsToDiscount > 1 ? 's' : ''} más</strong> y obtenés {Math.round(BULK_DISCOUNT_RATE * 100)}% off
+                  </div>
+                ) : (
+                  <div className={styles.discountApplied}>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                      <path d="M2 6.5l3 3 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Descuento de {Math.round(BULK_DISCOUNT_RATE * 100)}% aplicado
+                  </div>
+                )}
+                {discount > 0 ? (
+                  <div className={styles.totalBlock}>
+                    <div className={styles.totalRow}>
+                      <span>Subtotal</span>
+                      <span>{formatPrice(subtotal)}</span>
+                    </div>
+                    <div className={`${styles.totalRow} ${styles.discountRow}`}>
+                      <span>Descuento {Math.round(BULK_DISCOUNT_RATE * 100)}%</span>
+                      <span>−{formatPrice(discount)}</span>
+                    </div>
+                    <div className={`${styles.totalRow} ${styles.totalFinal}`}>
+                      <span>Total estimado</span>
+                      <strong>{formatPrice(total)}</strong>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.totalRow}>
+                    <span>Total estimado</span>
+                    <strong>{formatPrice(total)}</strong>
+                  </div>
+                )}
                 <a
                   className={styles.whatsappBtn}
                   href={orderLink}

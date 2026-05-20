@@ -535,13 +535,45 @@
   }
 }
 
+.discountNudge {
+  font-size: 0.82rem;
+  color: rgba(241, 221, 178, 0.55);
+  text-align: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px dashed rgba(216, 148, 37, 0.22);
+  background: rgba(216, 148, 37, 0.04);
+  line-height: 1.4;
+}
+
+.discountNudge strong {
+  color: rgba(241, 221, 178, 0.80);
+}
+
+.discountApplied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4ade80;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(74, 222, 128, 0.07);
+  border: 1px solid rgba(74, 222, 128, 0.20);
+}
+
+.totalBlock {
+  display: grid;
+  gap: 0.28rem;
+}
+
 .totalRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.93rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px dashed rgba(216, 148, 37, 0.13);
+  font-size: 0.9rem;
 }
 
 .totalRow span {
@@ -550,8 +582,28 @@
 
 .totalRow strong {
   color: #ffe0a0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   letter-spacing: 0.01em;
+}
+
+.discountRow span {
+  color: #4ade80 !important;
+  font-weight: 600;
+}
+
+.totalFinal {
+  padding-top: 0.45rem;
+  margin-top: 0.18rem;
+  border-top: 1px dashed rgba(216, 148, 37, 0.18);
+}
+
+.totalFinal span {
+  color: rgba(241, 221, 178, 0.75) !important;
+  font-weight: 600;
+}
+
+.totalFinal strong {
+  font-size: 1.15rem !important;
 }
 
 .whatsappBtn {

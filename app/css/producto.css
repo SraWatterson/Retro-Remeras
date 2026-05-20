@@ -845,18 +845,56 @@
   line-height: 1.5;
 }
 
-/* Total row */
+/* Discount nudge / applied */
+.pv-order-totals { display: grid; gap: 0.2rem; padding-top: 0.5rem; border-top: 1px solid rgba(216, 148, 37, 0.10); }
+
+.pv-discount-nudge {
+  font-size: 0.78rem;
+  color: rgba(241, 221, 178, 0.5);
+  text-align: center;
+  padding: 0.38rem 0.6rem;
+  border-radius: 7px;
+  border: 1px dashed rgba(216, 148, 37, 0.20);
+  background: rgba(216, 148, 37, 0.03);
+  margin-bottom: 0.3rem;
+  line-height: 1.35;
+}
+.pv-discount-nudge strong { color: rgba(241, 221, 178, 0.75); }
+
+.pv-discount-applied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4ade80;
+  padding: 0.35rem 0.6rem;
+  border-radius: 7px;
+  background: rgba(74, 222, 128, 0.07);
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  margin-bottom: 0.3rem;
+}
+
+/* Total rows */
 .pv-order-total {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(216, 148, 37, 0.10);
   color: var(--brand-cream-soft);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   text-align: left;
 }
+
+.pv-order-total--sub span { color: rgba(241, 221, 178, 0.45); font-size: 0.82rem; }
+.pv-order-total--discount span { color: #4ade80; font-size: 0.82rem; font-weight: 600; }
+.pv-order-total--final {
+  padding-top: 0.38rem;
+  margin-top: 0.1rem;
+  border-top: 1px dashed rgba(216, 148, 37, 0.15);
+}
+.pv-order-total--final span { font-weight: 600; color: rgba(241, 221, 178, 0.75); }
 
 .pv-order-total strong { font-size: 1.05rem; font-weight: 800; }
 

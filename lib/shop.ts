@@ -94,12 +94,24 @@ export function cartClear() {
   return [];
 }
 
+export const BULK_DISCOUNT_THRESHOLD = 3;
+export const BULK_DISCOUNT_RATE = 0.05;
+
 export function cartGetItemsCount(items: CartItem[]) {
   return items.reduce((acc, item) => acc + (Number(item.quantity) || 0), 0);
 }
 
 export function cartGetTotal(items: CartItem[]) {
   return items.reduce((acc, item) => acc + (Number(item.unitPrice) || 0) * (Number(item.quantity) || 0), 0);
+}
+
+export function cartGetDiscountAmount(items: CartItem[]) {
+  if (cartGetItemsCount(items) < BULK_DISCOUNT_THRESHOLD) return 0;
+  return Math.round(cartGetTotal(items) * BULK_DISCOUNT_RATE);
+}
+
+export function cartGetFinalTotal(items: CartItem[]) {
+  return cartGetTotal(items) - cartGetDiscountAmount(items);
 }
 
 export function cartAddItem(items: CartItem[], nextItem: CartItem) {
@@ -173,7 +185,14 @@ export function createCartMessage(items: CartItem[]) {
     lines.push('');
   });
 
-  lines.push(`Total estimado: ${formatPrice(cartGetTotal(items))}`);
+  const discount = cartGetDiscountAmount(items);
+  if (discount > 0) {
+    lines.push(`Subtotal: ${formatPrice(cartGetTotal(items))}`);
+    lines.push(`Descuento 5% (3+ unidades): -${formatPrice(discount)}`);
+    lines.push(`Total estimado: ${formatPrice(cartGetFinalTotal(items))}`);
+  } else {
+    lines.push(`Total estimado: ${formatPrice(cartGetTotal(items))}`);
+  }
   lines.push('');
   lines.push('¿Podés confirmar disponibilidad?');
 
