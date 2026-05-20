@@ -318,16 +318,27 @@
   .pv-price-cta { display: none; }
 }
 
-/* Inline qty control — replaces add-to-cart button once item is in cart */
+/* Inline qty control — shown near the price once item is in cart */
 .pv-qty-inline {
   display: inline-flex;
   align-items: center;
-  gap: 0;
   border-radius: 999px;
-  border: 1px solid rgba(216, 148, 37, 0.38);
-  background: rgba(216, 148, 37, 0.08);
+  border: 1.5px solid rgba(216, 148, 37, 0.44);
+  background: rgba(8, 6, 4, 0.75);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 240, 203, 0.05);
   overflow: hidden;
   flex-shrink: 0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pv-qty-inline:hover {
+  border-color: rgba(216, 148, 37, 0.65);
+  box-shadow:
+    0 3px 14px rgba(0, 0, 0, 0.34),
+    0 0 0 3px rgba(216, 148, 37, 0.08),
+    inset 0 1px 0 rgba(255, 240, 203, 0.07);
 }
 
 .pv-qty-inline button {
@@ -335,36 +346,43 @@
   height: 44px;
   border: 0;
   background: transparent;
-  color: rgba(255, 240, 203, 0.90);
-  font-size: 1rem;
-  font-weight: 800;
+  color: rgba(255, 240, 203, 0.68);
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.14s ease, color 0.14s ease;
 }
 
 .pv-qty-inline button:hover {
-  background: rgba(216, 148, 37, 0.16);
+  background: rgba(216, 148, 37, 0.14);
   color: #efb84e;
+}
+
+.pv-qty-inline button:active {
+  background: rgba(216, 148, 37, 0.22);
+}
+
+.pv-qty-inline button:focus-visible {
+  outline: 2px solid rgba(216, 148, 37, 0.60);
+  outline-offset: -2px;
 }
 
 .pv-qty-inline span {
-  min-width: 32px;
-  text-align: center;
-  color: #efb84e;
-  font-weight: 800;
-  font-size: 0.92rem;
-}
-
-/* Row used in the order-box actions — qty pill + secondary button side by side */
-.pv-qty-action-row {
+  min-width: 36px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-}
-
-.pv-qty-action-row .pv-cta--add {
-  flex: 1;
+  justify-content: center;
+  color: #efb84e;
+  font-weight: 800;
+  font-size: 1rem;
+  border-left: 1px solid rgba(216, 148, 37, 0.18);
+  border-right: 1px solid rgba(216, 148, 37, 0.18);
+  padding: 0 2px;
 }
 
 .pv-description {

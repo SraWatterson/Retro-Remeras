@@ -455,16 +455,9 @@ export function ProductView({ product }: Props) {
                       Agregar al pedido
                     </button>
                   ) : (
-                    <div className="pv-qty-action-row">
-                      <div className="pv-qty-inline" role="group" aria-label={`Cantidad: ${currentQty}`}>
-                        <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                        <span aria-live="polite">{currentQty}</span>
-                        <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
-                      </div>
-                      <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
-                        Agregar otro
-                      </button>
-                    </div>
+                    <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
+                      Agregar otro
+                    </button>
                   )}
                   {showClearConfirm ? (
                     <div className="rr-inline-confirm" role="group" aria-label="Confirmar vaciado">
