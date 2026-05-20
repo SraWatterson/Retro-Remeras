@@ -296,10 +296,10 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                       className="product-card product-card--linked"
                       key={product.id}
                       layout
-                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 14 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, transition: { duration: 0.12 } }}
-                      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.26, ease: [0.22, 1, 0.36, 1], delay: Math.min(i * 0.035, 0.25) }}
+                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
+                      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.32, ease: [0.22, 1, 0.36, 1], delay: Math.min(i * 0.03, 0.2) }}
                     >
                     <Link
                       className="product-card-link"
