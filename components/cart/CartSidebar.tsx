@@ -123,7 +123,8 @@ export function CartSidebar() {
 
   function handleSizeChipClick(item: CartItem, newSize: string) {
     if (item.size === newSize) return;
-    if (item.quantity === 1) {
+    const currentQty = items.find((i) => i.id === item.id)?.quantity ?? item.quantity;
+    if (currentQty <= 1) {
       updateCart(cartChangeSize(items, item.id, newSize));
     } else {
       setPendingSize({ itemId: item.id, newSize });
@@ -223,7 +224,6 @@ export function CartSidebar() {
                       <motion.li
                         key={item.id}
                         className={styles.item}
-                        layout
                         initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24, transition: { duration: 0.18 } }}
@@ -270,10 +270,10 @@ export function CartSidebar() {
                             {isPending && (
                               <motion.div
                                 className={styles.sizeConfirm}
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: prefersReducedMotion ? 0 : 0.15 }}
                               >
                                 <span className={styles.sizeConfirmLabel}>
                                   ¿Cuántas al talle <strong>{pendingSize!.newSize}</strong>?
