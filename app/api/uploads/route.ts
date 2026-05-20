@@ -105,7 +105,8 @@ export async function POST(request: Request) {
       return jsonServerError('UPLOADS_POST', 'No se pudo subir la imagen', error);
     }
 
-    const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${fileName}`;
+    const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').replace(/\/$/, '');
+    const publicUrl = `${supabaseUrl}/storage/v1/object/public/${bucket}/${fileName}`;
 
     await createAuditLog({
       action: AuditAction.IMAGE_UPLOADED,
