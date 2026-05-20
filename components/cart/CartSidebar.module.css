@@ -8,7 +8,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 9990;
+  z-index: 10003;
   background: rgba(10, 4, 0, 0.78);
   backdrop-filter: blur(1px) saturate(60%);
   -webkit-backdrop-filter: blur(1px) saturate(60%);
@@ -21,7 +21,7 @@
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 10000;
+  z-index: 10005;
   width: min(420px, 92vw);
   display: flex;
   flex-direction: column;

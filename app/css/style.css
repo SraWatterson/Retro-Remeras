@@ -7545,7 +7545,7 @@ body.nav-open {
   .rr-mobile-overlay {
     position: fixed;
     inset: 0;
-    z-index: 9998;
+    z-index: 10008;
     background: rgba(10, 4, 0, 0.82);
     backdrop-filter: blur(1px) saturate(60%);
     -webkit-backdrop-filter: blur(1px) saturate(60%);
@@ -7557,7 +7557,7 @@ body.nav-open {
     top: 0;
     bottom: 0;
     width: min(300px, 82vw);
-    z-index: 10002;
+    z-index: 10010;
     display: flex;
     flex-direction: column;
     overflow-y: auto;

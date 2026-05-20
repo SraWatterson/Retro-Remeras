@@ -102,7 +102,7 @@ model SiteContent {
   heroTitleAccent         String   @default("estilo")
   heroTitleSuffix         String   @default("nostalgia y personalidad")
   heroText                String   @default("En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.")
-  heroPrimaryButtonText   String   @default("Ver catálogo")
+  heroPrimaryButtonText   String   @default("Ver productos")
   heroPrimaryButtonHref   String   @default("/catalogo")
   heroSecondaryButtonText String   @default("Ver carrito")
   heroSecondaryButtonHref String   @default("/carrito")
