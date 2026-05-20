@@ -688,7 +688,7 @@
 .catalog-sheet-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9990;
+  z-index: 10010;
   background: rgba(10, 4, 0, 0.78);
   backdrop-filter: blur(1px) saturate(60%);
   -webkit-backdrop-filter: blur(1px) saturate(60%);
@@ -699,7 +699,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 10000;
+  z-index: 10020;
   max-height: 88dvh;
   border-radius: 24px 24px 0 0;
   background:
