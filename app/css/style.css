@@ -7216,7 +7216,6 @@ body.nav-open {
 
 .navbar.rr-nav {
   position: relative;
-  isolation: isolate;
   overflow: visible;
 }
 
