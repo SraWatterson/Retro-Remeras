@@ -22,7 +22,7 @@
   top: 0;
   bottom: 0;
   z-index: 10005;
-  width: min(420px, 92vw);
+  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
   background:
@@ -73,7 +73,7 @@
 /* ── Tablet ── */
 @media (min-width: 768px) and (max-width: 1023.98px) {
   .drawer {
-    width: min(460px, 92vw);
+    width: min(540px, 92vw);
   }
 }
 
@@ -319,6 +319,16 @@
   align-items: center;
 }
 
+.sizeLabel {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: rgba(241, 221, 178, 0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.1rem;
+  user-select: none;
+}
+
 .sizeChip {
   font-size: 0.66rem;
   font-weight: 700;
@@ -356,6 +366,82 @@
     height: 24px;
     font-size: 0.7rem;
   }
+}
+
+/* ── Size-change confirmation (qty > 1) ── */
+.sizeConfirm {
+  overflow: hidden;
+  padding: 0.48rem 0.55rem;
+  background: rgba(216, 148, 37, 0.06);
+  border: 1px solid rgba(216, 148, 37, 0.20);
+  border-radius: 8px;
+}
+
+.sizeConfirmLabel {
+  display: block;
+  font-size: 0.72rem;
+  color: rgba(241, 221, 178, 0.60);
+  margin-bottom: 0.35rem;
+}
+
+.sizeConfirmLabel strong {
+  color: #efb84e;
+}
+
+.sizeConfirmActions {
+  display: flex;
+  align-items: center;
+  gap: 0.32rem;
+}
+
+.sizeConfirmBtn {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  min-height: 30px;
+  border-radius: 6px;
+  border: 1px solid rgba(216, 148, 37, 0.22);
+  background: rgba(216, 148, 37, 0.07);
+  color: rgba(241, 221, 178, 0.70);
+  cursor: pointer;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+}
+
+.sizeConfirmBtn:hover {
+  background: rgba(216, 148, 37, 0.14);
+  border-color: rgba(216, 148, 37, 0.36);
+  color: rgba(241, 221, 178, 0.92);
+}
+
+.sizeConfirmBtnAll {
+  background: rgba(216, 148, 37, 0.13);
+  border-color: rgba(216, 148, 37, 0.38);
+  color: #efb84e;
+}
+
+.sizeConfirmBtnAll:hover {
+  background: rgba(216, 148, 37, 0.20);
+}
+
+.sizeConfirmCancel {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: rgba(241, 221, 178, 0.30);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.14s ease, background 0.14s ease;
+}
+
+.sizeConfirmCancel:hover {
+  color: rgba(241, 221, 178, 0.70);
+  background: rgba(255, 240, 203, 0.06);
 }
 
 .itemActions {
@@ -616,7 +702,10 @@
   .emptyStateCta,
   .clearAllBtn,
   .clearConfirmYes,
-  .clearConfirmNo {
+  .clearConfirmNo,
+  .sizeChip,
+  .sizeConfirmBtn,
+  .sizeConfirmCancel {
     transition: none;
   }
 }

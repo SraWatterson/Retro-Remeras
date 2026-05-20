@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 import {
   type CartItem,
+  cartAddItem,
   cartChangeQuantity,
   cartChangeSize,
   cartClear,
@@ -20,11 +21,13 @@ import {
   formatPrice,
   subscribeToCartUpdates,
 } from '@/lib/shop';
+import styles from './CartSidebar.module.css';
 
 function getAvailableSizesForFit(fit: string) {
   return fit === 'oversize' ? ['M', 'L', 'XL', 'XXL'] : ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 }
-import styles from './CartSidebar.module.css';
+
+type PendingSizeChange = { itemId: string; newSize: string } | null;
 
 export const CART_SIDEBAR_EVENT = 'open-cart-sidebar';
 export const CART_ITEM_ADDED_EVENT = 'cart-item-added';
@@ -39,6 +42,7 @@ export function CartSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [items, setItems] = useState<CartItem[]>([]);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [pendingSize, setPendingSize] = useState<PendingSizeChange>(null);
   const prefersReducedMotion = useReducedMotion();
   const drawerRef = useRef<HTMLElement>(null);
 
@@ -62,14 +66,20 @@ export function CartSidebar() {
   useEffect(() => {
     document.body.classList.toggle('cart-sidebar-open', isOpen);
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') {
+        if (pendingSize) {
+          setPendingSize(null);
+        } else {
+          setIsOpen(false);
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       document.body.classList.remove('cart-sidebar-open');
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, pendingSize]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -101,6 +111,7 @@ export function CartSidebar() {
   function close() {
     setIsOpen(false);
     setShowClearConfirm(false);
+    setPendingSize(null);
   }
 
   function confirmClear() {
@@ -108,6 +119,33 @@ export function CartSidebar() {
     setItems(next);
     cartSave(next);
     setShowClearConfirm(false);
+  }
+
+  function handleSizeChipClick(item: CartItem, newSize: string) {
+    if (item.size === newSize) return;
+    if (item.quantity === 1) {
+      updateCart(cartChangeSize(items, item.id, newSize));
+    } else {
+      setPendingSize({ itemId: item.id, newSize });
+    }
+  }
+
+  function confirmSizeChange(itemId: string, newSize: string, moveCount: number) {
+    const item = items.find((i) => i.id === itemId);
+    if (!item) { setPendingSize(null); return; }
+
+    if (moveCount >= item.quantity) {
+      updateCart(cartChangeSize(items, itemId, newSize));
+    } else {
+      const reduced = cartChangeQuantity(items, itemId, -moveCount);
+      const suffix = `-${item.size}-${item.fit}`;
+      const prefix = `${item.productId}-`;
+      const colorSlug = itemId.slice(prefix.length, itemId.length - suffix.length);
+      const newId = `${item.productId}-${colorSlug}-${newSize}-${item.fit}`;
+      const newItem: CartItem = { ...item, id: newId, size: newSize, quantity: moveCount };
+      updateCart(cartAddItem(reduced, newItem));
+    }
+    setPendingSize(null);
   }
 
   const slideTransition = prefersReducedMotion
@@ -179,77 +217,125 @@ export function CartSidebar() {
               ) : (
                 <ul className={styles.itemList}>
                   <AnimatePresence initial={false}>
-                  {items.map((item) => (
-                    <motion.li
-                      key={item.id}
-                      className={styles.item}
-                      layout
-                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24, transition: { duration: 0.18 } }}
-                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <div className={styles.itemThumb}>
-                        <Image
-                          src={item.image}
-                          alt={item.productName}
-                          width={100}
-                          height={100}
-                          sizes="64px"
-                        />
-                      </div>
-                      <div className={styles.itemInfo}>
-                        <div className={styles.itemHeader}>
-                          <span className={styles.itemName}>{item.productName}</span>
-                          <span className={styles.itemPrice}>{formatPrice(item.unitPrice * item.quantity)}</span>
+                  {items.map((item) => {
+                    const isPending = pendingSize?.itemId === item.id;
+                    return (
+                      <motion.li
+                        key={item.id}
+                        className={styles.item}
+                        layout
+                        initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: 24, transition: { duration: 0.18 } }}
+                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <div className={styles.itemThumb}>
+                          <Image
+                            src={item.image}
+                            alt={item.productName}
+                            width={100}
+                            height={100}
+                            sizes="64px"
+                          />
                         </div>
-                        <div className={styles.itemMeta}>
-                          <span>{item.fitLabel}</span>
-                          <span>{item.color}</span>
-                        </div>
-                        <div className={styles.sizeRow} role="group" aria-label="Talle">
-                          {getAvailableSizesForFit(item.fit).map((s) => (
+                        <div className={styles.itemInfo}>
+                          <div className={styles.itemHeader}>
+                            <span className={styles.itemName}>{item.productName}</span>
+                            <span className={styles.itemPrice}>{formatPrice(item.unitPrice * item.quantity)}</span>
+                          </div>
+                          <div className={styles.itemMeta}>
+                            <span>{item.fitLabel}</span>
+                            <span>{item.color}</span>
+                          </div>
+
+                          {/* Size chips */}
+                          <div className={styles.sizeRow} role="group" aria-label="Talle">
+                            <span className={styles.sizeLabel}>T.</span>
+                            {getAvailableSizesForFit(item.fit).map((s) => (
+                              <button
+                                key={s}
+                                type="button"
+                                className={`${styles.sizeChip}${item.size === s ? ` ${styles.sizeChipActive}` : ''}`}
+                                onClick={() => handleSizeChipClick(item, s)}
+                                aria-pressed={item.size === s}
+                                aria-label={`Talle ${s}`}
+                              >
+                                {s}
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Size change confirmation (qty > 1) */}
+                          <AnimatePresence>
+                            {isPending && (
+                              <motion.div
+                                className={styles.sizeConfirm}
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: prefersReducedMotion ? 0 : 0.18 }}
+                              >
+                                <span className={styles.sizeConfirmLabel}>
+                                  ¿Cuántas al talle <strong>{pendingSize!.newSize}</strong>?
+                                </span>
+                                <div className={styles.sizeConfirmActions}>
+                                  <button
+                                    type="button"
+                                    className={styles.sizeConfirmBtn}
+                                    onClick={() => confirmSizeChange(item.id, pendingSize!.newSize, 1)}
+                                  >
+                                    Solo 1
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={`${styles.sizeConfirmBtn} ${styles.sizeConfirmBtnAll}`}
+                                    onClick={() => confirmSizeChange(item.id, pendingSize!.newSize, item.quantity)}
+                                  >
+                                    Todas ({item.quantity})
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className={styles.sizeConfirmCancel}
+                                    aria-label="Cancelar cambio de talle"
+                                    onClick={() => setPendingSize(null)}
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+
+                          <div className={styles.itemActions}>
+                            <div className={styles.qtyControl}>
+                              <button
+                                type="button"
+                                aria-label="Reducir cantidad"
+                                onClick={() => updateCart(cartChangeQuantity(items, item.id, -1))}
+                              >
+                                −
+                              </button>
+                              <span>{item.quantity}</span>
+                              <button
+                                type="button"
+                                aria-label="Aumentar cantidad"
+                                onClick={() => updateCart(cartChangeQuantity(items, item.id, 1))}
+                              >
+                                +
+                              </button>
+                            </div>
                             <button
-                              key={s}
                               type="button"
-                              className={`${styles.sizeChip}${item.size === s ? ` ${styles.sizeChipActive}` : ''}`}
-                              onClick={() => { if (item.size !== s) updateCart(cartChangeSize(items, item.id, s)); }}
-                              aria-pressed={item.size === s}
-                              aria-label={`Talle ${s}`}
+                              className={styles.removeBtn}
+                              onClick={() => updateCart(cartRemoveItem(items, item.id))}
                             >
-                              {s}
-                            </button>
-                          ))}
-                        </div>
-                        <div className={styles.itemActions}>
-                          <div className={styles.qtyControl}>
-                            <button
-                              type="button"
-                              aria-label="Reducir cantidad"
-                              onClick={() => updateCart(cartChangeQuantity(items, item.id, -1))}
-                            >
-                              −
-                            </button>
-                            <span>{item.quantity}</span>
-                            <button
-                              type="button"
-                              aria-label="Aumentar cantidad"
-                              onClick={() => updateCart(cartChangeQuantity(items, item.id, 1))}
-                            >
-                              +
+                              Quitar
                             </button>
                           </div>
-                          <button
-                            type="button"
-                            className={styles.removeBtn}
-                            onClick={() => updateCart(cartRemoveItem(items, item.id))}
-                          >
-                            Quitar
-                          </button>
                         </div>
-                      </div>
-                    </motion.li>
-                  ))}
+                      </motion.li>
+                    );
+                  })}
                   </AnimatePresence>
                 </ul>
               )}
