@@ -561,18 +561,18 @@
   gap: 0.48rem;
   min-height: 50px;
   border-radius: 14px;
-  border: 1px solid rgba(216, 148, 37, 0.50);
-  background: linear-gradient(135deg, #f6d36a 0%, #efb84e 42%, #d89425 100%);
-  color: #100b07;
+  border: 1px solid rgba(30, 140, 70, 0.50);
+  background: linear-gradient(135deg, #22a04a 0%, #1a8c3e 50%, #137032 100%);
+  color: #e8f5ee;
   font-weight: 800;
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   box-shadow:
-    0 8px 22px rgba(216, 148, 37, 0.22),
-    0 2px 8px rgba(3, 2, 1, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 8px 22px rgba(20, 110, 55, 0.28),
+    0 2px 8px rgba(3, 2, 1, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 @media (max-width: 767.98px) {
@@ -586,9 +586,9 @@
 .whatsappBtn:hover,
 .whatsappBtn:focus-visible {
   box-shadow:
-    0 12px 28px rgba(216, 148, 37, 0.30),
-    0 3px 10px rgba(3, 2, 1, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    0 12px 28px rgba(20, 110, 55, 0.38),
+    0 3px 10px rgba(3, 2, 1, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transform: translateY(-1px);
 }
 
