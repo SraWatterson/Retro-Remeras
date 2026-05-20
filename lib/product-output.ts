@@ -20,7 +20,7 @@ type ProductLike = {
   deletedById?: string | null;
 };
 
-export function normalizeImageMap(value: unknown): Record<string, ProductColorImage> {
+export function normalizeImageMap(value: unknown, mainImageFallback = ''): Record<string, ProductColorImage> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
 
   const normalized: Record<string, ProductColorImage> = {};
@@ -46,14 +46,15 @@ export function normalizeImageMap(value: unknown): Record<string, ProductColorIm
 
     const data = rawData as Record<string, unknown>;
     const colorSlug = normalizeColorSlug(String(data.colorSlug || data.slug || rawColor));
+    if (!colorSlug) return;
+
     const path = String(data.path || data.image || data.url || '').trim();
-    if (!colorSlug || !path) return;
 
     normalized[colorSlug] = {
       colorSlug,
       colorName: String(data.colorName || data.name || colorLabelFromSlug(colorSlug)).trim() || colorLabelFromSlug(colorSlug),
       colorHex: String(data.colorHex || data.hex || colorHexFromSlug(colorSlug)).trim() || colorHexFromSlug(colorSlug),
-      path,
+      path: path || mainImageFallback,
     };
   });
 
@@ -133,7 +134,7 @@ export function normalizeProductOutput(product: ProductLike): Product {
     categoria: normalizeCategoryName(product.categoria),
     precio: product.precio,
     imagen: product.imagen,
-    imagenesPorColor: normalizeImageMap(product.imagenesPorColor),
+    imagenesPorColor: normalizeImageMap(product.imagenesPorColor, product.imagen || ''),
     sizeGuide: normalizeSizeGuide(product.sizeGuide),
     descripcion: product.descripcion,
     disponible: product.disponible,

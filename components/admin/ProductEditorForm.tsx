@@ -394,8 +394,8 @@ export function ProductEditorForm({
         <div className="form-group">
           <div className="admin-color-section-head">
             <div>
-              <label className="form-label">Imágenes por color</label>
-              <p className="admin-help">El producto público solo mostrará los colores que tengan color e imagen cargados acá.</p>
+              <label className="form-label">Colores del producto</label>
+              <p className="admin-help">Asigná los colores disponibles. Sin imagen específica, se muestra la imagen principal automáticamente.</p>
             </div>
           </div>
 
@@ -463,10 +463,25 @@ export function ProductEditorForm({
 
                 <div className={`admin-preview-wrap ${uploading ? 'is-busy' : ''}`} aria-busy={uploading}>
                   {(() => {
-                    const previewSrc = normalizeAdminImageSrc(row.path);
+                    const specificSrc = normalizeAdminImageSrc(row.path);
+                    const fallbackSrc = normalizeAdminImageSrc(form.imagen);
+                    const previewSrc = specificSrc || fallbackSrc;
+                    const isUsingMain = !specificSrc && Boolean(fallbackSrc);
 
                     return previewSrc ? (
-                      <Image className="admin-preview admin-preview--small" src={previewSrc} alt={`Color ${row.colorName || 'sin nombre'}`} width={180} height={180} sizes="96px" />
+                      <div className="admin-preview-relative">
+                        <Image
+                          className={`admin-preview admin-preview--small${isUsingMain ? ' admin-preview--dimmed' : ''}`}
+                          src={previewSrc}
+                          alt={`Color ${row.colorName || 'sin nombre'}`}
+                          width={180}
+                          height={180}
+                          sizes="96px"
+                        />
+                        {isUsingMain && (
+                          <span className="admin-preview-badge">Imagen principal</span>
+                        )}
+                      </div>
                     ) : (
                       <div className="admin-preview admin-preview--small admin-preview--empty">Sin imagen</div>
                     );
@@ -475,19 +490,23 @@ export function ProductEditorForm({
                 </div>
 
                 <div className="admin-inline-actions">
-                  <label className={`btn btn-primary admin-upload-btn ${uploading ? 'is-disabled' : ''}`}>
-                    {uploading ? 'Subiendo...' : 'Subir'}
+                  <label className={`btn btn-secondary admin-upload-btn ${uploading ? 'is-disabled' : ''}`}>
+                    {uploading ? 'Subiendo...' : (row.path ? 'Cambiar imagen' : 'Imagen específica')}
                     <input className="admin-file-input" type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading || saving} onChange={(event) => onColorUpload(row.id, event.target.files?.[0] || null)} />
                   </label>
-                  <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={() => onColorDetach(row.id)}>Quitar</button>
-                  <button className="btn btn-ghost" type="button" disabled={uploading || saving} onClick={() => onColorDeleteFile(row.id)}>Eliminar archivo</button>
+                  {row.path && (
+                    <>
+                      <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={() => onColorDetach(row.id)}>Quitar imagen</button>
+                      <button className="btn btn-ghost" type="button" disabled={uploading || saving} onClick={() => onColorDeleteFile(row.id)}>Eliminar archivo</button>
+                    </>
+                  )}
                   <button className="btn btn-ghost" type="button" disabled={uploading || saving} onClick={() => onRemoveColorRow(row.id)}>Eliminar color</button>
                 </div>
               </div>
             ))}
           </div>
 
-          <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={onAddColorRow}>Agregar imagen por color</button>
+          <button className="btn btn-secondary" type="button" disabled={uploading || saving} onClick={onAddColorRow}>+ Agregar color</button>
           {errors.colorImages ? <p className="admin-error">{errors.colorImages}</p> : null}
         </div>
 

@@ -33,7 +33,10 @@ const colorImageValueSchema = z.union([
     colorSlug: z.string().trim().min(1).transform((value) => normalizeColorSlug(value)),
     colorName: z.string().trim().min(1),
     colorHex: z.string().trim().min(1).transform((value) => normalizeHexColor(value)).refine(Boolean, 'Color hexadecimal inválido'),
-    path: relativeOrAbsoluteImagePath,
+    path: z.string().trim().default('').refine(
+      (v) => !v || v.startsWith('/uploads/') || v.startsWith('/assets/') || v.startsWith('https://') || v.startsWith('http://'),
+      'La imagen debe ser una ruta pública válida o una URL'
+    ),
   }),
 ]);
 

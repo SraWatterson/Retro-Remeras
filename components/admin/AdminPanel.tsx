@@ -157,10 +157,9 @@ function colorRowsToRecord(rows: ColorImageRow[]) {
     const colorSlug = normalizeColorSlug(row.colorSlug || row.colorName);
     const colorName = row.colorName.trim();
     const colorHex = row.colorHex.trim();
-    const path = row.path.trim();
 
-    if (colorSlug && colorName && colorHex && path) {
-      record[colorSlug] = { colorSlug, colorName, colorHex, path };
+    if (colorSlug && colorName && colorHex) {
+      record[colorSlug] = { colorSlug, colorName, colorHex, path: row.path.trim() };
     }
   });
 
@@ -273,11 +272,11 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
   const invalidRow = colorRows.some((row) => {
     const hasColor = Boolean(normalizeColorSlug(row.colorSlug || row.colorName));
     const hasPath = Boolean(row.path.trim());
-    return hasColor !== hasPath;
+    return hasPath && !hasColor;
   });
 
   if (invalidRow) {
-    errors.colorImages = 'Cada fila de color debe tener color e imagen.';
+    errors.colorImages = 'Una imagen cargada no tiene color asignado.';
   }
 
   const sizeGuide = sanitizeSizeGuide(values.sizeGuide);
@@ -316,12 +315,13 @@ function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
 }
 
 function fromProduct(product: Product) {
-  const rows = Object.entries(product.imagenesPorColor || {}).map(([colorSlug, data]) =>
+  const rawMap = product.imagenesPorColor as Record<string, { colorSlug?: string; colorName?: string; colorHex?: string; path?: string }> | null | undefined;
+  const rows = Object.entries(rawMap || {}).map(([colorSlug, data]) =>
     newColorRow({
-      colorSlug: data.colorSlug || colorSlug,
-      colorName: data.colorName,
-      colorHex: data.colorHex,
-      path: data.path,
+      colorSlug: data?.colorSlug || colorSlug,
+      colorName: data?.colorName || '',
+      colorHex: data?.colorHex || '#111111',
+      path: data?.path || '',
     })
   );
 

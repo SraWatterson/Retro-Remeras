@@ -109,6 +109,33 @@
   border-style: dashed;
 }
 
+.admin-preview-relative {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.admin-preview--dimmed {
+  opacity: 0.55;
+  filter: saturate(0.7);
+}
+
+.admin-preview-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgba(241, 221, 178, 0.92);
+  background: rgba(0, 0, 0, 0.72);
+  padding: 3px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 0 0 6px 6px;
+}
+
 .admin-color-list {
   display: grid;
   gap: 0.8rem;

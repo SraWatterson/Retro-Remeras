@@ -327,11 +327,12 @@
   border: 1px solid rgba(216, 148, 37, 0.38);
   background: rgba(216, 148, 37, 0.08);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .pv-qty-inline button {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: 0;
   background: transparent;
   color: rgba(255, 240, 203, 0.90);
@@ -348,36 +349,22 @@
 }
 
 .pv-qty-inline span {
-  min-width: 28px;
+  min-width: 32px;
   text-align: center;
   color: #efb84e;
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
-/* Larger variant used in the order box */
-.pv-qty-inline--lg {
-  width: 100%;
-  justify-content: center;
-  border-radius: 14px;
-  min-height: 50px;
-  border-color: rgba(216, 148, 37, 0.40);
+/* Row used in the order-box actions — qty pill + secondary button side by side */
+.pv-qty-action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.pv-qty-inline--lg button {
+.pv-qty-action-row .pv-cta--add {
   flex: 1;
-  height: 50px;
-  font-size: 1.1rem;
-}
-
-.pv-qty-inline--lg span {
-  font-size: 1.05rem;
-  min-width: 40px;
-}
-
-@media (min-width: 768px) {
-  .pv-qty-inline { display: none; }
-  .pv-qty-inline--lg { display: inline-flex; }
 }
 
 .pv-description {

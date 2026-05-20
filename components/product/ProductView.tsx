@@ -256,9 +256,9 @@ export function ProductView({ product }: Props) {
                   Agregar al pedido
                 </button>
               ) : (
-                <div className="pv-qty-inline">
+                <div className="pv-qty-inline" role="group" aria-label={`Cantidad en pedido: ${currentQty}`}>
                   <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                  <span>{currentQty}</span>
+                  <span aria-live="polite">{currentQty}</span>
                   <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
                 </div>
               )}
@@ -455,10 +455,15 @@ export function ProductView({ product }: Props) {
                       Agregar al pedido
                     </button>
                   ) : (
-                    <div className="pv-qty-inline pv-qty-inline--lg">
-                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                      <span>{currentQty}</span>
-                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                    <div className="pv-qty-action-row">
+                      <div className="pv-qty-inline" role="group" aria-label={`Cantidad: ${currentQty}`}>
+                        <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
+                        <span aria-live="polite">{currentQty}</span>
+                        <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                      </div>
+                      <button className="pv-cta pv-cta--add" type="button" onClick={addToCart}>
+                        Agregar otro
+                      </button>
                     </div>
                   )}
                   {showClearConfirm ? (
@@ -491,17 +496,9 @@ export function ProductView({ product }: Props) {
                 </>
               ) : (
                 <>
-                  {currentQty === 0 ? (
-                    <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
-                      Agregar al pedido
-                    </button>
-                  ) : (
-                    <div className="pv-qty-inline pv-qty-inline--lg">
-                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                      <span>{currentQty}</span>
-                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
-                    </div>
-                  )}
+                  <button className="pv-cta pv-cta--primary" type="button" onClick={addToCart}>
+                    Agregar al pedido
+                  </button>
                   <Link className="pv-link-btn" href="/productos">
                     Seguir viendo diseños
                   </Link>
