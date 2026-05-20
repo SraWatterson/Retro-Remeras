@@ -248,20 +248,32 @@ export function ProductView({ product }: Props) {
                 <strong className="pv-price">{formatPrice(product.precio)}</strong>
                 <span className="pv-price-note">por unidad</span>
               </div>
-              {currentQty === 0 ? (
-                <button className="pv-price-cta" type="button" onClick={addToCart}>
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                    <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                  </svg>
-                  Agregar al pedido
-                </button>
-              ) : (
-                <div className="pv-qty-inline" role="group" aria-label={`Cantidad en pedido: ${currentQty}`}>
-                  <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
-                  <span aria-live="polite">{currentQty}</span>
-                  <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
-                </div>
-              )}
+              <div className="pv-price-right">
+                {currentQty === 0 ? (
+                  <button className="pv-price-cta" type="button" onClick={addToCart}>
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                      <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+                    </svg>
+                    Agregar al pedido
+                  </button>
+                ) : (
+                  <>
+                    <div className="pv-qty-inline" role="group" aria-label={`Cantidad en pedido: ${currentQty}`}>
+                      <button type="button" aria-label="Reducir cantidad" onClick={() => updateCartQty(-1)}>−</button>
+                      <span aria-live="polite">{currentQty}</span>
+                      <button type="button" aria-label="Aumentar cantidad" onClick={() => updateCartQty(1)}>+</button>
+                    </div>
+                    <a
+                      className="pv-mini-finalize"
+                      href={orderLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Finalizar pedido →
+                    </a>
+                  </>
+                )}
+              </div>
             </div>
             {product.descripcion && product.descripcion.trim().toLowerCase() !== product.nombre.trim().toLowerCase() && (
               <p className="pv-description">{product.descripcion}</p>
