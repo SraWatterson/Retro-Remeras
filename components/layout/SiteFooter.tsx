@@ -30,9 +30,9 @@ export function SiteFooter() {
             target="_blank"
             rel="noreferrer"
             className="footer-credit"
-            aria-label="Instagram de David Leonel, desarrollador del sitio"
+            aria-label="Instagram de David, desarrollador del sitio"
           >
-            Sitio realizado por <span className="footer-credit__name">David Leonel</span>
+            Sitio realizado por <span className="footer-credit__name">David</span>
           </a>
         </div>
 
