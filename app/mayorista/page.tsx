@@ -8,6 +8,7 @@ import { getSiteContent } from '@/lib/site-content';
 export const metadata: Metadata = {
   title: 'Mayorista | Retro Remeras',
   description: 'Producción mayorista de remeras para empresas, eventos, institutos, emprendimientos y revendedores.',
+  alternates: { canonical: '/mayorista' },
   openGraph: {
     title: 'Mayorista | Retro Remeras',
     description: 'Producción mayorista de remeras para empresas, eventos, institutos, emprendimientos y revendedores.',

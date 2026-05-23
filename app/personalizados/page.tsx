@@ -8,6 +8,7 @@ import { getSiteContent } from '@/lib/site-content';
 export const metadata: Metadata = {
   title: 'Personalizados | Retro Remeras',
   description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',
+  alternates: { canonical: '/personalizados' },
   openGraph: {
     title: 'Personalizados | Retro Remeras',
     description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',

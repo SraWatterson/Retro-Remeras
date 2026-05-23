@@ -5,6 +5,7 @@ import './css/style.css';
 import './css/personalizados-mayorista.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: 'Retro Remeras',
   description: 'Remeras con estilo, nostalgia y personalidad.',
   icons: { icon: '/assets/icons/favicon.ico' },
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
     locale: 'es_AR',
     type: 'website',
     images: [{ url: '/assets/img/ejemplo-vintage.jpg', width: 1100, height: 1320, alt: 'Retro Remeras' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 };
 

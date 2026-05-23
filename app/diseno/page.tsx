@@ -37,6 +37,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   return {
     title: `${product.nombre} | Retro Remeras`,
     description,
+    alternates: { canonical: `/diseno?id=${params.id}` },
     openGraph: {
       title: `${product.nombre} | Retro Remeras`,
       description,
@@ -65,6 +66,8 @@ export default async function Page({ searchParams }: PageProps) {
     ? rawImage
     : `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}${rawImage}`;
 
+  const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+
   const ldProduct = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -81,12 +84,20 @@ export default async function Page({ searchParams }: PageProps) {
     },
   };
 
+  const ldBreadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
+      { '@type': 'ListItem', position: 3, name: product.nombre, item: `${BASE}/diseno?id=${product.id}` },
+    ],
+  };
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldProduct) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldProduct) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ldBreadcrumb) }} />
       <PromoBar content={siteContent} />
       <SiteHeader active="catalogo" />
       <ProductView key={product.id} product={product} />
