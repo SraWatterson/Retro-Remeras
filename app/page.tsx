@@ -72,7 +72,7 @@ export default async function Page() {
               <span className="hero-stat__label">alta definición</span>
             </div>
             <div className="hero-stat">
-              <span className="hero-stat__num">CABA</span>
+              <span className="hero-stat__num">GBA</span>
               <span className="hero-stat__label">y envíos al país</span>
             </div>
           </div>
