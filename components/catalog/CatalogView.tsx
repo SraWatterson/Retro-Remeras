@@ -97,7 +97,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
       case 'name-desc':  return [...result].sort((a, b) => b.nombre.localeCompare(a.nombre, 'es'));
       default:           return result;
     }
-  }, [activeCategory, activeColors, sortOrder, products]);
+  }, [activeCategory, activeColors, sortOrder, searchQuery, products]);
 
   const activeFiltersCount = (activeCategory !== 'Todos' ? 1 : 0) + activeColors.size + (searchQuery ? 1 : 0);
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ?? 'Ordenar';
