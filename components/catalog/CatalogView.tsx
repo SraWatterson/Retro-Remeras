@@ -48,6 +48,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
   const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
   const [activeColors, setActiveColors] = useState<Set<string>>(new Set());
   const [sortOrder, setSortOrder] = useState('default');
+  const [searchQuery, setSearchQuery] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
@@ -76,12 +77,16 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
   const filtered = useMemo(() => {
     const catNorm = normalizeText(activeCategory);
+    const searchNorm = normalizeText(searchQuery);
     const result = products.filter((p) => {
       const catMatch = activeCategory === 'Todos' || normalizeText(p.categoria) === catNorm;
       if (!catMatch) return false;
-      if (activeColors.size === 0) return true;
-      const keys = p.imagenesPorColor ? Object.keys(p.imagenesPorColor) : [];
-      return [...activeColors].some((slug) => keys.includes(slug));
+      if (activeColors.size > 0) {
+        const keys = p.imagenesPorColor ? Object.keys(p.imagenesPorColor) : [];
+        if (![...activeColors].some((slug) => keys.includes(slug))) return false;
+      }
+      if (searchNorm && !normalizeText(p.nombre).includes(searchNorm)) return false;
+      return true;
     });
 
     switch (sortOrder) {
@@ -94,7 +99,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     }
   }, [activeCategory, activeColors, sortOrder, products]);
 
-  const activeFiltersCount = (activeCategory !== 'Todos' ? 1 : 0) + activeColors.size;
+  const activeFiltersCount = (activeCategory !== 'Todos' ? 1 : 0) + activeColors.size + (searchQuery ? 1 : 0);
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ?? 'Ordenar';
   const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, CATEGORIES_LIMIT + 1);
   const visibleColors = showAllColors ? availableColors : availableColors.slice(0, COLORS_LIMIT);
@@ -110,10 +115,40 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
   function clearFilters() {
     setActiveCategory('Todos');
     setActiveColors(new Set());
+    setSearchQuery('');
   }
 
   const filterPanel = (
     <>
+      <div className="cfilter-section cfilter-section--search">
+        <div className="cfilter-search">
+          <svg className="cfilter-search__icon" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+            <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          <input
+            type="search"
+            className="cfilter-search__input"
+            placeholder="Buscar diseño..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Buscar productos por nombre"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              className="cfilter-search__clear"
+              onClick={() => setSearchQuery('')}
+              aria-label="Limpiar búsqueda"
+            >
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+                <path d="M1 1l7 7M8 1L1 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="cfilter-section">
         <p className="cfilter-section-title">Categoría</p>
         <ul className="cfilter-list">
@@ -281,7 +316,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             {/* Product grid */}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={`${activeCategory}|${[...activeColors].sort().join(',')}|${sortOrder}`}
+                key={`${activeCategory}|${[...activeColors].sort().join(',')}|${sortOrder}|${searchQuery}`}
                 className="catalog-grid"
                 data-catalog-grid
                 initial={{ opacity: 0 }}
@@ -292,8 +327,8 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                 {!filtered.length ? (
                   <div className="empty-state">
                     <span className="section-kicker">Sin resultados</span>
-                    <h3>No encontramos diseños para ese filtro</h3>
-                    <p>Probá con otra categoría o limpiá los filtros activos.</p>
+                    <h3>No encontramos diseños{searchQuery ? ` para "${searchQuery}"` : ' para ese filtro'}</h3>
+                    <p>{searchQuery ? 'Probá con otro término o revisá el nombre del diseño.' : 'Probá con otra categoría o limpiá los filtros activos.'}</p>
                     <button type="button" className="btn btn-primary" onClick={clearFilters}>
                       Ver todos
                     </button>
