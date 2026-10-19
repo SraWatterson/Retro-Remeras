@@ -103,3 +103,35 @@
     animation: none !important;
   }
 }
+
+/* ---------- Tarjetas con ilustración ----------
+   Imagen más viva (antes un velo oscuro la apagaba) y un velo solo arriba a
+   la izquierda, detrás del texto. Título y descripción con borde oscuro para
+   que se lean sobre cualquier ilustración. */
+.cat-marquee .category-card::before,
+.cat-marquee .category-card img {
+  filter: brightness(1.03) contrast(1.06) saturate(1.1) !important;
+}
+
+.cat-marquee .category-card::after {
+  background:
+    radial-gradient(120% 75% at 0% 0%, rgba(8, 5, 3, 0.78) 0%, rgba(8, 5, 3, 0.45) 40%, rgba(8, 5, 3, 0) 64%),
+    linear-gradient(180deg, rgba(8, 5, 3, 0) 55%, rgba(8, 5, 3, 0.45) 100%) !important;
+}
+
+.cat-marquee .category-card h3 {
+  -webkit-text-stroke: 5px #140c06;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 #0b0704, 0 6px 18px rgba(0, 0, 0, 0.55) !important;
+}
+
+.cat-marquee .category-card p {
+  color: #fff6dd !important;
+  text-shadow:
+    -1px -1px 0 #140c06,
+    1px -1px 0 #140c06,
+    -1px 1px 0 #140c06,
+    1px 1px 0 #140c06,
+    0 2px 0 #140c06,
+    0 4px 12px rgba(0, 0, 0, 0.7) !important;
+}
