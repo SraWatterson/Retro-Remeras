@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { normalizeColorSlug, normalizeHexColor } from '@/lib/colors';
+import { withRemeraPrefix } from '@/lib/product-name';
 
 export const strongPasswordSchema = z
   .string()
@@ -70,7 +71,7 @@ export const productInputSchema = z.object({
     .trim()
     .min(2)
     .regex(/^[a-z0-9-]+$/, 'El slug solo puede contener minúsculas, números y guiones'),
-  nombre: z.string().trim().min(2),
+  nombre: z.string().trim().min(2).transform(withRemeraPrefix),
   categoria: z.string().trim().min(2),
   precio: z.number().int().nonnegative(),
   imagen: relativeOrAbsoluteImagePath.optional().nullable(),
