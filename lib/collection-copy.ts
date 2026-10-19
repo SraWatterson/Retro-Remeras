@@ -24,7 +24,7 @@ const COPY: Record<string, CollectionCopy> = {
     description:
       'Remeras de anime estampadas en DTF: Naruto, Frieren, One Piece, Sailor Moon y más. Sin mínimo de compra y con envíos a todo el país.',
     intro:
-      'Tus personajes favoritos en remeras con estampado DTF de alta definición: colores vivos, detalles finos y diseños pensados para quienes viven el anime y el manga.',
+      'Tus personajes favoritos, del shōnen de culto al anime que te marcó en los 90. Estampas con trazo de manga, colores vivos y detalles para mirar de cerca.',
   },
   musica: {
     imageAlt:
@@ -34,7 +34,7 @@ const COPY: Record<string, CollectionCopy> = {
     description:
       'Remeras de bandas de rock: AC/DC, Iron Maiden, Nirvana, Rolling Stones, KISS y más. Estampado DTF, sin mínimo de compra, envíos a todo el país.',
     intro:
-      'Rock clásico, giras legendarias y portadas que marcaron época. Remeras de bandas con estética vintage y estampado DTF que aguanta el uso y los lavados.',
+      'Discos que te cambiaron la vida, giras legendarias y bandas que se escuchan al palo. Remeras de rock con estética vintage, para el recital o para todos los días.',
   },
   videojuegos: {
     imageAlt:
@@ -44,7 +44,7 @@ const COPY: Record<string, CollectionCopy> = {
     description:
       'Remeras gamer y de videojuegos retro: Atari, League of Legends y más. Estampado DTF de alta definición, sin mínimo de compra.',
     intro:
-      'De las consolas clásicas a los juegos de hoy: remeras para gamers con diseños llenos de color y nostalgia, estampadas en DTF.',
+      'De los arcades y las consolas de los 80 a los juegos que jugás hoy. Remeras gamer con color, nostalgia y algún que otro guiño para iniciados.',
   },
   argentina: {
     imageAlt:
@@ -54,7 +54,7 @@ const COPY: Record<string, CollectionCopy> = {
     description:
       'Remeras con diseños argentinos: el Sol de Mayo y más símbolos nacionales. Estampado DTF, sin mínimo de compra, envíos a todo el país.',
     intro:
-      'Diseños con identidad nacional para llevar la pasión argentina en el pecho, con estampado DTF de alta definición.',
+      'El Sol de Mayo, el celeste y blanco y todo lo que nos hace argentinos, en diseños urbanos para llevar lo nuestro todos los días.',
   },
   retro: {
     imageAlt:
@@ -64,7 +64,7 @@ const COPY: Record<string, CollectionCopy> = {
     description:
       'Remeras retro y vintage con estética de los 70, 80 y 90. Estampado DTF de alta definición, sin mínimo de compra y envíos a todo el país.',
     intro:
-      'Cartelería, colores cálidos y tipografías con historia: remeras con espíritu vintage para quienes tienen buen gusto y memoria.',
+      'Neón, cartelería, autos de otra época y tipografías con historia. Remeras con espíritu vintage para quienes tienen buen gusto y buena memoria.',
   },
   futbol: {
     imageAlt:
@@ -73,7 +73,8 @@ const COPY: Record<string, CollectionCopy> = {
     heading: ['Remeras de ', 'fútbol'],
     description:
       'Remeras de fútbol con clásicos, ídolos y mística de cancha. Estampado DTF, sin mínimo de compra y envíos a todo el país.',
-    intro: 'Clásicos, ídolos y momentos épicos del fútbol en remeras con estampado DTF de alta definición.',
+    intro:
+      'Ídolos, camisetas que hicieron historia y la mística de la cancha. Remeras para vivir el fútbol también fuera del estadio.',
   },
   cine: {
     imageAlt:
@@ -82,7 +83,8 @@ const COPY: Record<string, CollectionCopy> = {
     heading: ['Remeras de ', 'cine'],
     description:
       'Remeras de películas: pósters, VHS, clásicos de culto y referencias que se entienden. Estampado DTF, sin mínimo de compra.',
-    intro: 'Pósters, VHS y películas de culto convertidos en remeras con estampado DTF de alta definición.',
+    intro:
+      'Pósters de culto, VHS gastados y películas que viste mil veces. Remeras para cinéfilos de alma.',
   },
   variados: {
     imageAlt:
@@ -91,7 +93,8 @@ const COPY: Record<string, CollectionCopy> = {
     heading: ['Remeras ', 'variadas'],
     description:
       'Remeras con diseños variados: cultura urbana, conceptos visuales y diseños únicos. Estampado DTF, sin mínimo de compra.',
-    intro: 'Cultura urbana, conceptos visuales y diseños sueltos que no entran en ninguna caja, con estampado DTF.',
+    intro:
+      'Cultura urbana, conceptos visuales y diseños que no entran en ninguna caja. Para los que no se casan con un solo estilo.',
   },
 };
 

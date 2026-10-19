@@ -20,7 +20,7 @@ const ICON_PROPS = {
 const steps: { title: string; description: string; icon: ReactNode }[] = [
   {
     title: 'Elegí un diseño',
-    description: 'Recorré las categorías o explorá todos los productos para encontrar tu remera.',
+    description: 'Recorré las colecciones y quedate con la que más te represente: anime, rock, gaming y más.',
     icon: (
       <svg {...ICON_PROPS}>
         <path d="M8 3 3 6l2 5 3-1.5V21h8V9.5l3 1.5 2-5-5-3c-.7 1.6-2.2 2.5-4 2.5S8.7 4.6 8 3z" />
@@ -28,8 +28,8 @@ const steps: { title: string; description: string; icon: ReactNode }[] = [
     ),
   },
   {
-    title: 'Seleccioná color, tipo y talle',
-    description: 'Configurá el modelo con las opciones disponibles antes de armar el pedido.',
+    title: 'Armá tu remera',
+    description: 'Elegí color, corte (regular u oversize) y talle. Si dudás, la tabla de medidas te salva.',
     icon: (
       <svg {...ICON_PROPS}>
         <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" />
@@ -41,7 +41,7 @@ const steps: { title: string; description: string; icon: ReactNode }[] = [
   },
   {
     title: 'Confirmá por WhatsApp',
-    description: 'Enviá tu pedido listo para coordinar disponibilidad, pago y entrega.',
+    description: 'Nos llega tu pedido armado y coordinamos pago y entrega por chat. Así de simple.',
     icon: (
       <svg {...ICON_PROPS}>
         <path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.2A8.5 8.5 0 1 1 21 12z" />

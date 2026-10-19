@@ -120,10 +120,10 @@ const EMPTY_SITE_CONTENT_FORM: SiteContentFormState = {
   promoEnabled: true,
   promoText: 'LLEVANDO 3 PRODUCTOS TENÉS 5% DE DESCUENTO',
   promoHref: '',
-  heroEyebrow: 'Tienda temática · Buenos Aires',
+  heroEyebrow: 'Estampado DTF · Zona Oeste, Buenos Aires',
   heroTitlePrefix: 'Remeras con',
-  heroTitleAccent: 'estilo',
-  heroTitleSuffix: 'nostalgia y personalidad',
+  heroTitleAccent: 'nostalgia',
+  heroTitleSuffix: 'y personalidad',
   heroText:
     'En Retro Remeras mezclamos cultura pop, estética vintage y diseños con identidad. Elegí una categoría, encontrá tu estilo y armá tu pedido desde la página de cada producto.',
   heroPrimaryButtonText: 'Ver productos',

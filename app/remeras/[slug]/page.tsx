@@ -24,15 +24,30 @@ function absoluteImageUrl(imagen?: string | null) {
   return rawImage.startsWith('http') ? rawImage : `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}${rawImage}`;
 }
 
+/**
+ * Descripción para Google (≈155 caracteres). Usa el segundo párrafo de la
+ * descripción si existe (el que nombra la referencia exacta: personaje, banda,
+ * serie), si no el primero, y le suma el precio.
+ */
+function metaDescription(nombre: string, descripcion: string | null | undefined, precio: string) {
+  const paragraphs = (descripcion || '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  const base = paragraphs[1] || paragraphs[0] || `${/^remeras?\b/i.test(nombre.trim()) ? nombre : `Remera ${nombre}`} con estampado DTF`;
+  const max = 150 - precio.length;
+  let text = base.replace(/\s+/g, ' ');
+  if (text.length > max) {
+    const cut = text.slice(0, max);
+    text = `${cut.slice(0, cut.lastIndexOf(' ')).replace(/[,.;:\s]+$/, '')}…`;
+  }
+  return `${text} · ${precio}`;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductCached(slug);
   if (!product) return {};
 
   const imageUrl = absoluteImageUrl(product.imagen);
-  const description = product.descripcion
-    ? `${product.descripcion} — ${formatPrice(product.precio)}`
-    : `${/^remeras?\b/i.test(product.nombre.trim()) ? product.nombre : `Remera ${product.nombre}`} · ${formatPrice(product.precio)} · Estampado DTF`;
+  const description = metaDescription(product.nombre, product.descripcion, formatPrice(product.precio));
 
   return {
     title: `${product.nombre} | Retro Remeras`,
