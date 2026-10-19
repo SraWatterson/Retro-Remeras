@@ -115,7 +115,9 @@
 
 .cat-marquee .category-card::after {
   background:
-    radial-gradient(130% 85% at 0% 0%, rgba(8, 5, 3, 0.84) 0%, rgba(8, 5, 3, 0.6) 42%, rgba(8, 5, 3, 0) 70%),
+    /* Capa negra pareja sobre toda la ilustración: se sigue viendo, pero el texto resalta. */
+    linear-gradient(rgba(0, 0, 0, 0.38), rgba(0, 0, 0, 0.38)),
+    radial-gradient(130% 85% at 0% 0%, rgba(8, 5, 3, 0.7) 0%, rgba(8, 5, 3, 0.4) 42%, rgba(8, 5, 3, 0) 70%),
     linear-gradient(180deg, rgba(8, 5, 3, 0) 55%, rgba(8, 5, 3, 0.45) 100%) !important;
 }
 
