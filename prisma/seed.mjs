@@ -101,11 +101,11 @@ async function main() {
 
   const landingCategories = [
     { title: 'Fútbol',      slug: 'futbol',      description: 'Clásicos, ídolos, momentos épicos y mística de cancha.',                   image: '/assets/category-cards/coleccion-futbol-retro.webp', order: 0 },
-    { title: 'Anime',       slug: 'anime',       description: 'Diseños con energía, ciudad, nostalgia y mucha personalidad.',              image: '/assets/category-cards/anime-retro.jpg',             order: 1 },
-    { title: 'Cine',        slug: 'cine',        description: 'Posters, VHS, culto y referencias que sí se entienden.',                   image: '/assets/category-cards/cine-retro.jpg',              order: 2 },
+    { title: 'Anime',       slug: 'anime',       description: 'Diseños con energía, ciudad, nostalgia y mucha personalidad.',              image: '/assets/category-cards/anime-retro.webp',             order: 1 },
+    { title: 'Cine',        slug: 'cine',        description: 'Posters, VHS, culto y referencias que sí se entienden.',                   image: '/assets/category-cards/cine-retro.webp',              order: 2 },
     { title: 'Videojuegos', slug: 'videojuegos', description: 'Arcade, pixel, boss fights y una buena cuota de nostalgia.',               image: '/assets/category-cards/retro-gaming.webp',           order: 3 },
-    { title: 'Variados',    slug: 'variados',    description: 'Rock, cultura urbana, conceptos visuales y diseños sueltos.',              image: '/assets/category-cards/random-retro.jpg',            order: 4 },
-    { title: 'Vintage',     slug: 'vintage',     description: 'Cartelería, color cálido, tipografías con historia y buen gusto.',         image: '/assets/category-cards/vintage-retro.png',           order: 5 },
+    { title: 'Variados',    slug: 'variados',    description: 'Rock, cultura urbana, conceptos visuales y diseños sueltos.',              image: '/assets/category-cards/random-retro.webp',            order: 4 },
+    { title: 'Vintage',     slug: 'vintage',     description: 'Cartelería, color cálido, tipografías con historia y buen gusto.',         image: '/assets/category-cards/vintage-retro.webp',           order: 5 },
   ];
 
   for (const cat of landingCategories) {
