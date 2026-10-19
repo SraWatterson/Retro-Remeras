@@ -232,7 +232,7 @@
 }
 
 /* ---------- Celular ---------- */
-@media (max-width: 767px) {
+@media (max-width: 900px) {
   .cx {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.4rem;

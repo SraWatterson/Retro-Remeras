@@ -116,10 +116,6 @@
   }
 }
 
-.coleccion-grid .product-title {
-  font-family: var(--font-text), Arial, sans-serif;
-}
-
 /* ---------- Otras colecciones ---------- */
 .coleccion-others {
   position: relative;
