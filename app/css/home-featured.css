@@ -1,0 +1,263 @@
+/*
+ * Home · "Los más pedidos" — El índice
+ * -------------------------------------
+ * Foto grande y limpia + lista tipográfica de los productos destacados
+ * (los que tienen "Destacado" tildado en el panel). Minimalista: sin
+ * tarjetas, solo foto, texto y líneas finas.
+ *
+ * Compu: foto a la izquierda; título y lista a la derecha.
+ * Celular: título, foto cuadrada y lista, en ese orden.
+ */
+
+.home-page .fx-section {
+  padding-block: clamp(3.5rem, 6vw, 5.5rem) !important;
+}
+
+.fx {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-areas:
+    "stage head"
+    "stage side";
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+
+/* ---------- Título ---------- */
+.fx__head {
+  grid-area: head;
+  display: grid;
+  gap: 0.5rem;
+  align-self: end;
+  margin-bottom: clamp(1.1rem, 2vw, 1.7rem);
+}
+
+.fx__kicker {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow, #f4c542);
+}
+
+.fx__title {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  color: var(--brand-cream-soft, #fff0cb);
+  text-shadow: 0 0 40px rgba(245, 234, 212, 0.08);
+}
+
+.fx__title span {
+  color: var(--yellow, #f4c542);
+  text-shadow: 0 0 28px rgba(244, 197, 66, 0.25);
+}
+
+/* ---------- Foto ---------- */
+.fx__stage {
+  grid-area: stage;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(420px, 36vw, 540px);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0d0907;
+  align-self: center;
+}
+
+.fx__stage img {
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.035);
+  transition:
+    opacity 0.8s ease,
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fx__stage img.is-on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fx__count {
+  position: absolute;
+  z-index: 2;
+  left: 18px;
+  bottom: 16px;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: #fff0cb;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Lista ---------- */
+.fx__side {
+  grid-area: side;
+  min-width: 0;
+}
+
+.fx__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(241, 221, 178, 0.14);
+}
+
+.fx__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.1rem 0.25rem;
+  border-bottom: 1px solid rgba(241, 221, 178, 0.14);
+  color: var(--brand-cream, #f1ddb2);
+  text-decoration: none;
+}
+
+.fx__row:focus-visible {
+  outline: 2px solid var(--yellow, #f4c542);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.fx__num {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: rgba(241, 221, 178, 0.45);
+  transition: color 0.3s;
+}
+
+.fx__text {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.fx__text small {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 185, 143, 0.6);
+}
+
+.fx__text b {
+  font-family: var(--font-title), Georgia, serif;
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(1.25rem, 1.9vw, 1.75rem);
+  line-height: 1.1;
+  color: rgba(255, 240, 203, 0.55);
+  transform-origin: left;
+  transition:
+    color 0.3s,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fx__price {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.9rem;
+  color: rgba(241, 221, 178, 0.55);
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+
+.fx__row.is-on .fx__text b {
+  color: var(--brand-cream-soft, #fff0cb);
+  transform: translateX(6px);
+}
+
+.fx__row.is-on .fx__num,
+.fx__row.is-on .fx__price {
+  color: var(--yellow, #f4c542);
+}
+
+/* Línea dorada que se llena mientras la remera activa está en pantalla. */
+.fx__progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 0;
+  background: var(--yellow, #f4c542);
+}
+
+.fx__row.is-on .fx__progress {
+  width: 100%;
+}
+
+.fx__row.is-on.is-running .fx__progress {
+  width: 0;
+  animation: fx-progress var(--fx-autoplay, 4500ms) linear forwards;
+}
+
+@keyframes fx-progress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.fx__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.95rem;
+  color: var(--yellow, #f4c542);
+  text-decoration: none;
+}
+
+.fx__more span {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.fx__more:hover span,
+.fx__more:focus-visible span {
+  transform: translateX(5px);
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 767px) {
+  .fx {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "stage"
+      "side";
+    grid-template-rows: auto;
+  }
+
+  .fx__stage {
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 1.4rem;
+  }
+
+  .fx__row {
+    padding: 0.95rem 0.1rem;
+  }
+
+  .fx__text b {
+    font-size: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx__stage img,
+  .fx__text b {
+    transition: none;
+  }
+}
