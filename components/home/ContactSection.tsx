@@ -1,77 +1,132 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { FaEnvelope, FaWhatsapp } from 'react-icons/fa';
+import { FaEnvelope, FaInstagram, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
+import { createWhatsAppLink } from '@/lib/shop';
 
-const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5491123620076';
 const CONTACT_EMAIL = 'admiretro.remeras@gmail.com';
+const INSTAGRAM_URL = 'https://www.instagram.com/retro.remeras/';
 
-const CHANNELS = [
+const MAPS_URL =
+  'https://www.google.com/maps/place/Retro+Remeras/@-34.683511,-58.6405952,13.75z/data=!4m10!1m2!2m1!1sRetro+Remeras+Buenos+Aires!3m6!1s0x95bcc783d44ac483:0x7779caf3aad85e22!8m2!3d-34.6928604!4d-58.6065624!15sChpSZXRybyBSZW1lcmFzIEJ1ZW5vcyBBaXJlc1ocIhpyZXRybyByZW1lcmFzIGJ1ZW5vcyBhaXJlc5IBDmNsb3RoaW5nX3N0b3JlmgFEQ2k5RFFVbFJRVU52WkVOb2RIbGpSamx2VDI1Vk1FOVhhRFJqVlRGc1VWWkdTazVGY0VsTlZGWXlaRlk0TlU5WVl4QULgAQD6AQQIABAX!16s%2Fg%2F11yht175vp?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D';
+
+const MAP_EMBED_URL =
+  'https://www.google.com/maps?q=Retro%20Remeras%20Buenos%20Aires&ll=-34.6928604,-58.6065624&z=15&output=embed';
+
+const ROWS = [
+  {
+    key: 'whatsapp',
+    Icon: FaWhatsapp,
+    label: 'WhatsApp',
+    value: '+54 9 11 2362-0076',
+    href: createWhatsAppLink('Hola! Quiero hacer una consulta sobre las remeras.'),
+    external: true,
+    cta: 'Escribinos',
+  },
+  {
+    key: 'instagram',
+    Icon: FaInstagram,
+    label: 'Instagram',
+    value: '@retro.remeras',
+    href: INSTAGRAM_URL,
+    external: true,
+  },
   {
     key: 'email',
     Icon: FaEnvelope,
     label: 'Email',
     value: CONTACT_EMAIL,
     href: `mailto:${CONTACT_EMAIL}`,
-    className: 'contact-card--email',
     external: false,
   },
   {
-    key: 'whatsapp',
-    Icon: FaWhatsapp,
-    label: 'WhatsApp',
-    value: '+54 9 11 2362-0076',
-    href: `https://wa.me/${WHATSAPP_NUMBER}`,
-    className: 'contact-card--whatsapp',
+    key: 'retiro',
+    Icon: FaMapMarkerAlt,
+    label: 'Retiro y envíos',
+    value: 'Zona Oeste, Buenos Aires · Envíos a todo el país',
+    href: MAPS_URL,
     external: true,
   },
 ] as const;
 
+/**
+ * Contacto + ubicación en una sola sección (antes eran dos: "Dónde estamos"
+ * y "Hablemos"). Izquierda: lista de canales; derecha: mapa en versión oscura.
+ * Mantiene los anclas #contacto y #ubicacion que usan el menú y el footer.
+ */
 export function ContactSection() {
   const prefersReducedMotion = useReducedMotion();
+  const enter = (delay = 0) =>
+    prefersReducedMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 24 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: '-80px' },
+          transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] as const, delay },
+        };
 
   return (
-    <section id="contacto" className="section contact-section" aria-labelledby="contact-title">
-      <div className="container contact-section__inner">
-        <motion.div
-          className="contact-section__header"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <span className="section-kicker">Contacto</span>
-          <h2 id="contact-title" className="section-title contact-section__title">Hablemos</h2>
-          <span className="contact-section__title-accent" aria-hidden="true" />
-          <p className="section-subtitle contact-section__subtitle">
-            ¿Tenés una consulta o querés coordinar algo? Escribinos por el medio que prefieras.
-          </p>
-        </motion.div>
+    <section id="contacto" className="section contact-section cx-section" aria-labelledby="contact-title">
+      <span id="ubicacion" className="cx-anchor" aria-hidden="true" />
+      <div className="container">
+        <div className="cx">
+          <motion.div className="cx__info" {...enter()}>
+            <div className="cx__head">
+              <span className="cx__kicker">Contacto</span>
+              <h2 id="contact-title" className="cx__title">
+                Hablemos<span>.</span>
+              </h2>
+              <p className="cx__lead">
+                ¿Tenés una consulta o querés coordinar un pedido? Respondemos rápido por WhatsApp.
+              </p>
+            </div>
 
-        <motion.div
-          className="contact-section__cards"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.56, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        >
-          {CHANNELS.map(({ key, Icon, label, value, href, className, external }) => (
-            <a
-              key={key}
-              className={`contact-card ${className}`}
-              href={href}
-              {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            >
-              <span className="contact-card__icon" aria-hidden="true">
-                <Icon size={22} />
+            <ul className="cx__list">
+              {ROWS.map((row) => (
+                <li key={row.key}>
+                  <a
+                    className={`cx__row cx__row--${row.key}`}
+                    href={row.href}
+                    {...(row.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    <span className="cx__icon" aria-hidden="true">
+                      <row.Icon size={15} />
+                    </span>
+                    <span className="cx__text">
+                      <small>{row.label}</small>
+                      <b>{row.value}</b>
+                    </span>
+                    {'cta' in row ? (
+                      <span className="btn btn-primary cx__cta">{row.cta}</span>
+                    ) : (
+                      <span className="cx__arrow" aria-hidden="true">↗</span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <motion.div className="cx__map" {...enter(0.08)}>
+            <iframe
+              src={MAP_EMBED_URL}
+              title="Mapa de Retro Remeras en Google Maps"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+            <div className="cx__pin">
+              <span>
+                <b>Retro Remeras</b>
+                <small>Zona Oeste · Buenos Aires</small>
               </span>
-              <span className="contact-card__body">
-                <span className="contact-card__label">{label}</span>
-                <span className="contact-card__value">{value}</span>
-              </span>
-            </a>
-          ))}
-        </motion.div>
+              <a className="btn btn-primary" href={MAPS_URL} target="_blank" rel="noopener noreferrer">
+                Cómo llegar
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

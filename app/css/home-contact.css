@@ -1,0 +1,253 @@
+/*
+ * Home · Contacto + ubicación
+ * ---------------------------
+ * Une "Dónde estamos" y "Hablemos" en una sola sección que entra en una
+ * pantalla. Misma línea que "El índice": líneas finas, etiquetas en Archivo
+ * Black, valores claros y un solo botón dorado (WhatsApp).
+ * Compu: lista a la izquierda, mapa oscuro a la derecha.
+ * Celular: título, lista y mapa debajo.
+ */
+
+.home-page .cx-section {
+  position: relative;
+  min-height: 0 !important;
+  padding-block: clamp(2rem, 3.6vw, 3.5rem) !important;
+}
+
+/* El ancla #ubicacion vive acá: compensa el header fijo. */
+.cx-anchor {
+  position: absolute;
+  top: 0;
+  scroll-margin-top: calc(var(--header-height, 68px) + 1rem);
+}
+
+.cx {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: stretch;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+/* ---------- Columna de texto ---------- */
+.cx__info {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+}
+
+.cx__head {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: clamp(0.9rem, 1.6vw, 1.4rem);
+}
+
+.cx__kicker {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow, #f4c542);
+}
+
+.cx__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.4vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: 0.005em;
+  color: var(--brand-cream-soft, #fff0cb);
+  text-shadow: 0 0 40px rgba(245, 234, 212, 0.08);
+}
+
+.cx__title span {
+  color: var(--yellow, #f4c542);
+}
+
+.cx__lead {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--muted, #cbb98f);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.cx__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(241, 221, 178, 0.14);
+}
+
+.cx__row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.95rem;
+  padding: 0.72rem 0.2rem;
+  border-bottom: 1px solid rgba(241, 221, 178, 0.14);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+
+.cx__row:hover {
+  background: rgba(216, 148, 37, 0.05);
+}
+
+.cx__row:focus-visible {
+  outline: 2px solid var(--yellow, #f4c542);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.cx__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 184, 78, 0.45);
+  color: var(--brand-gold-soft, #efb84e);
+  background: rgba(216, 148, 37, 0.06);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s;
+}
+
+.cx__row:hover .cx__icon {
+  transform: rotate(-8deg) scale(1.06);
+  border-color: rgba(239, 184, 78, 0.9);
+}
+
+.cx__text {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.cx__text small {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 185, 143, 0.7);
+}
+
+.cx__text b {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--brand-cream-soft, #fff0cb);
+  overflow-wrap: anywhere;
+}
+
+.cx__arrow {
+  color: rgba(241, 221, 178, 0.45);
+  font-size: 1rem;
+  transition: transform 0.25s, color 0.25s;
+}
+
+.cx__row:hover .cx__arrow {
+  color: var(--yellow, #f4c542);
+  transform: translate(2px, -2px);
+}
+
+.cx__cta {
+  min-height: 40px;
+  padding-inline: 1.05rem;
+  font-size: 0.85rem;
+}
+
+/* ---------- Mapa ---------- */
+.cx__map {
+  position: relative;
+  min-height: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(239, 184, 78, 0.22);
+  background: #0d0907;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Versión oscura del mapa de Google, para que no desentone con la web. */
+.cx__map iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: invert(0.92) hue-rotate(180deg) saturate(0.55) brightness(0.9) contrast(0.95);
+}
+
+/* Tinte cálido sobre el mapa (no bloquea el uso del mapa). */
+.cx__map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(216, 148, 37, 0.06), rgba(9, 7, 5, 0.25));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.cx__pin {
+  position: absolute;
+  z-index: 2;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.7rem 0.7rem 0.7rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 240, 203, 0.14);
+  background: rgba(10, 8, 6, 0.82);
+  backdrop-filter: blur(10px);
+}
+
+.cx__pin > span {
+  display: grid;
+  min-width: 0;
+}
+
+.cx__pin b {
+  font-family: var(--font-title), Georgia, serif;
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: 1.05rem;
+  color: var(--brand-cream-soft, #fff0cb);
+}
+
+.cx__pin small {
+  font-size: 0.8rem;
+  color: var(--muted, #cbb98f);
+}
+
+.cx__pin .btn {
+  min-height: 40px;
+  padding-inline: 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 767px) {
+  .cx {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .cx__map {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+
+  .cx__cta {
+    padding-inline: 0.85rem;
+  }
+
+  .cx__text b {
+    font-size: 0.95rem;
+  }
+}
