@@ -23,7 +23,7 @@ export default function NotFound() {
                   Ir al inicio
                 </Link>
                 <Link className="btn btn-secondary" href="/productos">
-                  Ver productos
+                  Ver remeras
                 </Link>
               </div>
             </div>

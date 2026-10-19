@@ -85,7 +85,7 @@ export default async function Page({ params }: PageProps) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-      { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
+      { '@type': 'ListItem', position: 2, name: 'Remeras', item: `${BASE}/productos` },
       { '@type': 'ListItem', position: 3, name: heading, item: url },
     ],
   };
@@ -103,7 +103,7 @@ export default async function Page({ params }: PageProps) {
             <nav className="coleccion-crumbs" aria-label="Estás en">
               <Link href="/">Inicio</Link>
               <span aria-hidden="true">/</span>
-              <Link href="/productos">Productos</Link>
+              <Link href="/productos">Remeras</Link>
               <span aria-hidden="true">/</span>
               <span aria-current="page">{collection.category}</span>
             </nav>

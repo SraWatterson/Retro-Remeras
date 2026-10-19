@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Todas las remeras: anime, rock y gaming | Retro Remeras',
     description: 'Diseños de anime, gaming, cine y más. Remeras con estampado DTF de alta definición — envíos a todo el país.',
-    images: [{ url: '/assets/img/remera-goku.jpg', width: 1100, height: 1320, alt: 'Productos Retro Remeras' }],
+    images: [{ url: '/assets/img/remera-goku.jpg', width: 1100, height: 1320, alt: 'Remeras de Retro Remeras' }],
   },
 };
 
@@ -27,16 +27,13 @@ const LD_BREADCRUMB = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-    { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
+    { '@type': 'ListItem', position: 2, name: 'Remeras', item: `${BASE}/productos` },
   ],
 };
 
-type PageProps = {
-  searchParams: Promise<{ categoria?: string }>;
-};
-
-export default async function Page({ searchParams }: PageProps) {
-  const params = await searchParams;
+// Página estática (se regenera cada 60 s): abre al instante. El filtro
+// ?categoria= se aplica en el navegador, así la página no se arma en cada visita.
+export default async function Page() {
   const [products, categories, siteContent] = await Promise.all([
     getPublicProducts(),
     getProductCategories(),
@@ -48,7 +45,7 @@ export default async function Page({ searchParams }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LD_BREADCRUMB) }} />
       <PromoBar content={siteContent} />
       <SiteHeader active="catalogo" />
-      <CatalogView initialCategory={params.categoria} initialProducts={products} categories={categories} />
+      <CatalogView initialProducts={products} categories={categories} />
       <SiteFooter />
     </>
   );

@@ -219,7 +219,7 @@ export function CartSidebar() {
                   </svg>
                   <p>Todavía no agregaste nada al pedido</p>
                   <Link href="/productos" className={styles.emptyStateCta} onClick={close}>
-                    Ver productos
+                    Ver remeras
                   </Link>
                 </div>
               ) : (

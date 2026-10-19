@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { collectionCopy } from '@/lib/collection-copy';
 import { Product, formatPrice, normalizeImageUrl, normalizeText, productHref } from '@/lib/shop';
 
@@ -47,6 +47,13 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
   }, [categories, initialCategoryValue]);
 
   const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
+
+  // Link viejo tipo /productos?categoria=anime: se aplica al abrir.
+  useEffect(() => {
+    if (initialCategory) return;
+    const fromUrl = new URLSearchParams(window.location.search).get('categoria');
+    if (fromUrl) setActiveCategory(findCategoryFromUrl(fromUrl, categories));
+  }, [categories, initialCategory]);
   const [activeColors, setActiveColors] = useState<Set<string>>(new Set());
   const [sortOrder, setSortOrder] = useState('default');
   const [searchQuery, setSearchQuery] = useState('');
@@ -227,7 +234,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     <main className="catalog-main">
       <section className="catalog-hero">
         <div className="container">
-          <span className="section-kicker">Productos</span>
+          <span className="section-kicker">Remeras</span>
           {/* El título cambia con la categoría elegida: "Remeras de [anime]", con la palabra clave en dorado. */}
           <h1 className="section-title">
             {headingCopy ? (
@@ -350,16 +357,22 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                     </button>
                   </div>
                 ) : (
-                  filtered.map((product) => (
+                  filtered.map((product) => {
+                    // Si hay un color elegido en el filtro, la tarjeta muestra la foto de ese color
+                    // y el link abre la ficha con ese color ya seleccionado.
+                    const colorMatch = [...activeColors].find((slug) => product.imagenesPorColor?.[slug]?.path);
+                    const cardImage = colorMatch ? product.imagenesPorColor![colorMatch].path : product.imagen;
+                    const cardHref = colorMatch ? `${productHref(product)}?color=${encodeURIComponent(colorMatch)}` : productHref(product);
+                    return (
                     <article className="product-card product-card--linked" key={product.id}>
                       <Link
                         className="product-card-link"
-                        href={productHref(product)}
+                        href={cardHref}
                         aria-label={`Ver ${product.nombre}`}
                       >
                         <div className="product-media">
                           <Image
-                            src={normalizeImageUrl(product.imagen)}
+                            src={normalizeImageUrl(cardImage)}
                             alt={product.imagenAlt?.trim() || product.nombre}
                             width={800}
                             height={1000}
@@ -375,7 +388,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                       <div className="product-content">
                         <div className="product-category">{product.categoria}</div>
                         <h3 className="product-title">
-                          <Link className="product-title-link" href={productHref(product)}>
+                          <Link className="product-title-link" href={cardHref}>
                             {product.nombre}
                           </Link>
                         </h3>
@@ -386,7 +399,8 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                         </div>
                       </div>
                     </article>
-                  ))
+                    );
+                  })
                 )}
               </motion.div>
             </AnimatePresence>
