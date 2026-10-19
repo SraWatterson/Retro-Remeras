@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
+import { ProductZoom } from './ProductZoom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   CartItem,
@@ -81,6 +82,17 @@ export function ProductView({ product }: Props) {
   const sizeGuideDialogRef = useRef<HTMLDialogElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [items, setItems] = useState<CartItem[]>([]);
+  const [zoomOpen, setZoomOpen] = useState(false);
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // Lupa en compu: la foto se agranda siguiendo el mouse.
+  function handleLensMove(event: React.MouseEvent<HTMLDivElement>) {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const rect = frame.getBoundingClientRect();
+    frame.style.setProperty('--zx', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+    frame.style.setProperty('--zy', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+  }
 
   useEffect(() => {
     setItems(cartLoad());
@@ -150,7 +162,21 @@ export function ProductView({ product }: Props) {
               <span>{product.nombre}</span>
             </nav>
 
-            <div className="pv-gallery__frame">
+            <div
+              ref={frameRef}
+              className="pv-gallery__frame pv-gallery__frame--zoomable"
+              role="button"
+              tabIndex={0}
+              aria-label="Ver la foto ampliada"
+              onMouseMove={handleLensMove}
+              onClick={() => setZoomOpen(true)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  setZoomOpen(true);
+                }
+              }}
+            >
               {/* Blurred background — same image, darkened, fills empty areas around contained image */}
               <div className="pv-gallery__blur-bg" aria-hidden="true">
                 <Image
@@ -179,13 +205,20 @@ export function ProductView({ product }: Props) {
                     width={1400}
                     height={1400}
                     quality={94}
-                    sizes="(max-width: 767px) 94vw, (max-width: 1023px) 52vw, 56vw"
+                    sizes="(max-width: 767px) 94vw, (max-width: 1023px) 52vw, 1100px"
                     priority
                   />
                 </motion.div>
               </AnimatePresence>
 
               <span className="pv-gallery__cat-badge" aria-hidden="true">{product.categoria}</span>
+              <span className="pv-gallery__zoom-hint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="6.5" />
+                  <path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5" />
+                </svg>
+                <span className="pv-gallery__zoom-hint-text">Ampliar</span>
+              </span>
             </div>
 
             {availableColors.length > 1 && (
@@ -446,6 +479,13 @@ export function ProductView({ product }: Props) {
           </div>
         </aside>
       </div>
+
+      <ProductZoom
+        src={selectedImage}
+        alt={product.imagenAlt?.trim() || product.nombre}
+        open={zoomOpen}
+        onClose={() => setZoomOpen(false)}
+      />
     </main>
   );
 }

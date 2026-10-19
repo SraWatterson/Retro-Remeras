@@ -1,5 +1,6 @@
 import { collectionHref } from '@/lib/collections';
 import '../../css/producto.css';
+import '../../css/producto-zoom.css';
 import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';

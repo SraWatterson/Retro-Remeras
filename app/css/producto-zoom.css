@@ -1,0 +1,197 @@
+/*
+ * Ficha de producto · Zoom de la foto
+ * - Compu: al pasar el mouse la foto se agranda siguiendo el cursor (lupa).
+ *   Clic: abre el visor a pantalla completa.
+ * - Celular: tocar la foto abre el visor; ahí se pellizca o se toca para acercar.
+ */
+
+.pv-gallery__frame--zoomable {
+  cursor: zoom-in;
+}
+
+.pv-gallery__frame--zoomable:focus-visible {
+  outline: 2px solid var(--yellow, #f4c542);
+  outline-offset: 3px;
+}
+
+/* Lupa: solo en pantallas con mouse. */
+@media (hover: hover) and (pointer: fine) {
+  .pv-gallery__frame--zoomable:hover .pv-gallery__img img {
+    transform: scale(2.1) !important;
+    transform-origin: var(--zx, 50%) var(--zy, 50%);
+    transition: transform 0.25s ease-out;
+  }
+
+  .pv-gallery__frame--zoomable:hover .pv-gallery__cat-badge,
+  .pv-gallery__frame--zoomable:hover .pv-gallery__zoom-hint {
+    opacity: 0;
+  }
+}
+
+.pv-gallery__zoom-hint {
+  position: absolute;
+  z-index: 3;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.38rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(10, 8, 6, 0.78);
+  border: 1px solid rgba(239, 184, 78, 0.35);
+  color: #fff0cb;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.pv-gallery__zoom-hint svg {
+  color: var(--yellow, #f4c542);
+}
+
+/* ---------- Visor a pantalla completa ---------- */
+.pz {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  animation: pz-in 0.22s ease-out;
+}
+
+.pz__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: rgba(6, 4, 3, 0.94);
+  cursor: zoom-out;
+}
+
+.pz__stage {
+  position: relative;
+  width: min(100vw, 1100px);
+  height: min(92dvh, 1100px);
+  overflow: hidden;
+  touch-action: none;
+  cursor: zoom-in;
+  user-select: none;
+}
+
+.pz__stage.is-zoomed {
+  cursor: grab;
+}
+
+.pz__stage.is-zoomed:active {
+  cursor: grabbing;
+}
+
+.pz__img {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transition: transform 0.18s ease-out;
+  will-change: transform;
+}
+
+.pz__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pz__close {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top));
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 184, 78, 0.45);
+  background: rgba(10, 8, 6, 0.85);
+  color: #fff0cb;
+  cursor: pointer;
+}
+
+.pz__close:hover,
+.pz__close:focus-visible {
+  border-color: var(--yellow, #f4c542);
+  color: var(--yellow, #f4c542);
+}
+
+.pz__controls {
+  position: absolute;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 184, 78, 0.35);
+  background: rgba(10, 8, 6, 0.85);
+  transform: translateX(-50%);
+}
+
+.pz__controls button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(216, 148, 37, 0.14);
+  color: #fff0cb;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pz__controls button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.pz__controls span {
+  min-width: 3.2rem;
+  text-align: center;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.75rem;
+  color: var(--yellow, #f4c542);
+}
+
+.pz__hint {
+  position: absolute;
+  top: max(24px, env(safe-area-inset-top));
+  left: 16px;
+  right: 76px;
+  z-index: 2;
+  margin: 0;
+  color: rgba(255, 240, 203, 0.7);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+@keyframes pz-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pz,
+  .pz__img,
+  .pv-gallery__frame--zoomable .pv-gallery__img img {
+    animation: none;
+    transition: none !important;
+  }
+}
