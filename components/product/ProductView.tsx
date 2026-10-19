@@ -17,7 +17,6 @@ import {
   cartGetDiscountAmount,
   cartGetFinalTotal,
   cartGetItemsCount,
-  cartGetTotal,
   cartLoad,
   cartSave,
   subscribeToCartUpdates,
@@ -25,6 +24,7 @@ import {
   normalizeImageUrl,
 } from '@/lib/shop';
 import { openCartSidebar, CART_ITEM_ADDED_EVENT } from '@/components/cart/CartSidebar';
+import { collectionHref } from '@/lib/collection-copy';
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 type FitKey = 'regular' | 'oversize';
@@ -115,7 +115,6 @@ export function ProductView({ product }: Props) {
 
   const hasCartItems = items.length > 0;
   const itemCount = cartGetItemsCount(items);
-  const subtotal = cartGetTotal(items);
   const discount = cartGetDiscountAmount(items);
   const finalTotal = cartGetFinalTotal(items);
   const itemsToDiscount = Math.max(0, BULK_DISCOUNT_THRESHOLD - itemCount);
@@ -141,149 +140,135 @@ export function ProductView({ product }: Props) {
     openCartSidebar();
   }
 
+  const paragraphs = (product.descripcion || '')
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph && paragraph.toLowerCase() !== product.nombre.trim().toLowerCase());
+  // Primer párrafo: el que cuenta y vende (se ve siempre).
+  // El resto (datos para Google: referencia, corte, estampado) va en "Detalles".
+  const [lead, ...details] = paragraphs;
+  const imageAlt =
+    product.imagenAlt?.trim() ||
+    `${product.nombre}${selectedColorOption?.colorName ? ` — ${selectedColorOption.colorName}` : ''}`;
+
   return (
-    <main className="product-page">
-      <div className="product-shell">
+    <main className="product-page pv2">
+      <div className="pv2-shell">
 
-        {/* ── GALERÍA ── */}
-        <section className="pv-gallery" aria-label="Galería del producto">
-          <div className="pv-gallery__sticky">
-
-            <nav className="pv-breadcrumb" aria-label="Migas de pan">
-              <Link href="/productos">Productos</Link>
-              <span aria-hidden="true">/</span>
-              <span>{product.nombre}</span>
-            </nav>
-
-            <div
-              ref={frameRef}
-              className="pv-gallery__frame pv-gallery__frame--zoomable"
-              role="button"
-              tabIndex={0}
-              aria-label="Ver la foto ampliada"
-              onClick={() => setZoomOpen(true)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  setZoomOpen(true);
-                }
-              }}
-            >
-              {/* Blurred background — same image, darkened, fills empty areas around contained image */}
-              <div className="pv-gallery__blur-bg" aria-hidden="true">
+        {/* ── FOTO ── */}
+        <section className="pv2-gallery" aria-label="Fotos del producto">
+          <div
+            ref={frameRef}
+            className="pv2-frame pv-gallery__frame--zoomable"
+            role="button"
+            tabIndex={0}
+            aria-label="Ver la foto ampliada"
+            onClick={() => setZoomOpen(true)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setZoomOpen(true);
+              }
+            }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={selectedImage}
+                className="pv-gallery__img"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.18, ease: 'easeOut' }}
+              >
                 <Image
                   src={selectedImage}
-                  alt=""
-                  width={400}
-                  height={400}
-                  quality={40}
-                  sizes="200px"
+                  alt={imageAlt}
+                  width={1200}
+                  height={1500}
+                  quality={94}
+                  sizes="(max-width: 899px) 100vw, 560px"
                   priority
                 />
-              </div>
+              </motion.div>
+            </AnimatePresence>
 
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={selectedImage}
-                  className="pv-gallery__img"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: prefersReducedMotion ? 0 : 0.18, ease: 'easeOut' }}
-                >
-                  <Image
-                    src={selectedImage}
-                    alt={product.imagenAlt?.trim() || `${product.nombre}${selectedColorOption?.colorName ? ` — ${selectedColorOption.colorName}` : ''}`}
-                    width={1400}
-                    height={1400}
-                    quality={94}
-                    sizes="(max-width: 767px) 94vw, (max-width: 1023px) 52vw, 1100px"
-                    priority
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              <span className="pv-gallery__cat-badge" aria-hidden="true">{product.categoria}</span>
-              <span className="pv-gallery__zoom-hint" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                  <circle cx="11" cy="11" r="6.5" />
-                  <path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5" />
-                </svg>
-                <span className="pv-gallery__zoom-hint-text">Ampliar</span>
-              </span>
-            </div>
-
-            {availableColors.length > 1 && (
-              <div className="pv-gallery__colors" role="group" aria-label="Variantes de color">
-                {availableColors.map((color) => (
-                  <button
-                    key={color.colorSlug}
-                    className={`pv-color-thumb ${selectedColor === color.colorSlug ? 'is-active' : ''}`}
-                    type="button"
-                    onClick={() => setSelectedColor(color.colorSlug)}
-                    aria-label={color.colorName}
-                    aria-pressed={selectedColor === color.colorSlug}
-                  >
-                    <Image
-                      src={normalizeImageUrl(color.path)}
-                      alt={color.colorName}
-                      width={96}
-                      height={96}
-                      sizes="72px"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+            <span className="pv-gallery__zoom-hint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="M20 20l-4.2-4.2M11 8.5v5M8.5 11h5" />
+              </svg>
+              <span className="pv-gallery__zoom-hint-text">Ampliar</span>
+            </span>
           </div>
+
+          {availableColors.length > 1 && (
+            <div className="pv2-thumbs" role="group" aria-label="Ver por color">
+              {availableColors.map((color) => (
+                <button
+                  key={color.colorSlug}
+                  className={`pv2-thumb${selectedColor === color.colorSlug ? ' is-active' : ''}`}
+                  type="button"
+                  onClick={() => setSelectedColor(color.colorSlug)}
+                  aria-label={`Ver en ${color.colorName}`}
+                  aria-pressed={selectedColor === color.colorSlug}
+                >
+                  <Image src={normalizeImageUrl(color.path)} alt="" width={120} height={150} sizes="64px" />
+                </button>
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* ── BUYBOX ── */}
-        <aside className="pv-buybox" ref={buyboxRef}>
+        {/* ── INFO Y COMPRA ── */}
+        <aside className="pv2-info" ref={buyboxRef}>
+          <nav className="pv2-crumbs" aria-label="Estás en">
+            <Link href="/productos">Productos</Link>
+            <span aria-hidden="true">/</span>
+            <Link href={collectionHref(product.categoria)}>{product.categoria}</Link>
+          </nav>
 
-          {/* Meta */}
-          <div className="pv-meta">
-            <p className="pv-category">{product.categoria}</p>
-            <h1 className="pv-title">{product.nombre}</h1>
-            <div className="pv-price-row">
-              <div className="pv-price-group">
-                <strong className="pv-price">{formatPrice(product.precio)}</strong>
-                <span className="pv-price-note">por unidad</span>
-              </div>
-              <button className="pv-price-cta" type="button" onClick={addToCart}>
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                  <path d="M6.5 1v11M1 6.5h11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-                </svg>
-                Agregar al pedido
-              </button>
-            </div>
-            {product.descripcion && product.descripcion.trim().toLowerCase() !== product.nombre.trim().toLowerCase() && (
-              <div className="pv-description">
-                {/* Cada párrafo (separado por una línea en blanco en el panel) en su propio bloque. */}
-                {product.descripcion
-                  .split(/\n\s*\n/)
-                  .map((paragraph) => paragraph.trim())
-                  .filter(Boolean)
-                  .map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
+          <h1 className="pv2-title">{product.nombre}</h1>
+
+          <p className="pv2-price">
+            <strong>{formatPrice(product.precio)}</strong>
+            <span>por unidad · {Math.round(BULK_DISCOUNT_RATE * 100)}% off llevando {BULK_DISCOUNT_THRESHOLD}</span>
+          </p>
+
+          {lead ? <p className="pv2-lead">{lead}</p> : null}
+
+          <div className="pv2-options">
+            {availableColors.length > 0 && (
+              <div className="pv2-option">
+                <div className="pv2-option__head">
+                  <span>Color</span>
+                  <strong>{selectedColorOption?.colorName || 'Color principal'}</strong>
+                </div>
+                <div className="pv2-swatches" role="group" aria-label="Elegir color">
+                  {availableColors.map((color) => (
+                    <button
+                      key={color.colorSlug}
+                      type="button"
+                      className={`pv2-swatch${selectedColor === color.colorSlug ? ' is-active' : ''}`}
+                      onClick={() => setSelectedColor(color.colorSlug)}
+                      aria-pressed={selectedColor === color.colorSlug}
+                      aria-label={color.colorName}
+                      title={color.colorName}
+                    >
+                      <span style={{ backgroundColor: color.colorHex }} />
+                    </button>
                   ))}
+                </div>
               </div>
             )}
-          </div>
 
-          {/* Config */}
-          <div className="pv-config">
-
-            {/* Tipo de remera — tabs compactos */}
-            <div className="pv-inline-row">
-              <span className="pv-inline-label">Tipo</span>
-              <div className="pv-fit-tabs" role="group" aria-label="Tipo de remera">
+            <div className="pv2-option">
+              <div className="pv2-option__head">
+                <span>Corte</span>
+                <strong>{FITS.find((f) => f.key === selectedFit)?.note}</strong>
+              </div>
+              <div className="pv2-segmented" role="radiogroup" aria-label="Corte de la remera">
                 {FITS.map((fit) => (
-                  <label
-                    key={fit.key}
-                    className={`pv-fit-tab ${selectedFit === fit.key ? 'is-active' : ''}`}
-                    title={fit.note}
-                  >
+                  <label key={fit.key} className={selectedFit === fit.key ? 'is-active' : ''}>
                     <input
                       type="radio"
                       name="shirt-fit"
@@ -301,62 +286,60 @@ export function ProductView({ product }: Props) {
               </div>
             </div>
 
-            {/* Talle */}
-            <div className="pv-size-block">
-              <div className="pv-size-block__head">
-                <span className="pv-inline-label">Talle</span>
-                <strong className="pv-inline-value">{selectedSize}</strong>
-                <button
-                  className="pv-size-guide-link"
-                  type="button"
-                  onClick={() => sizeGuideDialogRef.current?.showModal()}
-                >
-                  Ver tabla de talles
+            <div className="pv2-option">
+              <div className="pv2-option__head">
+                <span>Talle</span>
+                <button type="button" className="pv2-link" onClick={() => sizeGuideDialogRef.current?.showModal()}>
+                  Tabla de medidas
                 </button>
               </div>
-              <div className="pv-size-grid">
+              <div className="pv2-sizes" role="radiogroup" aria-label="Talle">
                 {getAvailableSizes(selectedFit).map((size) => (
-                  <label
-                    className={`pv-size-option ${selectedSize === size ? 'is-selected' : ''}`}
-                    key={size}
-                  >
+                  <label key={size} className={selectedSize === size ? 'is-active' : ''}>
                     <input
                       type="radio"
                       name="shirt-size"
                       checked={selectedSize === size}
                       onChange={() => setSelectedSize(size)}
                     />
-                    <span>{size}</span>
+                    {size}
                   </label>
                 ))}
               </div>
             </div>
-
-            {/* Color — inline swatches */}
-            {availableColors.length > 0 && (
-              <div className="pv-color-block">
-                <div className="pv-size-block__head">
-                  <span className="pv-inline-label">Color</span>
-                  <strong className="pv-inline-value">{selectedColorOption?.colorName || 'Color principal'}</strong>
-                </div>
-                <div className="pv-color-swatches" role="group" aria-label="Seleccionar color">
-                  {availableColors.map((color) => (
-                    <button
-                      key={color.colorSlug}
-                      type="button"
-                      className={`pv-color-swatch${selectedColor === color.colorSlug ? ' is-selected' : ''}`}
-                      onClick={() => setSelectedColor(color.colorSlug)}
-                      aria-pressed={selectedColor === color.colorSlug}
-                      aria-label={color.colorName}
-                    >
-                      <span className="pv-swatch__dot" style={{ backgroundColor: color.colorHex }} />
-                      <span className="pv-color-swatch__name">{color.colorName}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
+
+          <button className="btn btn-primary pv2-cta" type="button" onClick={addToCart}>
+            Agregar al pedido
+          </button>
+
+          <ul className="pv2-trust" aria-label="Por qué comprarnos">
+            <li>Estampado DTF</li>
+            <li>Sin mínimo</li>
+            <li>Envíos a todo el país</li>
+          </ul>
+
+          {hasCartItems && (
+            <button type="button" className="pv2-cartline" onClick={() => openCartSidebar()}>
+              <span>
+                Tu pedido: <strong>{itemCount} {itemCount === 1 ? 'remera' : 'remeras'}</strong> · {formatPrice(finalTotal)}
+              </span>
+              <small>
+                {itemsToDiscount > 0
+                  ? `Sumá ${itemsToDiscount} más y tenés ${Math.round(BULK_DISCOUNT_RATE * 100)}% off`
+                  : `${Math.round(BULK_DISCOUNT_RATE * 100)}% off aplicado${discount > 0 ? ` (−${formatPrice(discount)})` : ''}`}
+              </small>
+            </button>
+          )}
+
+          {details.length > 0 && (
+            <details className="pv2-details">
+              <summary>Detalles del producto</summary>
+              {details.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </details>
+          )}
 
           {/* Tabla de talles — modal nativa */}
           <dialog ref={sizeGuideDialogRef} className="pv-size-guide-dialog">
@@ -391,103 +374,11 @@ export function ProductView({ product }: Props) {
               </table>
             </div>
           </dialog>
-
-          {/* ── ORDER BOX ── */}
-          <div className="pv-order-box">
-            <div className="pv-order-box__head">
-              <div>
-                <h2 className="pv-order-box__title">Tu pedido</h2>
-                <p className="pv-order-box__sub">
-                  {hasCartItems ? 'Sumá más remeras antes de finalizar.' : 'Configurá el tipo, talle y color.'}
-                </p>
-              </div>
-              {hasCartItems && (
-                <span className="pv-order-badge">
-                  {itemCount} {itemCount === 1 ? 'ítem' : 'ítems'}
-                </span>
-              )}
-            </div>
-
-            {hasCartItems ? (
-              <ul className="pv-order-list" aria-label="Ítems en el pedido">
-                {items.map((item) => (
-                  <li key={item.id} className="pv-order-item">
-                    <div className="pv-order-item__img">
-                      <Image src={item.image} alt={item.productName} width={52} height={52} sizes="52px" />
-                    </div>
-                    <div className="pv-order-item__info">
-                      <span className="pv-order-item__name">{item.productName}</span>
-                      <span className="pv-order-item__meta">
-                        {item.fitLabel} · T{item.size} · {item.color}
-                      </span>
-                    </div>
-                    <div className="pv-order-item__right">
-                      <span className="pv-order-item__price">{formatPrice(item.unitPrice * item.quantity)}</span>
-                      <span className="pv-order-item__qty">×{item.quantity}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="pv-order-empty">
-                Elegí tus opciones y presioná <strong>Agregar al pedido</strong>.
-              </p>
-            )}
-
-            {hasCartItems && (
-              <div className="pv-order-totals">
-                {itemsToDiscount > 0 ? (
-                  <p className="pv-discount-nudge">
-                    Sumá <strong>{itemsToDiscount} remera{itemsToDiscount > 1 ? 's' : ''} más</strong> y obtenés {Math.round(BULK_DISCOUNT_RATE * 100)}% off
-                  </p>
-                ) : (
-                  <p className="pv-discount-applied">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                      <path d="M1.5 6l3 3 6-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    Descuento de {Math.round(BULK_DISCOUNT_RATE * 100)}% aplicado
-                  </p>
-                )}
-                {discount > 0 ? (
-                  <>
-                    <div className="pv-order-total pv-order-total--sub">
-                      <span>Subtotal</span>
-                      <span>{formatPrice(subtotal)}</span>
-                    </div>
-                    <div className="pv-order-total pv-order-total--discount">
-                      <span>Descuento {Math.round(BULK_DISCOUNT_RATE * 100)}%</span>
-                      <span>−{formatPrice(discount)}</span>
-                    </div>
-                    <div className="pv-order-total pv-order-total--final">
-                      <span>Total estimado</span>
-                      <strong>{formatPrice(finalTotal)}</strong>
-                    </div>
-                  </>
-                ) : (
-                  <div className="pv-order-total">
-                    <span>Total estimado</span>
-                    <strong>{formatPrice(finalTotal)}</strong>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <ul className="pv-trust" aria-label="Garantías">
-              <li>DTF profesional</li>
-              <li>Sin mínimo de compra</li>
-              <li>Envíos a todo el país</li>
-            </ul>
-          </div>
         </aside>
       </div>
 
       <ProductLens frameRef={frameRef} sideRef={buyboxRef} src={selectedImage} />
-      <ProductZoom
-        src={selectedImage}
-        alt={product.imagenAlt?.trim() || product.nombre}
-        open={zoomOpen}
-        onClose={() => setZoomOpen(false)}
-      />
+      <ProductZoom src={selectedImage} alt={imageAlt} open={zoomOpen} onClose={() => setZoomOpen(false)} />
     </main>
   );
 }
