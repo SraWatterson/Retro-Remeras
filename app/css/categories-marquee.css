@@ -1,0 +1,96 @@
+/*
+ * Cinta infinita de categorías (home)
+ * ------------------------------------
+ * Las tarjetas (.category-card) mantienen todo su diseño de style.css:
+ * foto, degradés, título, descripción, botón "Explorar" y efecto al pasar
+ * el mouse. Este archivo solo las pone en una fila que se desliza en loop.
+ */
+
+.cat-marquee {
+  --cat-card-w: clamp(250px, 24vw, 340px);
+  --cat-gap: clamp(14px, 1.6vw, 22px);
+  position: relative;
+  margin-top: clamp(20px, 3vw, 36px);
+  overflow: hidden;
+  /* Los bordes se desvanecen para que la cinta parezca no tener fin. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  /* Aire arriba y abajo para que la elevación y la sombra del hover no se corten. */
+  padding-block: 14px 22px;
+}
+
+.cat-marquee__track {
+  display: flex;
+  gap: var(--cat-gap);
+  width: max-content;
+}
+
+.cat-marquee__item.category-card-shell {
+  flex: 0 0 var(--cat-card-w);
+  width: var(--cat-card-w);
+  margin: 0;
+}
+
+.cat-marquee__item .category-card {
+  height: 100%;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* Movimiento: corre una copia completa (la mitad del track, incluido un gap). */
+.cat-marquee.is-animated .cat-marquee__track {
+  padding-right: var(--cat-gap);
+  animation: cat-marquee-scroll var(--cat-marquee-duration, 48s) linear infinite;
+}
+
+.cat-marquee.is-animated:hover .cat-marquee__track,
+.cat-marquee.is-animated:focus-within .cat-marquee__track,
+.cat-marquee.is-animated.is-paused .cat-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes cat-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Sin movimiento (reducir movimiento activado): fila deslizable a mano. */
+.cat-marquee.is-static {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.cat-marquee.is-static::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-marquee.is-static .cat-marquee__item {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 767px) {
+  .cat-marquee {
+    --cat-card-w: 72vw;
+    --cat-gap: 12px;
+    /* En el celular la cinta llega hasta los bordes de la pantalla,
+       sin importar el margen interno del contenedor. */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  }
+
+  .cat-marquee.is-static {
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-marquee__track {
+    animation: none !important;
+  }
+}
