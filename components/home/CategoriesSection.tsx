@@ -1,3 +1,4 @@
+import { collectionCopy, collectionName } from '@/lib/collection-copy';
 import { collectionSlug, getCollections } from '@/lib/collections';
 import { prisma } from '@/lib/prisma';
 import { CategoryCardAnimated } from './CategoryCardAnimated';
@@ -37,6 +38,10 @@ export async function CategoriesSection() {
             description: category.description,
             image: category.image,
             href: collectionBySlug.get(collectionSlug(category.title)),
+            // Las ilustraciones propias tienen su descripción; si en el panel se carga otra imagen, se usa un texto genérico.
+            alt: category.image.includes('/category-cards/categoria-')
+              ? collectionCopy(category.title).imageAlt
+              : `${collectionName(category.title)} | Retro Remeras`,
           }))}
         />
       </div>

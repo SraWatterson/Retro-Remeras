@@ -13,6 +13,8 @@ export type MarqueeCategory = {
   image: string;
   /** Página de la colección; si no tiene remeras todavía, va al catálogo filtrado. */
   href?: string;
+  /** Texto alternativo de la imagen (si no hay, se usa el título). */
+  alt?: string;
 };
 
 type Props = {
@@ -36,7 +38,7 @@ function CategoryCard({ category, hidden }: { category: MarqueeCategory; hidden?
         {category.image ? (
           <Image
             src={category.image}
-            alt={hidden ? '' : category.title}
+            alt={hidden ? '' : category.alt || category.title}
             width={1100}
             height={820}
             quality={85}
