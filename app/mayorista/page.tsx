@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Remeras por mayor para empresas y eventos | Retro Remeras',
     description: 'Remeras estampadas por mayor para empresas, eventos, institutos, emprendimientos y revendedores. Estampado DTF de alta definición.',
-    images: [{ url: '/assets/pets/Postales_1_5.png', width: 1100, height: 1320, alt: 'Producción mayorista Retro Remeras' }],
+    images: [{ url: '/assets/pets/Postales_1_5-share.jpg', width: 535, height: 858, alt: 'Producción mayorista Retro Remeras' }],
   },
 };
 

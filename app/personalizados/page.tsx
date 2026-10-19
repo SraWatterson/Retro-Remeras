@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Remeras personalizadas desde 1 unidad | Retro Remeras',
     description: 'Remeras personalizadas desde una unidad con estampado DTF. Mandanos tu diseño, foto o frase y la hacemos realidad. Envíos a todo el país.',
-    images: [{ url: '/assets/pets/Postales_1_4.png', width: 1100, height: 1320, alt: 'Remeras personalizadas Retro Remeras' }],
+    images: [{ url: '/assets/pets/Postales_1_4-share.jpg', width: 506, height: 814, alt: 'Remeras personalizadas Retro Remeras' }],
   },
 };
 
