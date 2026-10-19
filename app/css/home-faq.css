@@ -1,0 +1,175 @@
+/*
+ * Home · Preguntas frecuentes
+ * Compu: título a la izquierda, preguntas a la derecha.
+ * Celular: título arriba y preguntas abajo.
+ * Misma línea que "El índice" y "Contacto": líneas finas, sin tarjetas.
+ */
+
+.faq {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.faq__head {
+  display: grid;
+  gap: 0.55rem;
+  position: sticky;
+  top: calc(var(--header-height, 72px) + 1.5rem);
+}
+
+.faq__kicker {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow, #f4c542);
+}
+
+.faq__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.4vw, 3.2rem);
+  line-height: 1;
+  color: var(--brand-cream-soft, #fff0cb);
+}
+
+.faq__title span {
+  color: var(--yellow, #f4c542);
+}
+
+.faq__lead {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--muted, #cbb98f);
+  line-height: 1.6;
+}
+
+.faq__list {
+  border-top: 1px solid rgba(241, 221, 178, 0.14);
+}
+
+.faq__item {
+  border-bottom: 1px solid rgba(241, 221, 178, 0.14);
+}
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 0.2rem;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--brand-cream-soft, #fff0cb);
+  transition: color 0.2s;
+}
+
+.faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__item summary:hover {
+  color: var(--yellow, #f4c542);
+}
+
+.faq__item summary:focus-visible {
+  outline: 2px solid var(--yellow, #f4c542);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Signo + que gira a × al abrir. */
+.faq__item summary i {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.faq__item summary i::before,
+.faq__item summary i::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 1.5px;
+  margin-top: -0.75px;
+  background: var(--brand-gold-soft, #efb84e);
+}
+
+.faq__item summary i::after {
+  transform: rotate(90deg);
+}
+
+.faq__item[open] summary i {
+  transform: rotate(45deg);
+}
+
+.faq__item[open] summary {
+  color: var(--yellow, #f4c542);
+}
+
+.faq__answer {
+  padding: 0 0.2rem 1.1rem;
+  animation: faq-open 0.35s ease;
+}
+
+.faq__answer p {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted, #cbb98f);
+  line-height: 1.65;
+}
+
+.faq__link {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.85rem;
+  color: var(--yellow, #f4c542);
+  text-decoration: none;
+}
+
+/* Dato que falta completar (solo mientras esté entre corchetes en lib/faq.ts). */
+.faq__todo {
+  padding: 0.05em 0.35em;
+  border-radius: 4px;
+  background: rgba(244, 197, 66, 0.22);
+  color: #ffe38a;
+  outline: 1px dashed rgba(244, 197, 66, 0.7);
+}
+
+@keyframes faq-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 767px) {
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.3rem;
+  }
+
+  .faq__head {
+    position: static;
+  }
+
+  .faq__item summary {
+    font-size: 0.98rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__answer,
+  .faq__item summary i {
+    animation: none;
+    transition: none;
+  }
+}

@@ -9,11 +9,11 @@ import { getPublicProducts } from '@/lib/product-queries';
 import { getSiteContent } from '@/lib/site-content';
 
 export const metadata: Metadata = {
-  title: 'Productos | Retro Remeras',
+  title: 'Todas las remeras: anime, rock y gaming | Retro Remeras',
   description: 'Diseños de anime, gaming, cine y más. Remeras con estampado DTF de alta definición — envíos a todo el país.',
   alternates: { canonical: '/productos' },
   openGraph: {
-    title: 'Productos | Retro Remeras',
+    title: 'Todas las remeras: anime, rock y gaming | Retro Remeras',
     description: 'Diseños de anime, gaming, cine y más. Remeras con estampado DTF de alta definición — envíos a todo el país.',
     images: [{ url: '/assets/img/remera-goku.jpg', width: 1100, height: 1320, alt: 'Productos Retro Remeras' }],
   },

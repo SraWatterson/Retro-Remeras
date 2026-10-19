@@ -1,0 +1,137 @@
+/*
+ * Páginas de colección (/coleccion/anime, /coleccion/musica…)
+ * Encabezado editorial + la misma grilla del catálogo + links a las
+ * otras colecciones (ayudan a Google a recorrer la web).
+ */
+
+.coleccion-hero {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.4rem, 3vw, 2.6rem) 0 clamp(1.4rem, 2.6vw, 2.2rem);
+}
+
+.coleccion-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(203, 185, 143, 0.6);
+}
+
+.coleccion-crumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.coleccion-crumbs a:hover {
+  color: var(--yellow, #f4c542);
+}
+
+.coleccion-crumbs [aria-current] {
+  color: var(--yellow, #f4c542);
+}
+
+.coleccion-title {
+  margin: 0 0 0.8rem;
+  max-width: 16ch;
+  font-family: var(--font-title), Georgia, serif;
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(2.3rem, 5vw, 4.2rem);
+  line-height: 1;
+  color: var(--cg-cream-soft, #fff0cb);
+  text-shadow: 0 0 40px rgba(255, 240, 203, 0.08);
+}
+
+.coleccion-intro {
+  margin: 0 0 0.9rem;
+  max-width: 60ch;
+  font-size: clamp(0.98rem, 1.2vw, 1.08rem);
+  line-height: 1.65;
+  color: var(--cg-muted, rgba(255, 240, 203, 0.62));
+}
+
+.coleccion-count {
+  margin: 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(241, 221, 178, 0.14);
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(239, 184, 78, 0.85);
+}
+
+/* Sin barra de filtros: la grilla usa todo el ancho. */
+@media (min-width: 1024px) {
+  .coleccion-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.coleccion-grid .product-title {
+  font-family: var(--font-text), Arial, sans-serif;
+}
+
+/* ---------- Otras colecciones ---------- */
+.coleccion-others {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(2.4rem, 5vw, 4rem);
+}
+
+.coleccion-others__label {
+  display: block;
+  margin-bottom: 0.9rem;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow, #f4c542);
+}
+
+.coleccion-others ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.coleccion-others a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.55rem 1.05rem;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 184, 78, 0.35);
+  color: var(--cg-cream-soft, #fff0cb);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.coleccion-others a:hover,
+.coleccion-others a:focus-visible {
+  border-color: rgba(239, 184, 78, 0.9);
+  background: rgba(216, 148, 37, 0.08);
+}
+
+.coleccion-others small {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.68rem;
+  color: rgba(239, 184, 78, 0.85);
+}

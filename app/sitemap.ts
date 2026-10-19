@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { getCollections } from '@/lib/collections';
 import { getPublicProducts } from '@/lib/product-queries';
 import { normalizeImageUrl, productHref } from '@/lib/shop';
 
@@ -12,7 +13,7 @@ function absolute(url: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await getPublicProducts();
+  const [products, collections] = await Promise.all([getPublicProducts(), getCollections()]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/`,              lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
@@ -36,5 +37,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticRoutes, ...productRoutes];
+  const collectionRoutes: MetadataRoute.Sitemap = collections.map((collection) => ({
+    url: `${BASE}${collection.href}`,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...collectionRoutes, ...productRoutes];
 }

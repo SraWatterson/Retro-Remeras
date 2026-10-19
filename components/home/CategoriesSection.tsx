@@ -1,3 +1,4 @@
+import { collectionSlug, getCollections } from '@/lib/collections';
 import { prisma } from '@/lib/prisma';
 import { CategoryCardAnimated } from './CategoryCardAnimated';
 import { CategoryMarquee } from './CategoryMarquee';
@@ -14,7 +15,8 @@ async function getLandingCategories() {
 }
 
 export async function CategoriesSection() {
-  const categories = await getLandingCategories();
+  const [categories, collections] = await Promise.all([getLandingCategories(), getCollections().catch(() => [])]);
+  const collectionBySlug = new Map(collections.map((collection) => [collection.slug, collection.href]));
 
   return (
     <section className="section section--categories">
@@ -34,6 +36,7 @@ export async function CategoriesSection() {
             slug: category.slug,
             description: category.description,
             image: category.image,
+            href: collectionBySlug.get(collectionSlug(category.title)),
           }))}
         />
       </div>

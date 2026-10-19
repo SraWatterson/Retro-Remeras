@@ -11,6 +11,8 @@ export type MarqueeCategory = {
   slug: string;
   description: string;
   image: string;
+  /** Página de la colección; si no tiene remeras todavía, va al catálogo filtrado. */
+  href?: string;
 };
 
 type Props = {
@@ -25,7 +27,7 @@ function CategoryCard({ category, hidden }: { category: MarqueeCategory; hidden?
     <div className="category-card-shell cat-marquee__item" aria-hidden={hidden || undefined}>
       <Link
         className="category-card"
-        href={`/productos?categoria=${category.slug}`}
+        href={category.href ?? `/productos?categoria=${category.slug}`}
         aria-label={`Explorar categoría ${category.title}`}
         tabIndex={hidden ? -1 : undefined}
         style={{ '--category-image': `url('${category.image}')` } as CSSProperties}
