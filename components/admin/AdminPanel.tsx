@@ -1,5 +1,6 @@
 'use client';
 
+import { withRemeraPrefix } from '@/lib/product-name';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { normalizeColorSlug, uniqueColorOptions, ProductColorOption } from '@/lib/colors';
@@ -295,8 +296,8 @@ function validateProductInput(values: ProductFormState, colorRows: ColorImageRow
 
 function toPayload(values: ProductFormState, colorRows: ColorImageRow[]) {
   const payload: Record<string, unknown> = {
-    slug: values.slug.trim() || slugifyProductName(values.nombre),
-    nombre: values.nombre.trim(),
+    slug: values.slug.trim() || slugifyProductName(withRemeraPrefix(values.nombre)),
+    nombre: withRemeraPrefix(values.nombre),
     categoria: normalizeCategoryInput(values.categoria),
     precio: Number(values.precio),
     imagen: values.imagen.trim(),
