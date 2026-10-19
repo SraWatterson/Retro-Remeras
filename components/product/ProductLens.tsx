@@ -61,21 +61,28 @@ export function ProductLens({ frameRef, sideRef, src }: Props) {
       const img = frame.querySelector<HTMLImageElement>('.pv-gallery__img img');
       if (!side || !img || !img.naturalWidth) return;
 
-      // Parte de la foto que realmente se ve (la foto va "contain" dentro del cuadro).
+      // Tamaño real de la foto dibujada. Funciona con "cover" (llena el cuadro,
+      // recorta lo que sobra) y con "contain" (entra entera).
       const box = img.getBoundingClientRect();
-      const ratio = img.naturalWidth / img.naturalHeight;
-      let cw = box.width;
-      let ch = box.width / ratio;
-      if (ch > box.height) {
-        ch = box.height;
-        cw = box.height * ratio;
-      }
+      const fit = getComputedStyle(img).objectFit;
+      const scale =
+        fit === 'cover'
+          ? Math.max(box.width / img.naturalWidth, box.height / img.naturalHeight)
+          : Math.min(box.width / img.naturalWidth, box.height / img.naturalHeight);
+      const cw = img.naturalWidth * scale;
+      const ch = img.naturalHeight * scale;
       const cx0 = box.left + (box.width - cw) / 2;
       const cy0 = box.top + (box.height - ch) / 2;
       const x = event.clientX - cx0;
       const y = event.clientY - cy0;
 
-      if (x < 0 || y < 0 || x > cw || y > ch) {
+      // Zona visible de la foto (en "cover" es todo el cuadro).
+      const minX = Math.max(0, box.left - cx0);
+      const minY = Math.max(0, box.top - cy0);
+      const maxX = Math.min(cw, box.right - cx0);
+      const maxY = Math.min(ch, box.bottom - cy0);
+
+      if (x < minX || y < minY || x > maxX || y > maxY) {
         setState(null);
         return;
       }
@@ -89,10 +96,10 @@ export function ProductLens({ frameRef, sideRef, src }: Props) {
         height: frameRect.height,
       };
 
-      const lw = Math.min(cw, pane.width / ZOOM);
-      const lh = Math.min(ch, pane.height / ZOOM);
-      const lx = Math.min(Math.max(x - lw / 2, 0), cw - lw);
-      const ly = Math.min(Math.max(y - lh / 2, 0), ch - lh);
+      const lw = Math.min(maxX - minX, pane.width / ZOOM);
+      const lh = Math.min(maxY - minY, pane.height / ZOOM);
+      const lx = Math.min(Math.max(x - lw / 2, minX), maxX - lw);
+      const ly = Math.min(Math.max(y - lh / 2, minY), maxY - lh);
 
       setState({
         lens: { left: cx0 - frameRect.left + lx, top: cy0 - frameRect.top + ly, width: lw, height: lh },
