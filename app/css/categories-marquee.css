@@ -8,6 +8,13 @@
 
 .cat-marquee {
   --cat-card-w: clamp(250px, 24vw, 340px);
+  /* La cinta mide miles de píxeles (todas las tarjetas, dos veces). Sin esto,
+     el body (que es una grilla) toma ese ancho como mínimo y estira TODA la
+     página. `contain: inline-size` hace que su ancho no dependa del contenido. */
+  contain: inline-size;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   --cat-gap: clamp(14px, 1.6vw, 22px);
   position: relative;
   margin-top: clamp(20px, 3vw, 36px);
@@ -78,6 +85,7 @@
     /* En el celular la cinta llega hasta los bordes de la pantalla,
        sin importar el margen interno del contenedor. */
     width: 100vw;
+    max-width: 100vw;
     margin-left: calc(50% - 50vw);
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
     mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
