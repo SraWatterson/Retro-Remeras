@@ -64,6 +64,11 @@ export function normalizeText(value: string) {
     .trim();
 }
 
+/** URL pública de la ficha de un producto, armada con su slug. */
+export function productHref(product: Pick<Product, 'slug'>) {
+  return `/remeras/${encodeURIComponent(product.slug)}`;
+}
+
 export function normalizeImageUrl(value?: string | null) {
   if (!value) return '/assets/img/ejemplo-vintage.jpg';
   if (value.startsWith('http://') || value.startsWith('https://')) return value;
