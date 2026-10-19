@@ -11,6 +11,7 @@ import './css/home-personalizados.css';
 import './css/home-steps.css';
 import './css/home-featured.css';
 import './css/home-contact.css';
+import './css/home-flow.css';
 
 // Tipografías: Shrikhand para títulos, Archivo Black para etiquetas cortas
 // (menú, botones, precios) y Archivo para párrafos. next/font las sirve desde

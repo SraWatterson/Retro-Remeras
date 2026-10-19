@@ -76,10 +76,11 @@ export default async function Page() {
             </div>
           </div>
         </div>
+        {/* Orden: de lo que más vende a lo que cierra la compra. */}
         <CategoriesSection />
+        <FeaturedProducts initialProducts={featuredProducts} />
         <PersonalizadosMayoristaSection />
         <StepsSection />
-        <FeaturedProducts initialProducts={featuredProducts} />
         <ContactSection />
       </main>
 
