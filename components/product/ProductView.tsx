@@ -175,7 +175,7 @@ export function ProductView({ product }: Props) {
                 >
                   <Image
                     src={selectedImage}
-                    alt={`${product.nombre}${selectedColorOption?.colorName ? ` — ${selectedColorOption.colorName}` : ''}`}
+                    alt={product.imagenAlt?.trim() || `${product.nombre}${selectedColorOption?.colorName ? ` — ${selectedColorOption.colorName}` : ''}`}
                     width={1400}
                     height={1400}
                     quality={94}

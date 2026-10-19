@@ -294,7 +294,7 @@ function FeaturedCarouselCard({ product, index, activeIndex, totalCards }: Featu
       >
         <Image
           src={normalizeImageUrl(product.imagen)}
-          alt={product.nombre}
+          alt={product.imagenAlt?.trim() || product.nombre}
           width={900}
           height={1120}
           quality={90}

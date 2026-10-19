@@ -389,6 +389,21 @@ export function ProductEditorForm({
             <button className="btn btn-ghost" type="button" disabled={uploading || saving} onClick={onMainDeleteFile}>Eliminar archivo</button>
           </div>
           {errors.imagen ? <p className="admin-error">{errors.imagen}</p> : null}
+
+          <label className="form-label" htmlFor="imagenAlt">Texto alternativo de la imagen</label>
+          <input
+            id="imagenAlt"
+            className="input"
+            value={form.imagenAlt}
+            maxLength={250}
+            placeholder="Ej: Remera negra con estampado de Frieren sentada en un bosque – Retro Remeras"
+            disabled={saving}
+            onChange={(event) => onChange({ imagenAlt: event.target.value })}
+          />
+          <p className="admin-help">
+            Describí lo que se ve en la foto: prenda, color, qué tiene estampado y estilo. Lo leen Google y los lectores de pantalla. Si lo dejás vacío se usa el nombre del producto. ({form.imagenAlt.length}/250)
+          </p>
+          {errors.imagenAlt ? <p className="admin-error">{errors.imagenAlt}</p> : null}
         </div>
 
         <div className="form-group">
