@@ -1,10 +1,9 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { FaEnvelope, FaInstagram, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram, FaMapMarkerAlt, FaWhatsapp } from 'react-icons/fa';
 import { createWhatsAppLink } from '@/lib/shop';
 
-const CONTACT_EMAIL = 'admiretro.remeras@gmail.com';
 const INSTAGRAM_URL = 'https://www.instagram.com/retro.remeras/';
 
 const MAPS_URL =
@@ -30,14 +29,6 @@ const ROWS = [
     value: '@retro.remeras',
     href: INSTAGRAM_URL,
     external: true,
-  },
-  {
-    key: 'email',
-    Icon: FaEnvelope,
-    label: 'Email',
-    value: CONTACT_EMAIL,
-    href: `mailto:${CONTACT_EMAIL}`,
-    external: false,
   },
   {
     key: 'retiro',
