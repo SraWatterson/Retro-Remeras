@@ -13,6 +13,16 @@ import { getSiteContent } from '@/lib/site-content';
 
 export const revalidate = 60;
 
+/** Colecciones armadas de antemano: abren al instante (se actualizan cada 60 s). */
+export async function generateStaticParams() {
+  try {
+    const collections = await getCollections();
+    return collections.map((collection) => ({ slug: collection.slug }));
+  } catch {
+    return [];
+  }
+}
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -147,7 +157,7 @@ export default async function Page({ params }: PageProps) {
                         alt={product.imagenAlt?.trim() || product.nombre}
                         width={800}
                         height={1000}
-                        quality={90}
+                        quality={75}
                         sizes="(max-width: 767px) 46vw, (max-width: 1199px) 30vw, 280px"
                       />
                       {product.destacado ? <span className="cat-visual__badge">Destacado</span> : null}

@@ -9,11 +9,25 @@ import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { ProductView } from '@/components/product/ProductView';
-import { getPublicProductBySlug } from '@/lib/product-queries';
+import { getPublicProductBySlug, getPublicProducts } from '@/lib/product-queries';
 import { getSiteContent } from '@/lib/site-content';
 import { formatPrice, normalizeImageUrl, productHref } from '@/lib/shop';
 
 export const revalidate = 60;
+
+/**
+ * Las fichas se arman de antemano (al publicar) y se actualizan solas cada
+ * 60 s: abren al instante. Una remera nueva se arma en su primera visita y
+ * desde ahí también queda lista.
+ */
+export async function generateStaticParams() {
+  try {
+    const products = await getPublicProducts();
+    return products.map((product) => ({ slug: product.slug }));
+  } catch {
+    return [];
+  }
+}
 
 type PageProps = {
   params: Promise<{ slug: string }>;

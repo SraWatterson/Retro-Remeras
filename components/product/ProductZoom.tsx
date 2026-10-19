@@ -156,7 +156,7 @@ export function ProductZoom({ src, alt, open, onClose }: Props) {
           className="pz__img"
           style={{ transform: `translate3d(${view.x}px, ${view.y}px, 0) scale(${scale})` }}
         >
-          <Image src={src} alt={alt} width={1600} height={1600} quality={94} sizes="100vw" priority draggable={false} />
+          <Image src={src} alt={alt} width={1600} height={1600} quality={85} sizes="100vw" priority draggable={false} />
         </div>
       </div>
 

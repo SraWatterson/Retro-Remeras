@@ -41,7 +41,7 @@ function CategoryCard({ category, hidden }: { category: MarqueeCategory; hidden?
             alt={hidden ? '' : category.alt || category.title}
             width={1100}
             height={820}
-            quality={85}
+            quality={75}
             sizes="(max-width: 767px) 72vw, 340px"
             draggable={false}
           />

@@ -130,12 +130,12 @@ const EMPTY_SITE_CONTENT_FORM: SiteContentFormState = {
   heroPrimaryButtonHref: '/productos',
   heroSecondaryButtonText: 'Cómo funciona',
   heroSecondaryButtonHref: '#como-funciona',
-  heroMainImage: '/assets/img/ejemplo-vintage.jpg',
+  heroMainImage: '/assets/img/ejemplo-vintage.webp',
   heroMainImageAlt: 'Diseño vintage destacado',
   heroBadgeText: 'Colecciones con impronta retro',
-  heroSideImageOne: '/assets/img/remera-goku.jpg',
+  heroSideImageOne: '/assets/img/remera-goku.webp',
   heroSideImageOneAlt: 'Diseño anime destacado',
-  heroSideImageTwo: '/assets/img/ejemplo-gaming.jpg',
+  heroSideImageTwo: '/assets/img/ejemplo-gaming.webp',
   heroSideImageTwoAlt: 'Diseño videojuegos destacado',
 };
 

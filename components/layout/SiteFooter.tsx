@@ -19,7 +19,7 @@ export function SiteFooter() {
       <div className="container footer-grid">
         <div>
           <Link className="brand" href="/" aria-label="Ir al inicio de Retro Remeras">
-            <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={64} height={64} sizes="64px" />
+            <Image src="/assets/logo/icono-banner.webp" alt="Retro Remeras" width={64} height={64} sizes="64px" />
           </Link>
           <p>
             Remeras con nostalgia y personalidad: anime, rock, videojuegos y cultura pop estampados en DTF. Sin mínimo de compra, con envíos a todo el país y atención por WhatsApp.

@@ -71,7 +71,7 @@ export function PersonalizadosMayoristaSection() {
                   alt={card.alt}
                   width={1100}
                   height={820}
-                  quality={90}
+                  quality={75}
                   sizes="(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 560px"
                 />
                 <span className="personalizados-mayorista-card__badge">{card.eyebrow}</span>
