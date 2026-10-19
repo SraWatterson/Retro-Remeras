@@ -115,7 +115,7 @@
 
 .cat-marquee .category-card::after {
   background:
-    radial-gradient(120% 75% at 0% 0%, rgba(8, 5, 3, 0.78) 0%, rgba(8, 5, 3, 0.45) 40%, rgba(8, 5, 3, 0) 64%),
+    radial-gradient(130% 85% at 0% 0%, rgba(8, 5, 3, 0.84) 0%, rgba(8, 5, 3, 0.6) 42%, rgba(8, 5, 3, 0) 70%),
     linear-gradient(180deg, rgba(8, 5, 3, 0) 55%, rgba(8, 5, 3, 0.45) 100%) !important;
 }
 
