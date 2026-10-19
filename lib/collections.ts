@@ -44,11 +44,17 @@ async function loadCollections() {
   });
 
   products.forEach((product) => {
-    const slug = collectionSlug(product.categoria);
-    if (!slug) return;
-    const entry = map.get(slug) ?? { category: normalizeCategoryName(product.categoria), products: [] };
-    entry.products.push(product);
-    map.set(slug, entry);
+    // Categoría principal + las extra (una remera puede estar en varias colecciones).
+    const categories = [product.categoria, ...(product.categoriasExtra ?? [])];
+    const seen = new Set<string>();
+    categories.forEach((category) => {
+      const slug = collectionSlug(category);
+      if (!slug || seen.has(slug)) return;
+      seen.add(slug);
+      const entry = map.get(slug) ?? { category: normalizeCategoryName(category), products: [] };
+      entry.products.push(product);
+      map.set(slug, entry);
+    });
   });
 
   return map;

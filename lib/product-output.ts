@@ -8,6 +8,7 @@ type ProductLike = {
   slug: string;
   nombre: string;
   categoria: string;
+  categoriasExtra?: string[] | null;
   precio: number;
   imagen: string | null;
   imagenAlt?: string | null;
@@ -133,6 +134,7 @@ export function normalizeProductOutput(product: ProductLike): Product {
     slug: product.slug,
     nombre: product.nombre,
     categoria: normalizeCategoryName(product.categoria),
+    categoriasExtra: (product.categoriasExtra ?? []).map(normalizeCategoryName).filter(Boolean),
     precio: product.precio,
     imagen: product.imagen,
     imagenAlt: product.imagenAlt ?? null,

@@ -79,7 +79,9 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    products.forEach((p) => { counts[p.categoria] = (counts[p.categoria] ?? 0) + 1; });
+    products.forEach((p) => {
+      new Set([p.categoria, ...(p.categoriasExtra ?? [])]).forEach((c) => { counts[c] = (counts[c] ?? 0) + 1; });
+    });
     return counts;
   }, [products]);
 
@@ -87,7 +89,9 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     const catNorm = normalizeText(activeCategory);
     const searchNorm = normalizeText(searchQuery);
     const result = products.filter((p) => {
-      const catMatch = activeCategory === 'Todos' || normalizeText(p.categoria) === catNorm;
+      const catMatch =
+        activeCategory === 'Todos' ||
+        [p.categoria, ...(p.categoriasExtra ?? [])].some((c) => normalizeText(c) === catNorm);
       if (!catMatch) return false;
       if (activeColors.size > 0) {
         const keys = p.imagenesPorColor ? Object.keys(p.imagenesPorColor) : [];
