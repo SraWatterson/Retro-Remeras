@@ -41,7 +41,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     openGraph: {
       title: `${product.nombre} | Retro Remeras`,
       description,
-      images: [{ url: imageUrl, width: 1400, height: 1400, alt: product.nombre }],
+      images: [{ url: imageUrl, width: 1400, height: 1400, alt: product.imagenAlt?.trim() || product.nombre }],
       type: 'website',
     },
   };

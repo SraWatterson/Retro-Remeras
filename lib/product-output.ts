@@ -10,6 +10,7 @@ type ProductLike = {
   categoria: string;
   precio: number;
   imagen: string | null;
+  imagenAlt?: string | null;
   imagenesPorColor: unknown;
   sizeGuide: unknown;
   descripcion: string;
@@ -134,6 +135,7 @@ export function normalizeProductOutput(product: ProductLike): Product {
     categoria: normalizeCategoryName(product.categoria),
     precio: product.precio,
     imagen: product.imagen,
+    imagenAlt: product.imagenAlt ?? null,
     imagenesPorColor: normalizeImageMap(product.imagenesPorColor, product.imagen || ''),
     sizeGuide: normalizeSizeGuide(product.sizeGuide),
     descripcion: product.descripcion,

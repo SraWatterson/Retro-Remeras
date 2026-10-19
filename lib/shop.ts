@@ -18,6 +18,7 @@ export type Product = {
   categoria: string;
   precio: number;
   imagen?: string | null;
+  imagenAlt?: string | null;
   imagenesPorColor?: Record<string, ProductColorImage>;
   sizeGuide?: ProductSizeGuide | null;
   descripcion: string;

@@ -28,6 +28,7 @@ export type ProductFormState = {
   categoria: string;
   precio: string;
   imagen: string;
+  imagenAlt: string;
   sizeGuide: ProductSizeGuide;
   descripcion: string;
   disponible: boolean;

@@ -344,7 +344,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                         <div className="product-media">
                           <Image
                             src={normalizeImageUrl(product.imagen)}
-                            alt={product.nombre}
+                            alt={product.imagenAlt?.trim() || product.nombre}
                             width={800}
                             height={1000}
                             quality={90}

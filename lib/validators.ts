@@ -74,6 +74,13 @@ export const productInputSchema = z.object({
   categoria: z.string().trim().min(2),
   precio: z.number().int().nonnegative(),
   imagen: relativeOrAbsoluteImagePath.optional().nullable(),
+  imagenAlt: z
+    .string()
+    .trim()
+    .max(250, 'El texto alternativo puede tener hasta 250 caracteres')
+    .transform((value) => value || null)
+    .optional()
+    .nullable(),
   imagenesPorColor: imageByColorSchema.optional(),
   sizeGuide: sizeGuideSchema,
   descripcion: z.string().trim().min(3),

@@ -57,6 +57,7 @@ model Product {
   categoria        String
   precio           Int
   imagen           String?
+  imagenAlt        String?
   imagenesPorColor Json?
   sizeGuide        Json?
   descripcion      String
