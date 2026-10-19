@@ -4,10 +4,10 @@
     "nombre": "Remera Atari",
     "categoria": "Videojuegos",
     "precio": 21000,
-    "imagen": "assets/catalogo/diseno-atari/atari-negra.png",
+    "imagen": "assets/catalogo/diseno-atari/atari-negra.webp",
     "imagenesPorColor": {
-      "Negro": "assets/catalogo/diseno-atari/atari-negra.png",
-      "Blanco": "assets/catalogo/diseno-atari/atari-blanca.jpg"
+      "Negro": "assets/catalogo/diseno-atari/atari-negra.webp",
+      "Blanco": "assets/catalogo/diseno-atari/atari-blanca.webp"
     },  
     "descripcion": "Diseño atari vintage",
     "disponible": true,
@@ -18,7 +18,7 @@
     "nombre": "Remera Espíritu de Carretera",
     "categoria": "Vintage",
     "precio": 21000,
-    "imagen": "assets/catalogo/ejemplo-vintage.jpg",
+    "imagen": "assets/catalogo/ejemplo-vintage.webp",
     "descripcion": "Una remera vintage",
     "disponible": true,
     "destacado": true
@@ -28,7 +28,7 @@
     "nombre": "Remera goku",
     "categoria": "Anime",
     "precio": 21000,
-    "imagen": "assets/catalogo/remera-goku.jpg",
+    "imagen": "assets/catalogo/remera-goku.webp",
     "descripcion": "Una remera de Goku",
     "disponible": true,
     "destacado": false
@@ -38,7 +38,7 @@
     "nombre": "Remera Bon Jovi",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/bon-jovi.jpeg",
+    "imagen": "assets/catalogo/bon-jovi.webp",
     "descripcion": "Remera Bon Jovi",
     "disponible": true,
     "destacado": false
@@ -48,7 +48,7 @@
     "nombre": "Remera Parasyte",
     "categoria": "Anime",
     "precio": 21000,
-    "imagen": "assets/catalogo/parasyte.png",
+    "imagen": "assets/catalogo/parasyte.webp",
     "descripcion": "Remera anime parasyte",
     "disponible": true,
     "destacado": true
@@ -58,7 +58,7 @@
     "nombre": "Remera Picapiedras",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/retro-picapiedra.jpeg",
+    "imagen": "assets/catalogo/retro-picapiedra.webp",
     "descripcion": "Remera Picapiedras",
     "disponible": true,
     "destacado": false
@@ -68,7 +68,7 @@
     "nombre": "Remera Stranger Things",
     "categoria": "Cine",
     "precio": 21000,
-    "imagen": "assets/catalogo/stranger-things.png",
+    "imagen": "assets/catalogo/stranger-things.webp",
     "descripcion": "Remera Stranger Things",
     "disponible": true,
     "destacado": true
@@ -78,7 +78,7 @@
     "nombre": "Remera Artesano del miedo",
     "categoria": "Cine",
     "precio": 21000,
-    "imagen": "assets/catalogo/artesano.jpeg",
+    "imagen": "assets/catalogo/artesano.webp",
     "descripcion": "Remera Artesano del miedo",
     "disponible": true,
     "destacado": false
@@ -88,7 +88,7 @@
     "nombre": "Remera Beatles",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/beatles.jpeg",
+    "imagen": "assets/catalogo/beatles.webp",
     "descripcion": "Remera Beatles",
     "disponible": true,
     "destacado": false
@@ -98,7 +98,7 @@
     "nombre": "Remera Charly García",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/charlygarcia.jpeg",
+    "imagen": "assets/catalogo/charlygarcia.webp",
     "descripcion": "Remera Charly García",
     "disponible": true,
     "destacado": false
@@ -108,7 +108,7 @@
     "nombre": "Remera Les Paul",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/guitar.jpeg",
+    "imagen": "assets/catalogo/guitar.webp",
     "descripcion": "Remera Les Paul",
     "disponible": true,
     "destacado": false
@@ -118,7 +118,7 @@
     "nombre": "Remera Kiss",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/kiss.jpeg",
+    "imagen": "assets/catalogo/kiss.webp",
     "descripcion": "Remera Kiss",
     "disponible": true,
     "destacado": false
@@ -128,7 +128,7 @@
     "nombre": "Remera Rolling Stones",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/rollingstones.jpeg",
+    "imagen": "assets/catalogo/rollingstones.webp",
     "descripcion": "Remera Rolling Stones",
     "disponible": true,
     "destacado": false
@@ -138,7 +138,7 @@
     "nombre": "Remera Sandro",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/sandro.jpeg",
+    "imagen": "assets/catalogo/sandro.webp",
     "descripcion": "Remera Sandro",
     "disponible": true,
     "destacado": false
@@ -148,7 +148,7 @@
     "nombre": "Remera Soda Stereo",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/sodastereo.jpeg",
+    "imagen": "assets/catalogo/sodastereo.webp",
     "descripcion": "Remera Soda Stereo",
     "disponible": true,
     "destacado": false
@@ -158,7 +158,7 @@
     "nombre": "Remera Patricio Rey",
     "categoria": "Variados",
     "precio": 21000,
-    "imagen": "assets/catalogo/patricio-rey-blanca.jpg",
+    "imagen": "assets/catalogo/patricio-rey-blanca.webp",
     "descripcion": "Remera Patricio Rey",
     "disponible": true,
     "destacado": false
