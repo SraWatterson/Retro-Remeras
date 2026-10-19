@@ -36,6 +36,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description: collection.copy.description,
     alternates: { canonical: collection.href },
+    // Sin remeras todavía: la página existe pero Google no la indexa hasta que tenga alguna.
+    robots: products.length ? undefined : { index: false, follow: true },
     openGraph: {
       title,
       description: collection.copy.description,
@@ -57,11 +59,13 @@ export default async function Page({ params }: PageProps) {
   const { collection, products } = data;
   const others = collections.filter((item) => item.slug !== collection.slug);
   const url = `${BASE}${collection.href}`;
+  const [headingStart, headingAccent] = collection.copy.heading;
+  const heading = headingStart + headingAccent;
 
   const ldCollection = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: collection.copy.heading,
+    name: heading,
     description: collection.copy.description,
     url,
     mainEntity: {
@@ -82,7 +86,7 @@ export default async function Page({ params }: PageProps) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
       { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
-      { '@type': 'ListItem', position: 3, name: collection.copy.heading, item: url },
+      { '@type': 'ListItem', position: 3, name: heading, item: url },
     ],
   };
 
@@ -103,16 +107,36 @@ export default async function Page({ params }: PageProps) {
               <span aria-hidden="true">/</span>
               <span aria-current="page">{collection.category}</span>
             </nav>
-            <h1 className="coleccion-title">{collection.copy.heading}</h1>
+            <h1 className="coleccion-title">
+              {headingStart}
+              <span>{headingAccent}</span>
+            </h1>
             <p className="coleccion-intro">{collection.copy.intro}</p>
             <p className="coleccion-count">
-              {products.length} {products.length === 1 ? 'diseño' : 'diseños'} · Sin mínimo de compra · Envíos a todo el país
+              {products.length
+                ? `${products.length} ${products.length === 1 ? 'diseño' : 'diseños'} · `
+                : ''}
+              Sin mínimo de compra · Envíos a todo el país
             </p>
           </div>
         </section>
 
         <section className="catalog-section" aria-label={`Remeras de la colección ${collection.category}`}>
           <div className="container">
+            {!products.length ? (
+              <div className="coleccion-empty">
+                <span className="coleccion-empty__kicker">Muy pronto</span>
+                <p>Estamos preparando los diseños de esta colección. Mientras tanto, mirá las otras o pedí el tuyo personalizado.</p>
+                <div className="coleccion-empty__actions">
+                  <Link className="btn btn-primary" href="/personalizados">
+                    Pedir uno personalizado
+                  </Link>
+                  <Link className="btn btn-secondary" href="/productos">
+                    Ver todas las remeras
+                  </Link>
+                </div>
+              </div>
+            ) : null}
             <div className="catalog-grid coleccion-grid">
               {products.map((product) => (
                 <article className="product-card product-card--linked" key={product.id}>
@@ -153,8 +177,8 @@ export default async function Page({ params }: PageProps) {
                 {others.map((item) => (
                   <li key={item.slug}>
                     <Link href={item.href}>
-                      {item.copy.heading}
-                      <small>{item.count}</small>
+                      {item.copy.heading.join('')}
+                      {item.count ? <small>{item.count}</small> : null}
                     </Link>
                   </li>
                 ))}

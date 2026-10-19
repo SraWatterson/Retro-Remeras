@@ -66,7 +66,7 @@ export function ContactSection() {
             <div className="cx__head">
               <span className="cx__kicker">Contacto</span>
               <h2 id="contact-title" className="cx__title">
-                Hablemos<span>.</span>
+                Hablemos
               </h2>
               <p className="cx__lead">
                 ¿Tenés una consulta o querés coordinar un pedido? Respondemos rápido por WhatsApp.

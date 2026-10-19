@@ -41,7 +41,7 @@ export function FaqSection() {
           <div className="faq__head">
             <span className="faq__kicker">Preguntas frecuentes</span>
             <h2 id="faq-title" className="faq__title">
-              Antes de pedir<span>.</span>
+              Antes de pedir
             </h2>
             <p className="faq__lead">Lo que más nos preguntan. Si no está acá, escribinos por WhatsApp.</p>
           </div>

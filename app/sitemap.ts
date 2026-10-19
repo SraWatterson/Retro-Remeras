@@ -37,7 +37,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  const collectionRoutes: MetadataRoute.Sitemap = collections.map((collection) => ({
+  // Solo las colecciones con remeras: las vacías no se indexan todavía.
+  const collectionRoutes: MetadataRoute.Sitemap = collections.filter((collection) => collection.count > 0).map((collection) => ({
     url: `${BASE}${collection.href}`,
     changeFrequency: 'weekly',
     priority: 0.8,
