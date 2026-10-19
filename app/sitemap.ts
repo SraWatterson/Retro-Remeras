@@ -1,7 +1,15 @@
 import type { MetadataRoute } from 'next';
 import { getPublicProducts } from '@/lib/product-queries';
+import { normalizeImageUrl, productHref } from '@/lib/shop';
 
 const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+
+// Se regenera cada hora, así los productos nuevos aparecen sin volver a publicar la web.
+export const revalidate = 3600;
+
+function absolute(url: string) {
+  return url.startsWith('http') ? url : `${BASE}${url}`;
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await getPublicProducts();
@@ -13,12 +21,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/mayorista`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
   ];
 
-  const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${BASE}/diseno?id=${product.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }));
+  const productRoutes: MetadataRoute.Sitemap = products.map((product) => {
+    const images = new Set<string>();
+    if (product.imagen) images.add(absolute(normalizeImageUrl(product.imagen)));
+    Object.values(product.imagenesPorColor || {}).forEach((color) => {
+      if (color?.path) images.add(absolute(normalizeImageUrl(color.path)));
+    });
+
+    return {
+      url: `${BASE}${productHref(product)}`,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+      images: [...images],
+    };
+  });
 
   return [...staticRoutes, ...productRoutes];
 }

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { Product, formatPrice, normalizeImageUrl, normalizeText } from '@/lib/shop';
+import { Product, formatPrice, normalizeImageUrl, normalizeText, productHref } from '@/lib/shop';
 
 const CATEGORIES_LIMIT = 6;
 const COLORS_LIMIT = 8;
@@ -338,7 +338,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                     <article className="product-card product-card--linked" key={product.id}>
                       <Link
                         className="product-card-link"
-                        href={`/diseno?id=${product.id}`}
+                        href={productHref(product)}
                         aria-label={`Ver ${product.nombre}`}
                       >
                         <div className="product-media">
@@ -359,7 +359,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                       <div className="product-content">
                         <div className="product-category">{product.categoria}</div>
                         <h3 className="product-title">
-                          <Link className="product-title-link" href={`/diseno?id=${product.id}`}>
+                          <Link className="product-title-link" href={productHref(product)}>
                             {product.nombre}
                           </Link>
                         </h3>

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion, type PanInfo } from 'framer-motion';
-import { Product, formatPrice, normalizeImageUrl } from '@/lib/shop';
+import { Product, formatPrice, normalizeImageUrl, productHref } from '@/lib/shop';
 
 const AUTOPLAY_DELAY = 3600;
 const SWIPE_THRESHOLD = 75;
@@ -287,7 +287,7 @@ function FeaturedCarouselCard({ product, index, activeIndex, totalCards }: Featu
       aria-hidden={!isVisible}
     >
       <Link
-        href={`/diseno?id=${product.id}`}
+        href={productHref(product)}
         className="featured-carousel-card__link"
         tabIndex={isActive ? 0 : -1}
         aria-label={`Ver ${product.nombre}`}

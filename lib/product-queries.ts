@@ -21,6 +21,14 @@ export async function getFeaturedProducts(limit = 12): Promise<Product[]> {
   return products.map(normalizeProductOutput);
 }
 
+export async function getPublicProductBySlug(slug: string): Promise<Product | null> {
+  const product = await prisma.product.findFirst({
+    where: { slug, activo: true, disponible: true, deletedAt: null },
+  });
+
+  return product ? normalizeProductOutput(product) : null;
+}
+
 export async function getPublicProductById(id: string): Promise<Product | null> {
   const product = await prisma.product.findFirst({
     where: { id, activo: true, disponible: true, deletedAt: null },
