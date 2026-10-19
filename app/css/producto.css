@@ -322,6 +322,21 @@
   max-width: 54ch;
 }
 
+.pv-description {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.pv-description p {
+  margin: 0;
+}
+
+/* El segundo párrafo es el informativo (corte, talles, estampado): más tenue. */
+.pv-description p + p {
+  color: rgba(241, 221, 178, 0.58);
+  font-size: 0.82rem;
+}
+
 
 /* ─────────────────────────────────────────────
    6. CONFIG — inline rows, sin containers anidados

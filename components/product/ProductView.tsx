@@ -233,7 +233,16 @@ export function ProductView({ product }: Props) {
               </button>
             </div>
             {product.descripcion && product.descripcion.trim().toLowerCase() !== product.nombre.trim().toLowerCase() && (
-              <p className="pv-description">{product.descripcion}</p>
+              <div className="pv-description">
+                {/* Cada párrafo (separado por una línea en blanco en el panel) en su propio bloque. */}
+                {product.descripcion
+                  .split(/\n\s*\n/)
+                  .map((paragraph) => paragraph.trim())
+                  .filter(Boolean)
+                  .map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+              </div>
             )}
           </div>
 

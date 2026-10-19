@@ -242,7 +242,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             )}
           </h1>
           <p className="section-subtitle">
-            {headingCopy ? headingCopy.intro : 'Filtrá por categoría y encontrá la remera perfecta.'}
+            {headingCopy ? headingCopy.intro : 'Filtrá por colección, buscá tu personaje o tu banda y encontrá tu próxima remera.'}
           </p>
         </div>
       </section>

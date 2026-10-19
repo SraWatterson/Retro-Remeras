@@ -23,10 +23,10 @@ export async function CategoriesSection() {
     <section className="section section--categories">
       <div className="container">
         <CategoryCardAnimated>
-          <span className="section-kicker">Categorías destacadas</span>
-          <h2 className="section-title">Diseños que representan lo que te gusta</h2>
+          <span className="section-kicker">Colecciones</span>
+          <h2 className="section-title">Elegí tu universo</h2>
           <p className="section-subtitle">
-            Explorá nuestras colecciones y encontrá el diseño que más te representa.
+            Anime, rock, videojuegos, cine y mucho más: diseños con historia para fans que se ponen la camiseta, literal.
           </p>
         </CategoryCardAnimated>
 

@@ -22,7 +22,7 @@ export function SiteFooter() {
             <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={64} height={64} sizes="64px" />
           </Link>
           <p>
-            Remeras con estilo, nostalgia y personalidad. Diseños temáticos, atención cercana y pedidos simples por WhatsApp.
+            Remeras con nostalgia y personalidad: anime, rock, videojuegos y cultura pop estampados en DTF. Sin mínimo de compra, con envíos a todo el país y atención por WhatsApp.
           </p>
           <small>© {new Date().getFullYear()} Retro Remeras. Todos los derechos reservados.</small>
           <a
