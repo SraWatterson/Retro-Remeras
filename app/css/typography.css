@@ -1,0 +1,83 @@
+/*
+ * Tipografías de Retro Remeras
+ * ----------------------------
+ * Este archivo solo decide QUÉ letra usa cada tipo de texto. Los tamaños,
+ * colores, brillos, sombras y animaciones siguen viniendo de style.css y no
+ * se tocan acá.
+ *
+ *   --font-title  Shrikhand      → títulos y nombres de producto
+ *   --font-label  Archivo Black  → menú, botones, precios, etiquetas cortas
+ *   --font-text   Archivo        → párrafos y descripciones (base del body)
+ *
+ * Shrikhand y Archivo Black tienen un solo grosor. `font-synthesis: none`
+ * evita que el navegador las "engorde" artificialmente cuando style.css pide
+ * font-weight 800/900, así se ven nítidas sin tener que cambiar esas reglas.
+ */
+
+/* ---------- Títulos: Shrikhand ---------- */
+:where(h1, h2, h3, h4),
+.hero-title,
+.section-title,
+.featured-showcase__title,
+.featured-carousel-card__label > span,
+.product-title,
+.pv-title,
+.pv-dialog-title,
+.pv-order-box__title,
+.catalog-sheet-title,
+.category-card h3,
+.contact-section__title-accent {
+  font-family: var(--font-title), Georgia, serif;
+  font-synthesis: none;
+}
+
+/* Shrikhand es ancha e inclinada: el interletrado negativo que tenían algunos
+   títulos con la letra anterior hace que se peguen las letras. */
+.hero-title,
+.section-title,
+.featured-showcase__title,
+.product-title,
+.pv-title,
+.category-card h3 {
+  letter-spacing: 0.005em !important;
+}
+
+/* ---------- Etiquetas cortas: Archivo Black ---------- */
+.btn,
+.rr-desktop-link,
+.rr-mobile-nav-link,
+.promo-bar__item,
+.eyebrow,
+.section-kicker,
+.featured-showcase__kicker,
+.featured-carousel-card__label > strong,
+.product-category,
+.product-price,
+.pv-category,
+.pv-price,
+.pv-price-cta,
+.pv-order-item__price,
+.pv-order-total,
+.pv-order-badge,
+.pv-gallery__cat-badge,
+.poster-badge,
+.hero-stat__num,
+.cat-visual__badge,
+.cfilter-badge,
+.cfilter-title,
+.cfilter-section-title,
+.personalizados-mayorista-card__badge,
+.contact-card__label,
+.footer-col-title,
+.sales-pricing-card__label {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+}
+
+/* ---------- Panel de administración ----------
+   El panel es una herramienta de trabajo: se queda con la letra de lectura
+   en todo, incluidos sus títulos y botones. */
+.admin-main :where(h1, h2, h3, h4, h5, h6, .btn),
+.login-page :where(h1, h2, h3, h4, h5, h6, .btn) {
+  font-family: var(--font-text), "Helvetica Neue", Arial, sans-serif;
+}
