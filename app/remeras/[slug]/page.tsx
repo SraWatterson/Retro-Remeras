@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const imageUrl = absoluteImageUrl(product.imagen);
   const description = product.descripcion
     ? `${product.descripcion} — ${formatPrice(product.precio)}`
-    : `Remera ${product.nombre} · ${formatPrice(product.precio)} · Estampado DTF`;
+    : `${/^remeras?\b/i.test(product.nombre.trim()) ? product.nombre : `Remera ${product.nombre}`} · ${formatPrice(product.precio)} · Estampado DTF`;
 
   return {
     title: `${product.nombre} | Retro Remeras`,
