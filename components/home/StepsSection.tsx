@@ -96,6 +96,17 @@ export function StepsSection() {
               variants={animate ? itemVariants : undefined}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
+              {/* Compu: emblema sobre la línea + número grande. */}
+              <span className="steps-flow__emblem" aria-hidden="true">
+                <svg viewBox="0 0 40 40" width="40" height="40">
+                  <path className="steps-flow__emblem-outer" d="M20 2.5 37.5 20 20 37.5 2.5 20Z" />
+                  <path className="steps-flow__emblem-mid" d="M20 9 31 20 20 31 9 20Z" />
+                  <path className="steps-flow__emblem-core" d="M20 14.5 25.5 20 20 25.5 14.5 20Z" />
+                </svg>
+              </span>
+              <span className="steps-flow__big" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+
+              {/* Celular: medallón con ícono para la línea de tiempo vertical. */}
               <span className="steps-flow__medal">
                 {step.icon}
                 <span className="steps-flow__num" aria-hidden="true">{index + 1}</span>

@@ -1,9 +1,11 @@
 /*
  * Home · "Pedí tu remera en 3 pasos"
  * ----------------------------------
- * Cada paso tiene un medallón dorado con ícono y número, unidos por una
- * línea que se dibuja al aparecer la sección. Compu: tres columnas con línea
- * horizontal. Celular: línea de tiempo vertical alineada a la izquierda.
+ * Compu (≥ 768 px): la estructura de siempre (marca sobre la línea, número
+ * grande, título y texto, todo centrado). El punto amarillo se reemplaza por
+ * un emblema art déco (rombo dorado) y los números grandes pasan de un dorado
+ * al 32 % a un contorno dorado nítido. La línea se dibuja al aparecer.
+ * Celular: línea de tiempo vertical con medallón e ícono por paso.
  * Al final, botones para ver los diseños o consultar por WhatsApp.
  */
 
@@ -11,17 +13,9 @@
   padding-block: clamp(3.5rem, 6vw, 5.5rem) !important;
 }
 
-/* En compu los pasos van centrados: el título también. */
-@media (min-width: 768px) {
-  .home-page .section--steps .section-header {
-    text-align: center;
-    justify-items: center;
-    margin-inline: auto;
-  }
-}
-
 .steps-flow {
-  --medal: 72px;
+  --emblem: 40px;
+  --medal: 60px;
   position: relative;
   list-style: none;
   margin: clamp(1.8rem, 3vw, 2.6rem) 0 0;
@@ -31,16 +25,22 @@
   gap: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-/* Línea horizontal: del centro del primer medallón al centro del último. */
+/* Línea horizontal: del centro del primer emblema al centro del último. */
 .steps-flow__line {
   position: absolute;
   z-index: 0;
-  top: calc(var(--medal) / 2);
+  top: calc(var(--emblem) / 2 - 0.5px);
   left: calc(100% / 6);
   right: calc(100% / 6);
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, rgba(216, 148, 37, 0.15), rgba(239, 184, 78, 0.75) 50%, rgba(216, 148, 37, 0.15));
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(216, 148, 37, 0) 0%,
+    rgba(216, 148, 37, 0.45) 12%,
+    rgba(239, 184, 78, 0.75) 50%,
+    rgba(216, 148, 37, 0.45) 88%,
+    rgba(216, 148, 37, 0) 100%
+  );
   transform-origin: left center;
   pointer-events: none;
 }
@@ -50,14 +50,79 @@
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 1.1rem;
   text-align: center;
   min-width: 0;
 }
 
+/* ---------- Emblema art déco (reemplaza al punto amarillo) ---------- */
+.steps-flow__emblem {
+  display: grid;
+  place-items: center;
+  width: var(--emblem);
+  height: var(--emblem);
+  margin-bottom: 1.6rem;
+  color: var(--brand-gold-soft, #efb84e);
+  filter: drop-shadow(0 0 10px rgba(216, 148, 37, 0.35));
+}
+
+.steps-flow__emblem svg {
+  display: block;
+  overflow: visible;
+  transition: transform 0.6s var(--ease-out-expo, ease);
+}
+
+/* El rombo exterior se rellena con el color del fondo para tapar la línea. */
+.steps-flow__emblem-outer {
+  fill: var(--bg, #090705);
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+
+.steps-flow__emblem-mid {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  opacity: 0.5;
+}
+
+.steps-flow__emblem-core {
+  fill: currentColor;
+  transform-origin: 20px 20px;
+  transition: transform 0.4s var(--ease-out-expo, ease);
+}
+
+.steps-flow__item:hover .steps-flow__emblem svg {
+  transform: rotate(90deg);
+}
+
+.steps-flow__item:hover .steps-flow__emblem-core {
+  transform: scale(1.25);
+}
+
+/* ---------- Número grande ---------- */
+.steps-flow__big {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-family: var(--font-title), Georgia, serif;
+  font-synthesis: none;
+  font-size: clamp(3.4rem, 5vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1.4px rgba(239, 184, 78, 0.9);
+  text-shadow: 0 0 28px rgba(216, 148, 37, 0.18);
+  transition: color 0.35s ease, -webkit-text-stroke-color 0.35s ease;
+}
+
+.steps-flow__item:hover .steps-flow__big {
+  color: rgba(239, 184, 78, 0.16);
+  -webkit-text-stroke-color: rgba(244, 197, 66, 1);
+}
+
+/* ---------- Medallón con ícono (solo celular) ---------- */
 .steps-flow__medal {
   position: relative;
-  display: grid;
+  display: none;
   place-items: center;
   width: var(--medal);
   height: var(--medal);
@@ -65,17 +130,15 @@
   color: var(--brand-gold-soft, #efb84e);
   background: radial-gradient(circle at 50% 30%, #241710, #0f0a07 70%);
   border: 1.5px solid rgba(239, 184, 78, 0.55);
-  /* El anillo del color de fondo tapa la línea detrás del medallón. */
   box-shadow:
     0 0 0 7px var(--bg, #090705),
     0 12px 30px rgba(216, 148, 37, 0.2),
     inset 0 1px 0 rgba(255, 240, 203, 0.08);
-  transition: transform 0.28s var(--ease-out-expo, ease), border-color 0.2s ease;
 }
 
-.steps-flow__item:hover .steps-flow__medal {
-  transform: translateY(-4px) rotate(-4deg);
-  border-color: rgba(239, 184, 78, 0.9);
+.steps-flow__medal svg {
+  width: 24px;
+  height: 24px;
 }
 
 .steps-flow__num {
@@ -84,25 +147,28 @@
   bottom: -4px;
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--brand-gold-soft, #efb84e), var(--brand-gold, #d89425));
   color: #100b07;
   font-family: var(--font-label), "Arial Black", Arial, sans-serif;
   font-synthesis: none;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   line-height: 1;
   box-shadow: 0 0 0 3px var(--bg, #090705);
 }
 
+/* ---------- Texto ---------- */
 .steps-flow__body {
   display: grid;
   gap: 0.45rem;
   max-width: 30ch;
 }
 
+/* "Paso 1": en compu ya lo dice el número grande. */
 .steps-flow__label {
+  display: none;
   font-family: var(--font-label), "Arial Black", Arial, sans-serif;
   font-synthesis: none;
   font-size: 0.72rem;
@@ -113,8 +179,8 @@
 
 .steps-flow__body h3 {
   margin: 0;
-  font-size: clamp(1.2rem, 1.6vw, 1.45rem);
-  line-height: 1.12;
+  font-size: clamp(1.15rem, 1.5vw, 1.35rem);
+  line-height: 1.15;
   letter-spacing: 0.005em;
   color: var(--brand-cream-soft, #fff0cb);
 }
@@ -134,17 +200,34 @@
   margin-top: clamp(2rem, 3.5vw, 2.8rem);
 }
 
+/* En compu los pasos van centrados: el título también. */
+@media (min-width: 768px) {
+  .home-page .section--steps .section-header {
+    text-align: center;
+    justify-items: center;
+    margin-inline: auto;
+  }
+}
+
 /* ---------- Celular: línea de tiempo vertical ---------- */
 @media (max-width: 767px) {
   .steps-flow {
-    --medal: 60px;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.6rem;
   }
 
-  /* La línea animada horizontal no aplica; cada paso dibuja su tramo. */
-  .steps-flow__line {
+  .steps-flow__line,
+  .steps-flow__emblem,
+  .steps-flow__big {
     display: none;
+  }
+
+  .steps-flow__medal {
+    display: grid;
+  }
+
+  .steps-flow__label {
+    display: block;
   }
 
   .steps-flow__item {
@@ -165,11 +248,6 @@
     bottom: -1.6rem;
     width: 2px;
     background: linear-gradient(180deg, rgba(239, 184, 78, 0.6), rgba(216, 148, 37, 0.15));
-  }
-
-  .steps-flow__medal svg {
-    width: 24px;
-    height: 24px;
   }
 
   .steps-flow__body {
