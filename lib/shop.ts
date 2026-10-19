@@ -16,6 +16,8 @@ export type Product = {
   slug: string;
   nombre: string;
   categoria: string;
+  /** Otras colecciones donde también aparece (ej. Argentina además de Cine). */
+  categoriasExtra?: string[];
   precio: number;
   imagen?: string | null;
   imagenAlt?: string | null;

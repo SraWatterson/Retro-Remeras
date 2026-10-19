@@ -55,6 +55,7 @@ model Product {
   slug             String   @unique
   nombre           String
   categoria        String
+  categoriasExtra  String[] @default([])
   precio           Int
   imagen           String?
   imagenAlt        String?
