@@ -47,7 +47,8 @@ export function FaqSection() {
           </div>
 
           <div className="faq__list">
-            {FAQ_ITEMS.map((item) => (
+            {/* Solo se muestran las respuestas completas: las que tienen [datos a completar] quedan ocultas hasta que se completen en lib/faq.ts. */}
+            {ready.map((item) => (
               <details key={item.question} className="faq__item">
                 <summary>
                   <span>{item.question}</span>
