@@ -5,6 +5,7 @@ import { CartSidebar } from '@/components/cart/CartSidebar';
 import './css/style.css';
 import './css/personalizados-mayorista.css';
 import './css/typography.css';
+import './css/home-hero.css';
 
 // Tipografías: Shrikhand para títulos, Archivo Black para etiquetas cortas
 // (menú, botones, precios) y Archivo para párrafos. next/font las sirve desde

@@ -1,0 +1,107 @@
+/*
+ * Hero de la home: proporciones
+ * -----------------------------
+ * Solo ajusta tamaños y distribución del hero. Los efectos (brillos, marcos
+ * dorados, sombras, animaciones de entrada, cartel "Colecciones con impronta
+ * retro") siguen viniendo de style.css sin cambios.
+ *
+ * style.css acumula varias capas de reglas para el hero en distintos anchos;
+ * por eso este archivo se carga al final y usa !important: así hay un único
+ * lugar que manda sobre el tamaño del hero.
+ */
+
+/* ---------- Compu (1024 px o más) ----------
+   Antes: entre 1024 y ~1600 px el contenedor perdía su ancho máximo (el texto
+   quedaba pegado al borde), el título tenía un tope de ancho que lo partía en
+   3 líneas, el collage tenía un tope de 560 px aunque su columna era más ancha
+   y la sección tenía una altura mínima fija que dejaba espacio vacío abajo. */
+@media (min-width: 1024px) {
+  .home-page .hero {
+    min-height: 0 !important;
+    padding-block: clamp(36px, 4.5vw, 80px) !important;
+  }
+
+  .home-page .hero > .container,
+  .home-page .hero-grid {
+    width: 100% !important;
+    max-width: 1280px !important;
+    margin-inline: auto !important;
+    padding-inline: clamp(24px, 3.5vw, 48px) !important;
+    box-sizing: border-box !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) !important;
+    column-gap: clamp(40px, 5vw, 80px) !important;
+    align-items: center !important;
+  }
+
+  .home-page .hero-copy {
+    max-width: 600px !important;
+  }
+
+  .home-page .hero-title {
+    max-width: none !important;
+    font-size: clamp(3rem, 4.3vw, 4.8rem) !important;
+    line-height: 1.04 !important;
+  }
+
+  .home-page .hero-text {
+    font-size: clamp(1rem, 1.05vw, 1.12rem) !important;
+    max-width: 52ch !important;
+  }
+
+  .home-page .hero-visual {
+    min-height: 0 !important;
+    width: 100% !important;
+  }
+
+  /* El collage ocupa toda su columna y su alto acompaña el ancho de la
+     pantalla, para que el hero entre completo en una notebook. */
+  .home-page .poster-stack {
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: clamp(400px, 32vw, 540px) !important;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) !important;
+  }
+}
+
+/* ---------- Celular y tablet (hasta 1023 px) ----------
+   Antes: las 3 fotos se apilaban a todo el ancho y el hero medía más de dos
+   pantallas. Ahora la foto principal va arriba y las dos chicas lado a lado. */
+@media (max-width: 1023px) {
+  .home-page .hero-visual,
+  .home-page .poster-stack {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .home-page .poster-stack {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto !important;
+    gap: 12px !important;
+  }
+
+  .home-page .poster-stack > .poster-main {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .home-page .poster-side {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: auto !important;
+    gap: 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .home-page .poster-side > .poster-main {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .home-page .poster-badge {
+    font-size: 0.78rem !important;
+  }
+}
