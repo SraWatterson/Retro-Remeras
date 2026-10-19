@@ -7,6 +7,7 @@ import './css/personalizados-mayorista.css';
 import './css/typography.css';
 import './css/home-hero.css';
 import './css/categories-marquee.css';
+import './css/home-personalizados.css';
 
 // Tipografías: Shrikhand para títulos, Archivo Black para etiquetas cortas
 // (menú, botones, precios) y Archivo para párrafos. next/font las sirve desde

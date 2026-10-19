@@ -1,0 +1,104 @@
+/*
+ * Home · sección "Personalizados y mayorista"
+ * -------------------------------------------
+ * Antes el título y el texto iban encima de la ilustración y tapaban la
+ * remera con el logo. Ahora:
+ *   - Compu (> 900 px): texto a la izquierda sobre el fondo oscuro de la
+ *     tarjeta, ilustración entera a la derecha.
+ *   - Celular/tablet (≤ 900 px): ilustración arriba, texto y botón abajo.
+ * Se mantienen el marco animado dorado/rojo, el cartel superior, la flecha,
+ * el zoom de la imagen al pasar el mouse y la animación de entrada.
+ *
+ * Todo va dentro de .section--personalizados-mayorista para no tocar las
+ * páginas /personalizados y /mayorista, que comparten estilos con estas
+ * tarjetas. Usa !important porque personalizados-mayorista.css define las
+ * mismas propiedades en varios anchos.
+ */
+
+.home-page .section--personalizados-mayorista {
+  padding-block: clamp(56px, 6vw, 88px) !important;
+}
+
+.section--personalizados-mayorista .personalizados-mayorista-card__content::before {
+  display: none !important;
+}
+
+.section--personalizados-mayorista .personalizados-mayorista-card__content h3 {
+  letter-spacing: 0.005em !important;
+  line-height: 1.02 !important;
+}
+
+/* ---------- Compu ---------- */
+@media (min-width: 901px) {
+  .section--personalizados-mayorista .personalizados-mayorista-card__link {
+    min-height: clamp(340px, 27vw, 400px) !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__link > img {
+    inset: 5px 5px 5px auto !important;
+    width: 46% !important;
+    height: calc(100% - 10px) !important;
+    border-radius: 0 calc(34px - 8px) calc(34px - 8px) 0 !important;
+    filter: brightness(0.92) contrast(1.04) saturate(1.02) !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__link[href="/personalizados"] > img {
+    object-position: 38% 20% !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__link[href="/mayorista"] > img {
+    object-position: 45% 30% !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content {
+    left: clamp(1.4rem, 2.6vw, 2rem) !important;
+    right: calc(46% + clamp(1rem, 2vw, 1.6rem)) !important;
+    top: auto !important;
+    bottom: clamp(1.4rem, 2.6vw, 2rem) !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content h3 {
+    font-size: clamp(1.8rem, 2.6vw, 2.5rem) !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content p {
+    color: rgba(255, 240, 203, 0.84) !important;
+  }
+}
+
+/* ---------- Celular y tablet ---------- */
+@media (max-width: 900px) {
+  .section--personalizados-mayorista .personalizados-mayorista-card__link {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    padding: 5px !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__link > img {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 3 !important;
+    /* Mismo radio que la tarjeta: 34 px en tablet, 24 px en celular. */
+    border-radius: calc(34px - 8px) calc(34px - 8px) 0 0 !important;
+    filter: brightness(0.92) contrast(1.04) !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content {
+    position: relative !important;
+    inset: auto !important;
+    padding: 1.1rem 1.1rem 1.25rem !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content h3 {
+    font-size: clamp(1.7rem, 7.6vw, 2.2rem) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .section--personalizados-mayorista .personalizados-mayorista-card__link > img {
+    border-radius: calc(24px - 8px) calc(24px - 8px) 0 0 !important;
+  }
+}
