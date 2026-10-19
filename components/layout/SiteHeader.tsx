@@ -21,7 +21,7 @@ type NavLink = {
 
 const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'Inicio', activeKey: 'inicio' },
-  { href: '/productos', label: 'Productos', activeKey: 'catalogo', featured: true, primary: true },
+  { href: '/productos', label: 'Remeras', activeKey: 'catalogo', featured: true, primary: true },
   { href: '/personalizados', label: 'Personalizados', activeKey: 'personalizados', primary: true },
   { href: '/mayorista', label: 'Mayorista', activeKey: 'mayorista', primary: true },
   { href: '/#contacto', label: 'Contacto' },
@@ -261,7 +261,7 @@ export function SiteHeader({ active }: Props) {
             </button>
 
             <Link className={`btn btn-primary ${active === 'catalogo' ? 'is-active' : ''}`} href="/productos">
-              Ver productos
+              Ver remeras
             </Link>
           </div>
         </div>

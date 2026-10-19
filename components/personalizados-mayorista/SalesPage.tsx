@@ -42,7 +42,7 @@ export function SalesPage({
   description,
   primaryCta,
   whatsappHref,
-  secondaryCta = 'Ver productos',
+  secondaryCta = 'Ver remeras',
   secondaryHref = '/productos',
   image,
   imageAlt,

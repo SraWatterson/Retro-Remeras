@@ -100,7 +100,7 @@ export default async function Page({ params }: PageProps) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-      { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
+      { '@type': 'ListItem', position: 2, name: 'Remeras', item: `${BASE}/productos` },
       { '@type': 'ListItem', position: 3, name: product.categoria, item: `${BASE}${collectionHref(product.categoria)}` },
       { '@type': 'ListItem', position: 4, name: product.nombre, item: url },
     ],

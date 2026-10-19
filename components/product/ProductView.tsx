@@ -92,6 +92,12 @@ export function ProductView({ product }: Props) {
     return subscribeToCartUpdates(setItems);
   }, []);
 
+  // Viene del catálogo filtrado por color (?color=blanco): arranca con ese color.
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get('color');
+    if (fromUrl && availableColors.some((c) => c.colorSlug === fromUrl)) setSelectedColor(fromUrl);
+  }, [availableColors]);
+
   useEffect(() => {
     if (!availableColors.length) return;
     const stillAvailable = availableColors.some((c) => c.colorSlug === selectedColor);
@@ -222,7 +228,7 @@ export function ProductView({ product }: Props) {
         {/* ── INFO Y COMPRA ── */}
         <aside className="pv2-info" ref={buyboxRef}>
           <nav className="pv2-crumbs" aria-label="Estás en">
-            <Link href="/productos">Productos</Link>
+            <Link href="/productos">Remeras</Link>
             <span aria-hidden="true">/</span>
             <Link href={collectionHref(product.categoria)}>{product.categoria}</Link>
           </nav>

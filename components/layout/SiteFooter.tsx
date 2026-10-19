@@ -4,7 +4,7 @@ import { FaEnvelope, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 const FOOTER_LINKS = [
   { href: '/', label: 'Inicio' },
-  { href: '/productos', label: 'Productos' },
+  { href: '/productos', label: 'Remeras' },
   { href: '/personalizados', label: 'Personalizados' },
   { href: '/mayorista', label: 'Mayorista' },
   { href: '/#contacto', label: 'Contacto' },
