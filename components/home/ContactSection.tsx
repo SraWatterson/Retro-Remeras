@@ -69,7 +69,7 @@ export function ContactSection() {
                 Hablemos
               </h2>
               <p className="cx__lead">
-                ¿Tenés una consulta o querés coordinar un pedido? Respondemos rápido por WhatsApp.
+                ¿Dudas con el talle, una idea para personalizar o un pedido grande? Escribinos por WhatsApp y lo charlamos.
               </p>
             </div>
 

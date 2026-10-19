@@ -31,7 +31,7 @@ export function HeroSection({ content }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
           >
-            {hero.heroTitlePrefix} <span>{hero.heroTitleAccent}</span>, {hero.heroTitleSuffix}
+            {hero.heroTitlePrefix} <span>{hero.heroTitleAccent}</span> {hero.heroTitleSuffix}
           </motion.h1>
 
           <motion.p

@@ -8,7 +8,7 @@ const SOLUTION_CARDS = [
   {
     eyebrow: 'Desde 1 unidad',
     title: 'Tu diseño, tu estilo',
-    text: 'Mandanos tu imagen, frase o idea y la convertimos en una remera única para vos o para regalar.',
+    text: 'Mandanos tu imagen, frase o idea y la convertimos en una remera única, para vos o para regalar.',
     href: '/personalizados',
     cta: 'Quiero personalizar',
     image: '/assets/pets/Postales_1_4.webp',
@@ -17,7 +17,7 @@ const SOLUTION_CARDS = [
   {
     eyebrow: 'Por cantidad',
     title: 'Impulsá tu marca o evento',
-    text: 'Producción para empresas, institutos, emprendimientos, equipos, eventos y revendedores.',
+    text: 'Remeras con tu logo o tu diseño para empresas, institutos, equipos, eventos y revendedores.',
     href: '/mayorista',
     cta: 'Ver mayorista',
     image: '/assets/pets/Postales_1_5.webp',
@@ -44,7 +44,7 @@ export function PersonalizadosMayoristaSection() {
           <span className="section-kicker">Pedidos a medida</span>
           <h2 id="personalizados-mayorista-title" className="section-title">Personalizados y mayorista</h2>
           <p className="section-subtitle">
-            Desde una remera personalizada hasta producciones por cantidad para marcas, empresas, institutos y eventos.
+            ¿Tenés una idea propia o necesitás remeras para tu equipo? Estampamos desde una sola unidad hasta producciones por cantidad.
           </p>
         </motion.div>
 
