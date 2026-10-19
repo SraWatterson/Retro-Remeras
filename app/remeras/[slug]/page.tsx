@@ -1,3 +1,4 @@
+import { collectionHref } from '@/lib/collections';
 import '../../css/producto.css';
 import { cache } from 'react';
 import type { Metadata } from 'next';
@@ -83,7 +84,8 @@ export default async function Page({ params }: PageProps) {
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
       { '@type': 'ListItem', position: 2, name: 'Productos', item: `${BASE}/productos` },
-      { '@type': 'ListItem', position: 3, name: product.nombre, item: url },
+      { '@type': 'ListItem', position: 3, name: product.categoria, item: `${BASE}${collectionHref(product.categoria)}` },
+      { '@type': 'ListItem', position: 4, name: product.nombre, item: url },
     ],
   };
 

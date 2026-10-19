@@ -11,8 +11,8 @@ const SOLUTION_CARDS = [
     text: 'Mandanos tu imagen, frase o idea y la convertimos en una remera única para vos o para regalar.',
     href: '/personalizados',
     cta: 'Quiero personalizar',
-    image: '/assets/pets/Postales_1_4.png',
-    alt: 'Postal visual para pedidos personalizados',
+    image: '/assets/pets/Postales_1_4.webp',
+    alt: 'Ilustración retro de una chica astronauta con remera negra de Retro Remeras',
   },
   {
     eyebrow: 'Por cantidad',
@@ -20,8 +20,8 @@ const SOLUTION_CARDS = [
     text: 'Producción para empresas, institutos, emprendimientos, equipos, eventos y revendedores.',
     href: '/mayorista',
     cta: 'Ver mayorista',
-    image: '/assets/pets/Postales_1_5.png',
-    alt: 'Postal visual para pedidos mayoristas',
+    image: '/assets/pets/Postales_1_5.webp',
+    alt: 'Ilustración retro de un explorador espacial con remera negra de Retro Remeras',
   },
 ];
 

@@ -3,6 +3,7 @@ import { FeaturedProducts } from '@/components/home/FeaturedProducts';
 import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { HeroSection } from '@/components/home/HeroSection';
 import { ContactSection } from '@/components/home/ContactSection';
+import { FaqSection } from '@/components/home/FaqSection';
 import { StepsSection } from '@/components/home/StepsSection';
 import { PersonalizadosMayoristaSection } from '@/components/home/PersonalizadosMayoristaSection';
 import { PromoBar } from '@/components/layout/PromoBar';
@@ -13,12 +14,12 @@ import { getSiteContent } from '@/lib/site-content';
 import { getProductCategories } from '@/lib/category-queries';
 
 export const metadata: Metadata = {
-  title: 'Retro Remeras — Diseños de anime, gaming, cine y más',
-  description: 'Remeras con estilo, nostalgia y personalidad. Diseños temáticos, estampado DTF de alta definición, sin mínimo de compra. Envíos a todo el país.',
+  title: 'Remeras estampadas de anime, rock y gaming | Retro Remeras',
+  description: 'Remeras estampadas en DTF con diseños de anime, bandas de rock, videojuegos y más. Sin mínimo de compra, envíos a todo el país y retiro en Zona Oeste.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Retro Remeras — Diseños de anime, gaming, cine y más',
-    description: 'Remeras con estilo, nostalgia y personalidad. Diseños temáticos, estampado DTF de alta definición, sin mínimo de compra. Envíos a todo el país.',
+    title: 'Remeras estampadas de anime, rock y gaming | Retro Remeras',
+    description: 'Remeras estampadas en DTF con diseños de anime, bandas de rock, videojuegos y más. Sin mínimo de compra, envíos a todo el país y retiro en Zona Oeste.',
     images: [{ url: '/assets/img/ejemplo-vintage.jpg', width: 1100, height: 1320, alt: 'Retro Remeras' }],
   },
 };
@@ -81,6 +82,7 @@ export default async function Page() {
         <FeaturedProducts initialProducts={featuredProducts} />
         <PersonalizadosMayoristaSection />
         <StepsSection />
+        <FaqSection />
         <ContactSection />
       </main>
 

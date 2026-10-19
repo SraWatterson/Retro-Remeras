@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useMemo, useState } from 'react';
+import { collectionCopy } from '@/lib/collection-copy';
 import { Product, formatPrice, normalizeImageUrl, normalizeText, productHref } from '@/lib/shop';
 
 const CATEGORIES_LIMIT = 6;
@@ -99,6 +100,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     }
   }, [activeCategory, activeColors, sortOrder, searchQuery, products]);
 
+  const headingCopy = activeCategory !== 'Todos' ? collectionCopy(activeCategory) : null;
   const activeFiltersCount = (activeCategory !== 'Todos' ? 1 : 0) + activeColors.size + (searchQuery ? 1 : 0);
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ?? 'Ordenar';
   const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, CATEGORIES_LIMIT + 1);
@@ -226,8 +228,22 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
       <section className="catalog-hero">
         <div className="container">
           <span className="section-kicker">Productos</span>
-          <h1 className="section-title">Todos nuestros diseños disponibles</h1>
-          <p className="section-subtitle">Filtrá por categoría y encontrá la remera perfecta.</p>
+          {/* El título cambia con la categoría elegida: "Remeras de [anime]", con la palabra clave en dorado. */}
+          <h1 className="section-title">
+            {headingCopy ? (
+              <>
+                {headingCopy.heading[0]}
+                <span>{headingCopy.heading[1]}</span>
+              </>
+            ) : (
+              <>
+                Todos nuestros <span>diseños</span>
+              </>
+            )}
+          </h1>
+          <p className="section-subtitle">
+            {headingCopy ? headingCopy.intro : 'Filtrá por categoría y encontrá la remera perfecta.'}
+          </p>
         </div>
       </section>
 

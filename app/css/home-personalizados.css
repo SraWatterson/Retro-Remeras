@@ -102,3 +102,27 @@
     border-radius: calc(24px - 8px) calc(24px - 8px) 0 0 !important;
   }
 }
+
+/* ---------- Tablet (641–900 px): las dos tarjetas lado a lado ----------
+   Una debajo de la otra ocupaban casi dos pantallas en una tablet. */
+@media (min-width: 641px) and (max-width: 900px) {
+  .section--personalizados-mayorista .personalizados-mayorista-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card,
+  .section--personalizados-mayorista .personalizados-mayorista-card__link {
+    height: 100% !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content h3 {
+    font-size: 1.7rem !important;
+  }
+
+  .section--personalizados-mayorista .personalizados-mayorista-card__content p {
+    font-size: 0.9rem !important;
+  }
+}

@@ -7,7 +7,8 @@
  */
 
 .cat-marquee {
-  --cat-card-w: clamp(250px, 24vw, 340px);
+  /* Tarjetas más anchas para que se luzcan las ilustraciones (formato 3:2). */
+  --cat-card-w: clamp(280px, 30vw, 420px);
   /* La cinta mide miles de píxeles (todas las tarjetas, dos veces). Sin esto,
      el body (que es una grilla) toma ese ancho como mínimo y estira TODA la
      página. `contain: inline-size` hace que su ancho no dependa del contenido. */
@@ -80,7 +81,7 @@
 
 @media (max-width: 767px) {
   .cat-marquee {
-    --cat-card-w: 72vw;
+    --cat-card-w: 80vw;
     --cat-gap: 12px;
     /* En el celular la cinta llega hasta los bordes de la pantalla,
        sin importar el margen interno del contenedor. */
@@ -101,4 +102,54 @@
   .cat-marquee__track {
     animation: none !important;
   }
+}
+
+/* ---------- Tarjetas con ilustración ----------
+   Imagen más viva (antes un velo oscuro la apagaba) y un velo solo arriba a
+   la izquierda, detrás del texto. Título y descripción con borde oscuro para
+   que se lean sobre cualquier ilustración. */
+.cat-marquee .category-card::before,
+.cat-marquee .category-card img {
+  filter: brightness(1.03) contrast(1.06) saturate(1.1) !important;
+}
+
+.cat-marquee .category-card::after {
+  background:
+    /* Capa negra pareja sobre toda la ilustración: se sigue viendo, pero el texto resalta. */
+    linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
+    radial-gradient(130% 85% at 0% 0%, rgba(8, 5, 3, 0.7) 0%, rgba(8, 5, 3, 0.4) 42%, rgba(8, 5, 3, 0) 70%),
+    linear-gradient(180deg, rgba(8, 5, 3, 0) 55%, rgba(8, 5, 3, 0.45) 100%) !important;
+}
+
+.cat-marquee .category-card h3 {
+  -webkit-text-stroke: 5px #140c06;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 #0b0704, 0 6px 18px rgba(0, 0, 0, 0.55) !important;
+}
+
+.cat-marquee .category-card p {
+  color: #fff6dd !important;
+  text-shadow:
+    -1px -1px 0 #140c06,
+    1px -1px 0 #140c06,
+    -1px 1px 0 #140c06,
+    1px 1px 0 #140c06,
+    0 2px 0 #140c06,
+    0 4px 12px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* El recuadro oscuro detrás del texto (también al tocar o pasar el mouse)
+   ahora se desvanece hacia los bordes: sin rectángulo marcado. */
+.cat-marquee .category-card .category-card-content,
+.cat-marquee .category-card:hover .category-card-content,
+.cat-marquee .category-card:focus-within .category-card-content {
+  background: radial-gradient(
+    ellipse 75% 85% at 32% 42%,
+    rgba(4, 3, 2, 0.5) 0%,
+    rgba(4, 3, 2, 0.28) 45%,
+    rgba(4, 3, 2, 0) 75%
+  ) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }

@@ -6,13 +6,13 @@ import { SalesPage } from '@/components/personalizados-mayorista/SalesPage';
 import { getSiteContent } from '@/lib/site-content';
 
 export const metadata: Metadata = {
-  title: 'Personalizados | Retro Remeras',
-  description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',
+  title: 'Remeras personalizadas desde 1 unidad | Retro Remeras',
+  description: 'Remeras personalizadas desde una unidad con estampado DTF. Mandanos tu diseño, foto o frase y la hacemos realidad. Envíos a todo el país.',
   alternates: { canonical: '/personalizados' },
   openGraph: {
-    title: 'Personalizados | Retro Remeras',
-    description: 'Remeras personalizadas desde una unidad. Mandanos tu diseño, imagen o frase y lo hacemos realidad.',
-    images: [{ url: '/assets/pets/Postales_1_4.png', width: 1100, height: 1320, alt: 'Remeras personalizadas Retro Remeras' }],
+    title: 'Remeras personalizadas desde 1 unidad | Retro Remeras',
+    description: 'Remeras personalizadas desde una unidad con estampado DTF. Mandanos tu diseño, foto o frase y la hacemos realidad. Envíos a todo el país.',
+    images: [{ url: '/assets/pets/Postales_1_4-share.jpg', width: 506, height: 814, alt: 'Remeras personalizadas Retro Remeras' }],
   },
 };
 
