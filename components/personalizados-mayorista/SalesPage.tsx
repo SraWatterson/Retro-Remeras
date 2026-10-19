@@ -93,7 +93,7 @@ export function SalesPage({
               alt={imageAlt}
               width={1100}
               height={1320}
-              quality={92}
+              quality={80}
               sizes="(max-width: 767px) 92vw, (max-width: 1199px) 42vw, 520px"
               priority
             />

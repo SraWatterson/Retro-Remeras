@@ -31,6 +31,25 @@ function sanitizeFileName(name: string, mimeType: string) {
   return `${base || 'image'}-${randomUUID().slice(0, 8)}${extension}`;
 }
 
+/**
+ * Convierte la imagen a WebP (formato liviano para web), máximo 1600 px de lado,
+ * respetando la orientación de la foto. Si por algo no se puede convertir,
+ * se sube el archivo original tal cual.
+ */
+async function toWebp(buffer: Buffer): Promise<Buffer | null> {
+  try {
+    const { default: sharp } = await import('sharp');
+    return await sharp(buffer)
+      .rotate()
+      .resize({ width: 1600, height: 1600, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toBuffer();
+  } catch (error) {
+    console.error('[UPLOADS] No se pudo convertir a WebP, se sube el original', error);
+    return null;
+  }
+}
+
 function getUploadContext(value: FormDataEntryValue | null): UploadContext {
   if (value === 'home') return 'home';
   if (value === 'categories') return 'categories';
@@ -95,11 +114,16 @@ export async function POST(request: Request) {
 
     const context = getUploadContext(formData.get('context'));
     const bucket = STORAGE_BUCKETS[context];
-    const fileName = sanitizeFileName(file.name || 'image', file.type);
+
+    // Toda imagen que se sube desde el panel queda en WebP liviana.
+    const webp = await toWebp(buffer);
+    const finalBuffer = webp ?? buffer;
+    const finalType = webp ? 'image/webp' : file.type;
+    const fileName = sanitizeFileName(file.name || 'image', finalType);
 
     const { error } = await supabaseAdmin.storage
       .from(bucket)
-      .upload(fileName, buffer, { contentType: file.type, upsert: false });
+      .upload(fileName, finalBuffer, { contentType: finalType, upsert: false });
 
     if (error) {
       return jsonServerError('UPLOADS_POST', 'No se pudo subir la imagen', error);
@@ -113,7 +137,7 @@ export async function POST(request: Request) {
       entity: 'Upload',
       entityId: publicUrl,
       actorId: session.id,
-      metadata: { fileName, size: file.size, mimeType: file.type, context },
+      metadata: { fileName, size: finalBuffer.length, originalSize: file.size, mimeType: finalType, context },
     });
 
     return NextResponse.json({ path: publicUrl }, { status: 201 });

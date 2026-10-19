@@ -23,7 +23,7 @@ type LensState = {
 /** Versión grande de la foto, optimizada por Next (formato web, buena calidad). */
 function hiResUrl(src: string) {
   if (!src) return '';
-  return `/_next/image?url=${encodeURIComponent(src)}&w=1920&q=90`;
+  return `/_next/image?url=${encodeURIComponent(src)}&w=1920&q=85`;
 }
 
 /**

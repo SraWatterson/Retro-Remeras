@@ -186,7 +186,7 @@ export function SiteHeader({ active }: Props) {
 
         {/* Center: logo */}
         <Link className="brand" href="/" aria-label="Ir al inicio de Retro Remeras" onClick={closeMenu}>
-          <Image src="/assets/logo/icono-banner.png" alt="Retro Remeras" width={56} height={56} sizes="56px" priority />
+          <Image src="/assets/logo/icono-banner.webp" alt="Retro Remeras" width={56} height={56} sizes="56px" priority />
         </Link>
 
         {/* Right: cart (mobile/tablet) */}

@@ -376,7 +376,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                             alt={product.imagenAlt?.trim() || product.nombre}
                             width={800}
                             height={1000}
-                            quality={90}
+                            quality={75}
                             sizes="(max-width: 767px) 46vw, (max-width: 1199px) 28vw, 280px"
                           />
                           {product.destacado ? (

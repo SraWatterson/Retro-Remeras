@@ -191,7 +191,7 @@ export function ProductView({ product }: Props) {
                   alt={imageAlt}
                   width={1200}
                   height={1500}
-                  quality={94}
+                  quality={85}
                   sizes="(max-width: 899px) 100vw, 560px"
                   priority
                 />

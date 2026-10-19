@@ -70,7 +70,7 @@ export function productHref(product: Pick<Product, 'slug'>) {
 }
 
 export function normalizeImageUrl(value?: string | null) {
-  if (!value) return '/assets/img/ejemplo-vintage.jpg';
+  if (!value) return '/assets/img/ejemplo-vintage.webp';
   if (value.startsWith('http://') || value.startsWith('https://')) return value;
   return `/${value.replace(/^\/+/, '')}`;
 }

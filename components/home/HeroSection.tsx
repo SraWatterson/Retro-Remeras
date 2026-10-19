@@ -63,17 +63,17 @@ export function HeroSection({ content }: Props) {
         >
           <div className="poster-stack">
             <article className="poster-main poster-frame poster-frame--featured">
-              <Image src={hero.heroMainImage} alt={hero.heroMainImageAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 72vw, (max-width: 1199px) 38vw, 430px" priority />
+              <Image src={hero.heroMainImage} alt={hero.heroMainImageAlt} width={1100} height={1320} quality={80} sizes="(max-width: 767px) 72vw, (max-width: 1199px) 38vw, 430px" priority />
               <div className="poster-badge">{hero.heroBadgeText}</div>
             </article>
 
             <div className="poster-side" aria-label="Diseños destacados">
               <article className="poster-main poster-frame">
-                <Image src={hero.heroSideImageOne} alt={hero.heroSideImageOneAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
+                <Image src={hero.heroSideImageOne} alt={hero.heroSideImageOneAlt} width={1100} height={1320} quality={80} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
               </article>
 
               <article className="poster-main poster-frame">
-                <Image src={hero.heroSideImageTwo} alt={hero.heroSideImageTwoAlt} width={1100} height={1320} quality={92} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
+                <Image src={hero.heroSideImageTwo} alt={hero.heroSideImageTwoAlt} width={1100} height={1320} quality={80} sizes="(max-width: 767px) 34vw, (max-width: 1199px) 18vw, 210px" priority />
               </article>
             </div>
           </div>

@@ -198,7 +198,7 @@ export function SiteContentEditor({
                 </div>
 
                 <div className="admin-visual-image-preview">
-                  {value ? <Image src={value} alt="Preview imagen hero" width={220} height={260} quality={90} /> : <span>Sin imagen</span>}
+                  {value ? <Image src={value} alt="Preview imagen hero" width={220} height={260} quality={75} /> : <span>Sin imagen</span>}
                 </div>
 
                 <label>

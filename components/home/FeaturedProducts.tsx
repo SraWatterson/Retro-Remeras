@@ -104,7 +104,7 @@ export function FeaturedProducts({ initialProducts }: Props) {
                 src={normalizeImageUrl(product.imagen)}
                 alt={index === active ? product.imagenAlt?.trim() || product.nombre : ''}
                 fill
-                quality={90}
+                quality={80}
                 sizes="(max-width: 767px) 92vw, 540px"
               />
             ))}
