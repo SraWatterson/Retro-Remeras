@@ -7,7 +7,8 @@
  */
 
 .cat-marquee {
-  --cat-card-w: clamp(250px, 24vw, 340px);
+  /* Tarjetas más anchas para que se luzcan las ilustraciones (formato 3:2). */
+  --cat-card-w: clamp(280px, 30vw, 420px);
   /* La cinta mide miles de píxeles (todas las tarjetas, dos veces). Sin esto,
      el body (que es una grilla) toma ese ancho como mínimo y estira TODA la
      página. `contain: inline-size` hace que su ancho no dependa del contenido. */
@@ -80,7 +81,7 @@
 
 @media (max-width: 767px) {
   .cat-marquee {
-    --cat-card-w: 72vw;
+    --cat-card-w: 80vw;
     --cat-gap: 12px;
     /* En el celular la cinta llega hasta los bordes de la pantalla,
        sin importar el margen interno del contenedor. */
