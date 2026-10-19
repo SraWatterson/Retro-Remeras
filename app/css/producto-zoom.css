@@ -1,6 +1,7 @@
 /*
  * Ficha de producto · Zoom de la foto
- * - Compu: al pasar el mouse la foto se agranda siguiendo el cursor (lupa).
+ * - Compu: al pasar el mouse aparece un recuadro sobre la foto y, al costado,
+ *   un panel con esa parte ampliada (como en Mercado Libre).
  *   Clic: abre el visor a pantalla completa.
  * - Celular: tocar la foto abre el visor; ahí se pellizca o se toca para acercar.
  */
@@ -14,16 +15,42 @@
   outline-offset: 3px;
 }
 
-/* Lupa: solo en pantallas con mouse. */
-@media (hover: hover) and (pointer: fine) {
+/* Zoom tipo Mercado Libre (compu con mouse): recuadro que sigue al mouse
+   sobre la foto y panel ampliado encima de la columna de la derecha. */
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+  .pv-gallery__frame--zoomable {
+    cursor: crosshair;
+  }
+
+  /* Sin el leve agrandado al pasar el mouse: la foto queda quieta. */
   .pv-gallery__frame--zoomable:hover .pv-gallery__img img {
-    transform: scale(2.1) !important;
-    transform-origin: var(--zx, 50%) var(--zy, 50%);
-    transition: transform 0.25s ease-out;
+    transform: none !important;
   }
 
   .pv-gallery__frame--zoomable:hover .pv-gallery__cat-badge,
-  .pv-gallery__frame--zoomable:hover .pv-gallery__zoom-hint {
+  .pv-gallery__frame--zoomable:hover .pv-lens {
+  position: absolute;
+  z-index: 4;
+  border: 1px solid rgba(244, 197, 66, 0.9);
+  border-radius: 6px;
+  background: rgba(255, 240, 203, 0.14);
+  box-shadow: 0 0 0 9999px rgba(6, 4, 3, 0.28);
+  pointer-events: none;
+}
+
+.pv-zoom-pane {
+  position: fixed;
+  z-index: 60;
+  border-radius: 20px;
+  border: 1px solid rgba(239, 184, 78, 0.45);
+  background-color: #0a0705;
+  background-repeat: no-repeat;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  animation: pz-in 0.15s ease-out;
+}
+
+.pv-gallery__zoom-hint {
     opacity: 0;
   }
 }

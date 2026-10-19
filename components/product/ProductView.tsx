@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
+import { ProductLens } from './ProductLens';
 import { ProductZoom } from './ProductZoom';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -84,15 +85,7 @@ export function ProductView({ product }: Props) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [zoomOpen, setZoomOpen] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
-
-  // Lupa en compu: la foto se agranda siguiendo el mouse.
-  function handleLensMove(event: React.MouseEvent<HTMLDivElement>) {
-    const frame = frameRef.current;
-    if (!frame) return;
-    const rect = frame.getBoundingClientRect();
-    frame.style.setProperty('--zx', `${((event.clientX - rect.left) / rect.width) * 100}%`);
-    frame.style.setProperty('--zy', `${((event.clientY - rect.top) / rect.height) * 100}%`);
-  }
+  const buyboxRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setItems(cartLoad());
@@ -168,7 +161,6 @@ export function ProductView({ product }: Props) {
               role="button"
               tabIndex={0}
               aria-label="Ver la foto ampliada"
-              onMouseMove={handleLensMove}
               onClick={() => setZoomOpen(true)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
@@ -247,7 +239,7 @@ export function ProductView({ product }: Props) {
         </section>
 
         {/* ── BUYBOX ── */}
-        <aside className="pv-buybox">
+        <aside className="pv-buybox" ref={buyboxRef}>
 
           {/* Meta */}
           <div className="pv-meta">
@@ -480,6 +472,7 @@ export function ProductView({ product }: Props) {
         </aside>
       </div>
 
+      <ProductLens frameRef={frameRef} sideRef={buyboxRef} src={selectedImage} />
       <ProductZoom
         src={selectedImage}
         alt={product.imagenAlt?.trim() || product.nombre}
