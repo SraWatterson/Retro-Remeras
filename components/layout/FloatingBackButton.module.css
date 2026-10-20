@@ -1,115 +1,87 @@
+/*
+ * Botón "Volver" flotante, abajo a la izquierda.
+ * Dorado y con texto en todas las pantallas, para que se entienda al toque.
+ * Compu: píldora grande con flecha + "Volver".
+ * Celular: más alto (cómodo para el pulgar) y apenas más compacto.
+ */
 .floatingBackButton {
   position: fixed;
-  left: max(1rem, env(safe-area-inset-left));
-  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  left: max(1.5rem, env(safe-area-inset-left));
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
   z-index: 80;
 
-  height: 2.6rem;
-  padding: 0 0.9rem;
+  height: 3.1rem;
+  padding: 0 1.35rem 0 1rem;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3rem;
+  gap: 0.45rem;
 
-  border: 1px solid rgba(216, 148, 37, 0.28);
+  border: 1px solid rgba(255, 226, 150, 0.55);
   border-radius: 999px;
-
-  background:
-    linear-gradient(135deg, rgba(14, 11, 8, 0.90), rgba(9, 7, 5, 0.84)),
-    radial-gradient(circle at 30% 20%, rgba(216, 148, 37, 0.08), transparent 52%);
-
-  color: rgba(255, 240, 200, 0.82);
+  background: linear-gradient(135deg, #f4c542 0%, #d89425 100%);
+  color: #1a0f06;
 
   box-shadow:
-    0 6px 22px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(216, 148, 37, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+    0 10px 28px rgba(0, 0, 0, 0.5),
+    0 0 0 4px rgba(216, 148, 37, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
 
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .floatingBackButton:hover {
-  border-color: rgba(216, 148, 37, 0.50);
-  background:
-    linear-gradient(135deg, rgba(20, 15, 10, 0.94), rgba(12, 9, 6, 0.90)),
-    radial-gradient(circle at 30% 20%, rgba(216, 148, 37, 0.14), transparent 52%);
-  color: rgba(255, 240, 200, 1);
+  filter: brightness(1.06);
   box-shadow:
-    0 8px 28px rgba(0, 0, 0, 0.48),
-    0 0 14px rgba(216, 148, 37, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 12px 32px rgba(0, 0, 0, 0.55),
+    0 0 0 6px rgba(216, 148, 37, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .floatingBackButton:focus-visible {
-  outline: 2px solid rgba(216, 148, 37, 0.80);
+  outline: 3px solid #fff0cb;
   outline-offset: 3px;
 }
 
 .icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.3rem;
+  height: 1.3rem;
   flex: 0 0 auto;
-
   fill: none;
   stroke: currentColor;
-  stroke-width: 2.4;
+  stroke-width: 2.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .text {
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   line-height: 1;
 }
 
-/* ── Mobile: botón circular más visible ── */
+/* ── Celular y tablet chica ── */
 @media (max-width: 767.98px) {
   .floatingBackButton {
     left: max(0.9rem, env(safe-area-inset-left));
-    bottom: max(1rem, env(safe-area-inset-bottom));
-    width: 3rem;
-    min-width: 3rem;
-    height: 3rem;
-    padding: 0;
-
-    border-color: rgba(216, 148, 37, 0.40);
-    background:
-      linear-gradient(135deg, rgba(14, 11, 8, 0.94), rgba(9, 7, 5, 0.90)),
-      radial-gradient(circle at 30% 20%, rgba(216, 148, 37, 0.12), transparent 52%);
-    color: rgba(255, 240, 200, 0.92);
-    box-shadow:
-      0 6px 24px rgba(0, 0, 0, 0.52),
-      0 0 0 1px rgba(216, 148, 37, 0.10),
-      inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  }
-
-  .icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    stroke-width: 2.5;
+    bottom: max(0.9rem, calc(env(safe-area-inset-bottom) + 0.4rem));
+    height: 3.25rem;
+    min-width: 3.25rem;
+    padding: 0 1.1rem 0 0.85rem;
+    gap: 0.35rem;
   }
 
   .text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+    font-size: 0.85rem;
   }
 }
 

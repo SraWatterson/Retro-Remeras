@@ -8,8 +8,6 @@ function shouldShowBackButton(pathname: string) {
   if (pathname === '/') return false;
   if (pathname.startsWith('/admin')) return false;
   if (pathname.startsWith('/login')) return false;
-  // En la ficha de producto la miga de pan ya lleva de vuelta (y el botón tapaba las miniaturas).
-  if (pathname.startsWith('/remeras/')) return false;
 
   return true;
 }
