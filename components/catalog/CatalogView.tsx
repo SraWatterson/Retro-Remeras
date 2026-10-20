@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { collectionCopy } from '@/lib/collection-copy';
 import { Product, formatPrice, normalizeImageUrl, normalizeText, productHref } from '@/lib/shop';
 
-const CATEGORIES_LIMIT = 6;
 const COLORS_LIMIT = 8;
 
 const SORT_OPTIONS = [
@@ -32,6 +31,16 @@ function findCategoryFromUrl(value: string | undefined, categories: string[]) {
   return categories.find((c) => normalizeText(c) === normalized) || decoded;
 }
 
+function hasCategory(p: Product, category: string) {
+  return [p.categoria, ...(p.categoriasExtra ?? [])].some((c) => normalizeText(c) === normalizeText(category));
+}
+
+/** "Fútbol", "Fútbol y Argentina", "Fútbol, Argentina y Retro". */
+function joinCategories(list: string[]) {
+  if (list.length <= 1) return list[0] ?? '';
+  return `${list.slice(0, -1).join(', ')} y ${list[list.length - 1]}`;
+}
+
 export function CatalogView({ initialCategory, initialProducts, categories }: Props) {
   const products = useMemo(() => initialProducts, [initialProducts]);
   const initialCategoryValue = useMemo(
@@ -39,27 +48,40 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     [categories, initialCategory]
   );
 
-  const categoryList = useMemo(() => {
-    if (initialCategoryValue !== 'Todos' && !categories.some((c) => c === initialCategoryValue)) {
-      return ['Todos', ...categories, initialCategoryValue];
-    }
-    return ['Todos', ...categories];
-  }, [categories, initialCategoryValue]);
+  // Todas las categorías: las principales y también las "extra" (ej. Argentina en una de fútbol).
+  const allCategories = useMemo(() => {
+    const list = [...categories];
+    const known = new Set(list.map(normalizeText));
+    products.forEach((p) => {
+      [p.categoria, ...(p.categoriasExtra ?? [])].forEach((c) => {
+        if (c && !known.has(normalizeText(c))) {
+          known.add(normalizeText(c));
+          list.push(c);
+        }
+      });
+    });
+    if (initialCategoryValue !== 'Todos' && !known.has(normalizeText(initialCategoryValue))) list.push(initialCategoryValue);
+    return list;
+  }, [categories, products, initialCategoryValue]);
 
-  const [activeCategory, setActiveCategory] = useState(initialCategoryValue);
+  const categoryList = useMemo(() => ['Todos', ...allCategories], [allCategories]);
+
+  // Se puede elegir más de una categoría: muestra las remeras que tienen TODAS las elegidas.
+  const [activeCategories, setActiveCategories] = useState<string[]>(
+    initialCategoryValue !== 'Todos' ? [initialCategoryValue] : []
+  );
 
   // Link viejo tipo /productos?categoria=anime: se aplica al abrir.
   useEffect(() => {
     if (initialCategory) return;
     const fromUrl = new URLSearchParams(window.location.search).get('categoria');
-    if (fromUrl) setActiveCategory(findCategoryFromUrl(fromUrl, categories));
-  }, [categories, initialCategory]);
+    if (fromUrl) setActiveCategories([findCategoryFromUrl(fromUrl, allCategories)]);
+  }, [allCategories, initialCategory]);
   const [activeColors, setActiveColors] = useState<Set<string>>(new Set());
   const [sortOrder, setSortOrder] = useState('default');
   const [searchQuery, setSearchQuery] = useState('');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-  const [showAllCategories, setShowAllCategories] = useState(false);
   const [showAllColors, setShowAllColors] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
@@ -85,21 +107,33 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     return counts;
   }, [products]);
 
-  const filtered = useMemo(() => {
-    const catNorm = normalizeText(activeCategory);
+  // Color y búsqueda (todo menos la categoría).
+  const matchesOtherFilters = useMemo(() => {
     const searchNorm = normalizeText(searchQuery);
-    const result = products.filter((p) => {
-      const catMatch =
-        activeCategory === 'Todos' ||
-        [p.categoria, ...(p.categoriasExtra ?? [])].some((c) => normalizeText(c) === catNorm);
-      if (!catMatch) return false;
+    return (p: Product) => {
       if (activeColors.size > 0) {
         const keys = p.imagenesPorColor ? Object.keys(p.imagenesPorColor) : [];
         if (![...activeColors].some((slug) => keys.includes(slug))) return false;
       }
       if (searchNorm && !normalizeText(p.nombre).includes(searchNorm)) return false;
       return true;
-    });
+    };
+  }, [activeColors, searchQuery]);
+
+  // Si no hay remeras con todas las categorías juntas: cuántas hay de cada una por separado.
+  const perCategoryCounts = useMemo(
+    () =>
+      activeCategories.map((category) => ({
+        category,
+        count: products.filter((p) => hasCategory(p, category) && matchesOtherFilters(p)).length,
+      })),
+    [activeCategories, products, matchesOtherFilters]
+  );
+
+  const filtered = useMemo(() => {
+    const result = products.filter(
+      (p) => activeCategories.every((category) => hasCategory(p, category)) && matchesOtherFilters(p)
+    );
 
     switch (sortOrder) {
       case 'oldest':     return [...result].reverse();
@@ -109,12 +143,12 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
       case 'name-desc':  return [...result].sort((a, b) => b.nombre.localeCompare(a.nombre, 'es'));
       default:           return result;
     }
-  }, [activeCategory, activeColors, sortOrder, searchQuery, products]);
+  }, [activeCategories, matchesOtherFilters, sortOrder, products]);
 
-  const headingCopy = activeCategory !== 'Todos' ? collectionCopy(activeCategory) : null;
-  const activeFiltersCount = (activeCategory !== 'Todos' ? 1 : 0) + activeColors.size + (searchQuery ? 1 : 0);
+  const headingCopy = activeCategories.length === 1 ? collectionCopy(activeCategories[0]) : null;
+  const categoriesLabel = joinCategories(activeCategories);
+  const activeFiltersCount = activeCategories.length + activeColors.size + (searchQuery ? 1 : 0);
   const sortLabel = SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ?? 'Ordenar';
-  const visibleCategories = showAllCategories ? categoryList : categoryList.slice(0, CATEGORIES_LIMIT + 1);
   const visibleColors = showAllColors ? availableColors : availableColors.slice(0, COLORS_LIMIT);
 
   function toggleColor(slug: string) {
@@ -125,8 +159,18 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
     });
   }
 
+  function toggleCategory(category: string) {
+    if (category === 'Todos') {
+      setActiveCategories([]);
+      return;
+    }
+    setActiveCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  }
+
   function clearFilters() {
-    setActiveCategory('Todos');
+    setActiveCategories([]);
     setActiveColors(new Set());
     setSearchQuery('');
   }
@@ -164,16 +208,18 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
       <div className="cfilter-section">
         <p className="cfilter-section-title">Categoría</p>
+        <p className="cfilter-hint">Podés elegir más de una</p>
         <ul className="cfilter-list">
-          {visibleCategories.map((cat) => {
+          {categoryList.map((cat) => {
             const count = cat === 'Todos' ? products.length : (categoryCounts[cat] ?? 0);
+            const isActive = cat === 'Todos' ? activeCategories.length === 0 : activeCategories.includes(cat);
             return (
               <li key={cat}>
                 <button
                   type="button"
-                  className={`cfilter-item${activeCategory === cat ? ' is-active' : ''}`}
-                  onClick={() => setActiveCategory(cat)}
-                  aria-pressed={activeCategory === cat}
+                  className={`cfilter-item${isActive ? ' is-active' : ''}`}
+                  onClick={() => toggleCategory(cat)}
+                  aria-pressed={isActive}
                 >
                   <span className="cfilter-check" aria-hidden="true" />
                   <span className="cfilter-item__name">{cat}</span>
@@ -183,11 +229,6 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             );
           })}
         </ul>
-        {categoryList.length > CATEGORIES_LIMIT + 1 && (
-          <button type="button" className="cfilter-see-more" onClick={() => setShowAllCategories((p) => !p)}>
-            {showAllCategories ? 'Ver menos' : `Ver más (${categoryList.length - CATEGORIES_LIMIT - 1})`}
-          </button>
-        )}
       </div>
 
       {availableColors.length > 0 && (
@@ -246,6 +287,10 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                 {headingCopy.heading[0]}
                 <span>{headingCopy.heading[1]}</span>
               </>
+            ) : activeCategories.length > 1 ? (
+              <>
+                Remeras de <span>{categoriesLabel}</span>
+              </>
             ) : (
               <>
                 Todos nuestros <span>diseños</span>
@@ -253,7 +298,11 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             )}
           </h1>
           <p className="section-subtitle">
-            {headingCopy ? headingCopy.intro : 'Filtrá por colección, buscá tu personaje o tu banda y encontrá tu próxima remera.'}
+            {headingCopy
+              ? headingCopy.intro
+              : activeCategories.length > 1
+                ? `Las remeras que son de ${categoriesLabel} a la vez.`
+                : 'Filtrá por colección, buscá tu personaje o tu banda y encontrá tu próxima remera.'}
           </p>
         </div>
       </section>
@@ -293,8 +342,8 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
 
               <span key={filtered.length} className="catalog-results-count" aria-live="polite">
                 {filtered.length} diseño{filtered.length !== 1 ? 's' : ''}
-                {activeCategory !== 'Todos' && (
-                  <span className="catalog-active-filter"> · {activeCategory}</span>
+                {activeCategories.length > 0 && (
+                  <span className="catalog-active-filter"> · {activeCategories.join(' + ')}</span>
                 )}
               </span>
 
@@ -343,7 +392,7 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
             {/* Product grid */}
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={`${activeCategory}|${[...activeColors].sort().join(',')}|${sortOrder}|${searchQuery}`}
+                key={`${activeCategories.join('+')}|${[...activeColors].sort().join(',')}|${sortOrder}|${searchQuery}`}
                 className="catalog-grid"
                 data-catalog-grid
                 initial={{ opacity: 0 }}
@@ -351,7 +400,36 @@ export function CatalogView({ initialCategory, initialProducts, categories }: Pr
                 exit={{ opacity: 0 }}
                 transition={{ duration: prefersReducedMotion ? 0 : 0.16, ease: 'easeInOut' }}
               >
-                {!filtered.length ? (
+                {!filtered.length && activeCategories.length > 1 ? (
+                  <div className="empty-state">
+                    <span className="section-kicker">Sin resultados</span>
+                    <h3>Todavía no hay remeras que sean de {categoriesLabel} a la vez</h3>
+                    {perCategoryCounts.some((c) => c.count > 0) ? (
+                      <>
+                        <p>Pero sí tenemos de cada una por separado:</p>
+                        <div className="empty-state__options">
+                          {perCategoryCounts
+                            .filter((c) => c.count > 0)
+                            .map((c) => (
+                              <button
+                                key={c.category}
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => setActiveCategories([c.category])}
+                              >
+                                Ver solo {c.category} ({c.count})
+                              </button>
+                            ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p>Probá con otra combinación o limpiá los filtros activos.</p>
+                    )}
+                    <button type="button" className="cfilter-see-more" onClick={clearFilters}>
+                      Ver todas las remeras
+                    </button>
+                  </div>
+                ) : !filtered.length ? (
                   <div className="empty-state">
                     <span className="section-kicker">Sin resultados</span>
                     <h3>No encontramos diseños{searchQuery ? ` para "${searchQuery}"` : ' para ese filtro'}</h3>

@@ -972,3 +972,19 @@
     transition: none;
   }
 }
+
+/* Categorías: aviso de selección múltiple */
+.cfilter-hint {
+  margin: -0.35rem 0 0.6rem;
+  font-size: 0.75rem;
+  color: var(--cg-muted);
+}
+
+/* Sin remeras con todas las categorías: botones para ver cada una por separado */
+.catalog-grid .empty-state__options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
