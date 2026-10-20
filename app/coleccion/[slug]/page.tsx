@@ -14,13 +14,12 @@ import { getSiteContent } from '@/lib/site-content';
 export const revalidate = 60;
 
 /** Colecciones armadas de antemano: abren al instante (se actualizan cada 60 s). */
+// No se arman todas en la publicación (con muchas remeras la base de datos se
+// saturaba y Vercel cancelaba el build). Cada página se arma la primera vez que
+// alguien la visita y queda guardada (se renueva cada 60 s), así que sigue
+// abriendo rápido.
 export async function generateStaticParams() {
-  try {
-    const collections = await getCollections();
-    return collections.map((collection) => ({ slug: collection.slug }));
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 type PageProps = {
