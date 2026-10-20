@@ -1,0 +1,69 @@
+/* Páginas de texto (cambios y devoluciones, etc.) */
+.legal-page {
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 5rem);
+}
+
+.legal {
+  max-width: 760px;
+}
+
+.legal .section-title {
+  margin-top: 0.6rem;
+}
+
+.legal__lead {
+  margin: 0 0 2rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(241, 221, 178, 0.82);
+}
+
+.legal section {
+  padding: 1.4rem 0;
+  border-top: 1px solid rgba(241, 221, 178, 0.12);
+}
+
+.legal h2 {
+  margin: 0 0 0.7rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  line-height: 1.25;
+  color: #fff0cb;
+}
+
+.legal p,
+.legal li {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: rgba(241, 221, 178, 0.78);
+}
+
+.legal p {
+  margin: 0;
+}
+
+.legal ul,
+.legal ol {
+  margin: 0.7rem 0 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.legal strong {
+  color: #fff0cb;
+}
+
+.legal a:not(.btn) {
+  color: var(--yellow, #f4c542);
+}
+
+.legal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.6rem 0 1.2rem;
+}
+
+.legal__note {
+  font-size: 0.88rem !important;
+}

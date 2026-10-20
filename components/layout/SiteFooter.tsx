@@ -8,6 +8,8 @@ const FOOTER_LINKS = [
   { href: '/personalizados', label: 'Personalizados' },
   { href: '/mayorista', label: 'Mayorista' },
   { href: '/#contacto', label: 'Contacto' },
+  { href: '/cambios-y-devoluciones', label: 'Cambios y devoluciones' },
+  { href: '/cambios-y-devoluciones#arrepentimiento', label: 'Botón de arrepentimiento' },
 ];
 
 const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '5491123620076';

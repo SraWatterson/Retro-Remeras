@@ -8,7 +8,7 @@ import { cartGetItemsCount, cartLoad, subscribeToCartUpdates } from '@/lib/shop'
 import { openCartSidebar, CART_ITEM_ADDED_EVENT } from '@/components/cart/CartSidebar';
 
 type Props = {
-  active: 'inicio' | 'catalogo' | 'personalizados' | 'mayorista';
+  active?: 'inicio' | 'catalogo' | 'personalizados' | 'mayorista';
 };
 
 type NavLink = {
