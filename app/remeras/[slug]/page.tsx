@@ -9,7 +9,7 @@ import { PromoBar } from '@/components/layout/PromoBar';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { ProductView } from '@/components/product/ProductView';
-import { getPublicProductBySlug, getPublicProducts } from '@/lib/product-queries';
+import { getPublicProductBySlug } from '@/lib/product-queries';
 import { getSiteContent } from '@/lib/site-content';
 import { formatPrice, normalizeImageUrl, productHref } from '@/lib/shop';
 import { absoluteUrl, SITE_URL } from '@/lib/site-url';
@@ -21,13 +21,12 @@ export const revalidate = 60;
  * 60 s: abren al instante. Una remera nueva se arma en su primera visita y
  * desde ahí también queda lista.
  */
+// No se arman todas en la publicación (con muchas remeras la base de datos se
+// saturaba y Vercel cancelaba el build). Cada página se arma la primera vez que
+// alguien la visita y queda guardada (se renueva cada 60 s), así que sigue
+// abriendo rápido.
 export async function generateStaticParams() {
-  try {
-    const products = await getPublicProducts();
-    return products.map((product) => ({ slug: product.slug }));
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 type PageProps = {
