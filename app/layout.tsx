@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   title: 'Retro Remeras',
   description: 'Remeras con estilo, nostalgia y personalidad.',
   icons: { icon: '/assets/icons/favicon.ico' },
+  // Código de Google Search Console (etiqueta HTML). Se carga como variable de entorno.
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+    : {}),
   openGraph: {
     siteName: 'Retro Remeras',
     locale: 'es_AR',
