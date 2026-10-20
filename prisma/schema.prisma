@@ -115,6 +115,8 @@ model SiteContent {
   heroSideImageOneAlt     String   @default("Diseño anime destacado")
   heroSideImageTwo        String   @default("/assets/img/ejemplo-gaming.jpg")
   heroSideImageTwoAlt     String   @default("Diseño videojuegos destacado")
+  heroSideImageThree      String   @default("/assets/img/ejemplo-gaming.webp")
+  heroSideImageThreeAlt   String   @default("Diseño destacado")
   personalizadosData      Json?
   mayoristaData           Json?
   createdAt               DateTime @default(now())

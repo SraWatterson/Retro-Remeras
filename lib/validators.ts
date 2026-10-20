@@ -172,6 +172,8 @@ export const siteContentInputSchema = z.object({
   heroSideImageOneAlt: z.string().trim().min(2).max(100),
   heroSideImageTwo: relativeOrAbsoluteImagePath,
   heroSideImageTwoAlt: z.string().trim().min(2).max(100),
+  heroSideImageThree: relativeOrAbsoluteImagePath,
+  heroSideImageThreeAlt: z.string().trim().min(2).max(100),
 });
 
 export const salesPagePatchSchema = z.object({
