@@ -12,6 +12,7 @@ import { ProductView } from '@/components/product/ProductView';
 import { getPublicProductBySlug, getPublicProducts } from '@/lib/product-queries';
 import { getSiteContent } from '@/lib/site-content';
 import { formatPrice, normalizeImageUrl, productHref } from '@/lib/shop';
+import { absoluteUrl, SITE_URL } from '@/lib/site-url';
 
 export const revalidate = 60;
 
@@ -36,8 +37,7 @@ type PageProps = {
 const getProductCached = cache(async (slug: string) => getPublicProductBySlug(decodeURIComponent(slug)));
 
 function absoluteImageUrl(imagen?: string | null) {
-  const rawImage = normalizeImageUrl(imagen);
-  return rawImage.startsWith('http') ? rawImage : `${process.env.NEXT_PUBLIC_SITE_URL ?? ''}${rawImage}`;
+  return absoluteUrl(normalizeImageUrl(imagen));
 }
 
 /**
@@ -87,16 +87,23 @@ export default async function Page({ params }: PageProps) {
     notFound();
   }
 
-  const BASE = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+  const BASE = SITE_URL;
   const url = `${BASE}${productHref(product)}`;
+
+  // Todas las fotos (una por color) y los colores, para Google.
+  const colorEntries = Object.values(product.imagenesPorColor ?? {}).filter((c) => c?.path);
+  const allImages = [...new Set([product.imagen, ...colorEntries.map((c) => c.path)].filter(Boolean).map((p) => absoluteImageUrl(p)))];
+  const nextYear = `${new Date().getFullYear() + 1}-12-31`;
 
   const ldProduct = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.nombre,
     description: product.descripcion ?? undefined,
-    image: absoluteImageUrl(product.imagen),
+    image: allImages.length ? allImages : absoluteImageUrl(product.imagen),
+    sku: product.slug,
     category: product.categoria,
+    ...(colorEntries.length ? { color: colorEntries.map((c) => c.colorName).join(', ') } : {}),
     url,
     brand: { '@type': 'Brand', name: 'Retro Remeras' },
     offers: {
@@ -104,6 +111,8 @@ export default async function Page({ params }: PageProps) {
       url,
       price: product.precio,
       priceCurrency: 'ARS',
+      priceValidUntil: nextYear,
+      itemCondition: 'https://schema.org/NewCondition',
       availability: 'https://schema.org/InStock',
       seller: { '@type': 'Organization', name: 'Retro Remeras' },
     },
