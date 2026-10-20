@@ -46,3 +46,9 @@ main.home-page {
   opacity: 0.18 !important;
   mix-blend-mode: normal !important;
 }
+
+/* Espacio al final del footer para que el botón "Volver" (abajo a la izquierda)
+   no tape los últimos links ni los créditos. */
+footer.footer {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)) !important;
+}
