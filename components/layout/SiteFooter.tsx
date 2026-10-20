@@ -32,7 +32,16 @@ export function SiteFooter() {
             className="footer-credit"
             aria-label="Instagram de David, desarrollador del sitio"
           >
-            Sitio realizado por <span className="footer-credit__name">David</span>
+            Desarrollo por <span className="footer-credit__name">David</span>
+          </a>
+          <a
+            href="https://www.instagram.com/am.vittone/"
+            target="_blank"
+            rel="noreferrer"
+            className="footer-credit"
+            aria-label="Instagram de Aylen, diseño y contenido del sitio"
+          >
+            Diseño y contenido por <span className="footer-credit__name">Aylen</span>
           </a>
         </div>
 
