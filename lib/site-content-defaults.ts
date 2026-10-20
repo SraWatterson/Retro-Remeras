@@ -56,6 +56,8 @@ export type SiteContentData = {
   heroSideImageOneAlt: string;
   heroSideImageTwo: string;
   heroSideImageTwoAlt: string;
+  heroSideImageThree: string;
+  heroSideImageThreeAlt: string;
   personalizadosData: SalesPageContent;
   mayoristaData: SalesPageContent;
   updatedAt?: Date | string;
@@ -160,6 +162,8 @@ export const DEFAULT_SITE_CONTENT: SiteContentData = {
   heroSideImageOneAlt: 'Diseño anime destacado',
   heroSideImageTwo: '/assets/img/ejemplo-gaming.webp',
   heroSideImageTwoAlt: 'Diseño videojuegos destacado',
+  heroSideImageThree: '/assets/img/ejemplo-gaming.webp',
+  heroSideImageThreeAlt: 'Diseño destacado',
   personalizadosData: DEFAULT_PERSONALIZADOS,
   mayoristaData: DEFAULT_MAYORISTA,
 };

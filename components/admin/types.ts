@@ -73,6 +73,8 @@ export type SiteContentFormState = {
   heroSideImageOneAlt: string;
   heroSideImageTwo: string;
   heroSideImageTwoAlt: string;
+  heroSideImageThree: string;
+  heroSideImageThreeAlt: string;
 };
 
 export type SiteContentErrors = Partial<Record<keyof SiteContentFormState, string>>;

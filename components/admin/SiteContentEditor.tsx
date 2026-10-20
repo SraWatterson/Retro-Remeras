@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FormEvent } from 'react';
 import { SiteContentErrors, SiteContentFormState } from './types';
 
-type ImageField = 'heroMainImage' | 'heroSideImageOne' | 'heroSideImageTwo';
+type ImageField = 'heroMainImage' | 'heroSideImageOne' | 'heroSideImageTwo' | 'heroSideImageThree';
 
 type Props = {
   form: SiteContentFormState;
@@ -36,14 +36,20 @@ const IMAGE_FIELDS: Array<{
   {
     field: 'heroSideImageOne',
     altField: 'heroSideImageOneAlt',
-    title: 'Poster secundario superior',
-    help: 'Primera imagen chica del stack lateral.',
+    title: 'Imagen mediana (arriba a la derecha)',
+    help: 'Va arriba a la derecha, al lado de la principal.',
   },
   {
     field: 'heroSideImageTwo',
     altField: 'heroSideImageTwoAlt',
-    title: 'Poster secundario inferior',
-    help: 'Segunda imagen chica del stack lateral.',
+    title: 'Imagen chica (abajo a la izquierda)',
+    help: 'Primera de las dos chicas de abajo.',
+  },
+  {
+    field: 'heroSideImageThree',
+    altField: 'heroSideImageThreeAlt',
+    title: 'Imagen chica (abajo a la derecha)',
+    help: 'Segunda de las dos chicas de abajo.',
   },
 ];
 

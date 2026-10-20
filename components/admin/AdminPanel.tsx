@@ -137,9 +137,11 @@ const EMPTY_SITE_CONTENT_FORM: SiteContentFormState = {
   heroSideImageOneAlt: 'Diseño anime destacado',
   heroSideImageTwo: '/assets/img/ejemplo-gaming.webp',
   heroSideImageTwoAlt: 'Diseño videojuegos destacado',
+  heroSideImageThree: '/assets/img/ejemplo-gaming.webp',
+  heroSideImageThreeAlt: 'Diseño destacado',
 };
 
-type SiteImageField = 'heroMainImage' | 'heroSideImageOne' | 'heroSideImageTwo';
+type SiteImageField = 'heroMainImage' | 'heroSideImageOne' | 'heroSideImageTwo' | 'heroSideImageThree';
 
 
 function newColorRow(initial?: Partial<ColorImageRow>): ColorImageRow {
@@ -210,6 +212,8 @@ function validateSiteContentInput(values: SiteContentFormState) {
     'heroSideImageOneAlt',
     'heroSideImageTwo',
     'heroSideImageTwoAlt',
+    'heroSideImageThree',
+    'heroSideImageThreeAlt',
   ];
 
   requiredFields.forEach((field) => {
@@ -225,7 +229,7 @@ function validateSiteContentInput(values: SiteContentFormState) {
     }
   });
 
-  const imageFields: Array<keyof SiteContentFormState> = ['heroMainImage', 'heroSideImageOne', 'heroSideImageTwo'];
+  const imageFields: Array<keyof SiteContentFormState> = ['heroMainImage', 'heroSideImageOne', 'heroSideImageTwo', 'heroSideImageThree'];
   imageFields.forEach((field) => {
     const value = String(values[field] || '').trim();
     const valid = value.startsWith('/assets/') || value.startsWith('/uploads/home/') || value.startsWith('/uploads/products/') || value.startsWith('https://') || value.startsWith('http://');
