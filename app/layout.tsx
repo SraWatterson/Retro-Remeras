@@ -12,6 +12,7 @@ import './css/home-steps.css';
 import './css/home-featured.css';
 import './css/home-contact.css';
 import './css/home-faq.css';
+import './css/home-reviews.css';
 import './css/home-flow.css';
 
 // Tipografías: Shrikhand para títulos, Archivo Black para etiquetas cortas

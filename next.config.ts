@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
         pathname: '/photo-*',
       },
+      {
+        // Fotos de perfil y de reseñas de Google Maps (sección de reseñas).
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
     ],
   },
 };

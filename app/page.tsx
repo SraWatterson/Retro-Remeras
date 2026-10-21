@@ -4,6 +4,7 @@ import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { HeroSection } from '@/components/home/HeroSection';
 import { ContactSection } from '@/components/home/ContactSection';
 import { FaqSection } from '@/components/home/FaqSection';
+import { ReviewsSection } from '@/components/home/ReviewsSection';
 import { StepsSection } from '@/components/home/StepsSection';
 import { PersonalizadosMayoristaSection } from '@/components/home/PersonalizadosMayoristaSection';
 import { PromoBar } from '@/components/layout/PromoBar';
@@ -82,6 +83,7 @@ export default async function Page() {
         <FeaturedProducts initialProducts={featuredProducts} />
         <PersonalizadosMayoristaSection />
         <StepsSection />
+        <ReviewsSection />
         <FaqSection />
         <ContactSection />
       </main>
