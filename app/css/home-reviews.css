@@ -58,15 +58,60 @@
   font-size: 0.95rem;
 }
 
-.rv__grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+/* Cinta de reseñas: se desliza sola y frena con el mouse o al tocarla. */
+.rv__marquee {
+  contain: inline-size;
+  width: 100%;
+  overflow: hidden;
+  padding-block: 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+.rv__track {
+  display: flex;
+  width: max-content;
+  animation: rv-scroll 60s linear infinite;
+}
+
+.rv__marquee:hover .rv__track,
+.rv__marquee:focus-within .rv__track,
+.rv__marquee:active .rv__track {
+  animation-play-state: paused;
+}
+
+@keyframes rv-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.rv__list {
+  display: flex;
   gap: 1rem;
   margin: 0;
-  padding: 0;
+  padding: 0 1rem 0 0;
   list-style: none;
-  max-width: 1180px;
-  margin-inline: auto;
+}
+
+.rv__list > .rv__card {
+  flex: 0 0 clamp(260px, 26vw, 330px);
+}
+
+/* Sin movimiento (reducir movimiento activado): fila deslizable a mano. */
+@media (prefers-reduced-motion: reduce) {
+  .rv__marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .rv__track {
+    animation: none;
+  }
+
+  .rv__list[aria-hidden] {
+    display: none;
+  }
 }
 
 .rv__card {
@@ -115,18 +160,6 @@
   margin-top: clamp(1.5rem, 3vw, 2.2rem);
 }
 
-@media (max-width: 1023px) {
-  .rv__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 599px) {
-  .rv__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 /* Fotos de Google (perfil y foto de la reseña) */
 .rv__avatar--img {
   object-fit: cover;
@@ -136,7 +169,38 @@
 .rv__photo {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   border-radius: 12px;
+}
+
+/* La reseña con foto va más ancha: foto a la izquierda y texto a la derecha,
+   así todas las tarjetas quedan de la misma altura. */
+.rv__list > .rv__card--photo {
+  flex-basis: clamp(440px, 42vw, 600px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: 1.1rem;
+  row-gap: 0.85rem;
+}
+
+.rv__card--photo .rv__photo {
+  grid-row: 1 / -1;
+  height: 100%;
+  aspect-ratio: auto;
+  min-height: 180px;
+}
+
+@media (max-width: 599px) {
+  .rv__list > .rv__card--photo {
+    flex-basis: 300px;
+    display: flex;
+  }
+
+  .rv__card--photo .rv__photo {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
 }
