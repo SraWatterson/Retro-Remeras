@@ -126,3 +126,17 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Fotos de Google (perfil y foto de la reseña) */
+.rv__avatar--img {
+  object-fit: cover;
+  padding: 0;
+}
+
+.rv__photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+}
