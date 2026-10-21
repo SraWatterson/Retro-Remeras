@@ -1,0 +1,128 @@
+/* Home · Reseñas de Google */
+.rv-section .rv__head {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.rv__kicker {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-synthesis: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--yellow, #f4c542);
+}
+
+.rv__title {
+  margin: 0;
+  max-width: 22ch;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.05;
+  color: var(--brand-cream-soft, #fff0cb);
+}
+
+.rv__title span {
+  color: var(--yellow, #f4c542);
+}
+
+.rv__score {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.7rem;
+  margin: 0.2rem 0 0;
+  color: var(--muted, #cbb98f);
+  font-size: 0.92rem;
+}
+
+.rv__score strong {
+  font-family: var(--font-label), "Arial Black", Arial, sans-serif;
+  font-size: 1.5rem;
+  color: #fff0cb;
+}
+
+.rv__score span:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.rv__stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--yellow, #f4c542);
+  font-size: 0.95rem;
+}
+
+.rv__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 1180px;
+  margin-inline: auto;
+}
+
+.rv__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid rgba(216, 148, 37, 0.2);
+  background: rgba(16, 12, 9, 0.7);
+}
+
+.rv__card blockquote {
+  flex: 1;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(241, 221, 178, 0.85);
+}
+
+.rv__author {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff0cb;
+}
+
+.rv__avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f4c542, #d89425);
+  color: #1a0f06;
+  font-weight: 800;
+}
+
+.rv__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+@media (max-width: 1023px) {
+  .rv__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599px) {
+  .rv__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
